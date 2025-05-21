@@ -4,7 +4,7 @@ global $router;
 
 require_once __DIR__ . '/models/AuthResultDto.php';
 
-$router->group('/auth')
+$router->group('/api/auth')
 ->post('/login', function (\Core\Http\RequestContext $ctx) {
     $data = $ctx->json();
 
@@ -58,3 +58,8 @@ $router->group('/auth')
 
     return ok_json($result);
 });
+
+$router->group('/auth')
+    ->get('/login', function (){
+       return view('login');
+    });

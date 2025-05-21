@@ -56,4 +56,9 @@ $router->group('/vehicles')
 
         return ok_json();
     })
+    ->get('/get-dropdown', function (){
+        $vehicles = DbModel\VehicleQuery::create()->find();
+
+        return dropdown_json($vehicles, fn($vehicle)=>$vehicle->getId(), fn($vehicle)=>$vehicle->getPlateNumber());
+    })
     ->middleware([authMiddleware()]);
