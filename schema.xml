@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <database name="default" namespace="DbModel" package="DbModel" defaultIdMethod="native" defaultPhpNamingMethod="underscore">
-  <table name="products" idMethod="native" phpName="Products">
+  <table name="products" idMethod="native" phpName="Product">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="NAME" phpName="Name" type="VARCHAR" size="255" required="true"/>
     <column name="created_on" phpName="CreatedOn" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
@@ -11,7 +11,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="stock_transactions" idMethod="native" phpName="StockTransactions">
+  <table name="stock_transactions" idMethod="native" phpName="StockTransaction">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="product_id" phpName="ProductId" type="INTEGER" required="true"/>
     <column name="from_warehouse_id" phpName="FromWarehouseId" type="INTEGER"/>
@@ -54,7 +54,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="users" idMethod="native" phpName="Users">
+  <table name="users" idMethod="native" phpName="User">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="username" phpName="Username" type="VARCHAR" size="255" required="true"/>
     <column name="PASSWORD" phpName="Password" type="VARCHAR" size="255" required="true"/>
@@ -66,7 +66,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="vehicles" idMethod="native" phpName="Vehicles">
+  <table name="vehicles" idMethod="native" phpName="Vehicle">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="plate_number" phpName="PlateNumber" type="VARCHAR" size="20" required="true"/>
     <column name="created_on" phpName="CreatedOn" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>
@@ -123,7 +123,7 @@
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="warehouses" idMethod="native" phpName="Warehouses">
+  <table name="warehouses" idMethod="native" phpName="Warehouse">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="NAME" phpName="Name" type="VARCHAR" size="255" required="true"/>
     <column name="created_on" phpName="CreatedOn" type="TIMESTAMP" required="true" defaultExpr="CURRENT_TIMESTAMP"/>

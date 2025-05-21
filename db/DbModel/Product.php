@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\Vehicles as BaseVehicles;
+use DbModel\Base\Product as BaseProduct;
 
 /**
- * Skeleton subclass for representing a row from the 'vehicles' table.
+ * Skeleton subclass for representing a row from the 'products' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\Vehicles as BaseVehicles;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class Vehicles extends BaseVehicles
+class Product extends BaseProduct
 {
 
 }

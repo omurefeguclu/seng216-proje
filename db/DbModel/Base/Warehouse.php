@@ -5,18 +5,18 @@ namespace DbModel\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use DbModel\StockTransactions as ChildStockTransactions;
-use DbModel\StockTransactionsQuery as ChildStockTransactionsQuery;
+use DbModel\StockTransaction as ChildStockTransaction;
+use DbModel\StockTransactionQuery as ChildStockTransactionQuery;
+use DbModel\Warehouse as ChildWarehouse;
 use DbModel\WarehouseProductStock as ChildWarehouseProductStock;
 use DbModel\WarehouseProductStockLog as ChildWarehouseProductStockLog;
 use DbModel\WarehouseProductStockLogQuery as ChildWarehouseProductStockLogQuery;
 use DbModel\WarehouseProductStockQuery as ChildWarehouseProductStockQuery;
-use DbModel\Warehouses as ChildWarehouses;
-use DbModel\WarehousesQuery as ChildWarehousesQuery;
-use DbModel\Map\StockTransactionsTableMap;
+use DbModel\WarehouseQuery as ChildWarehouseQuery;
+use DbModel\Map\StockTransactionTableMap;
 use DbModel\Map\WarehouseProductStockLogTableMap;
 use DbModel\Map\WarehouseProductStockTableMap;
-use DbModel\Map\WarehousesTableMap;
+use DbModel\Map\WarehouseTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -38,14 +38,14 @@ use Propel\Runtime\Util\PropelDateTime;
  *
  * @package    propel.generator.DbModel.Base
  */
-abstract class Warehouses implements ActiveRecordInterface
+abstract class Warehouse implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\DbModel\\Map\\WarehousesTableMap';
+    public const TABLE_MAP = '\\DbModel\\Map\\WarehouseTableMap';
 
 
     /**
@@ -97,18 +97,18 @@ abstract class Warehouses implements ActiveRecordInterface
     protected $created_on;
 
     /**
-     * @var        ObjectCollection|ChildStockTransactions[] Collection to store aggregation of ChildStockTransactions objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions> Collection to store aggregation of ChildStockTransactions objects.
+     * @var        ObjectCollection|ChildStockTransaction[] Collection to store aggregation of ChildStockTransaction objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction> Collection to store aggregation of ChildStockTransaction objects.
      */
-    protected $collStockTransactionssRelatedByFromWarehouseId;
-    protected $collStockTransactionssRelatedByFromWarehouseIdPartial;
+    protected $collStockTransactionsRelatedByFromWarehouseId;
+    protected $collStockTransactionsRelatedByFromWarehouseIdPartial;
 
     /**
-     * @var        ObjectCollection|ChildStockTransactions[] Collection to store aggregation of ChildStockTransactions objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions> Collection to store aggregation of ChildStockTransactions objects.
+     * @var        ObjectCollection|ChildStockTransaction[] Collection to store aggregation of ChildStockTransaction objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction> Collection to store aggregation of ChildStockTransaction objects.
      */
-    protected $collStockTransactionssRelatedByToWarehouseId;
-    protected $collStockTransactionssRelatedByToWarehouseIdPartial;
+    protected $collStockTransactionsRelatedByToWarehouseId;
+    protected $collStockTransactionsRelatedByToWarehouseIdPartial;
 
     /**
      * @var        ObjectCollection|ChildWarehouseProductStock[] Collection to store aggregation of ChildWarehouseProductStock objects.
@@ -134,17 +134,17 @@ abstract class Warehouses implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStockTransactions[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions>
+     * @var ObjectCollection|ChildStockTransaction[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction>
      */
-    protected $stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion = null;
+    protected $stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStockTransactions[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions>
+     * @var ObjectCollection|ChildStockTransaction[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction>
      */
-    protected $stockTransactionssRelatedByToWarehouseIdScheduledForDeletion = null;
+    protected $stockTransactionsRelatedByToWarehouseIdScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -171,7 +171,7 @@ abstract class Warehouses implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of DbModel\Base\Warehouses object.
+     * Initializes internal state of DbModel\Base\Warehouse object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -266,9 +266,9 @@ abstract class Warehouses implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Warehouses</code> instance.  If
-     * <code>obj</code> is an instance of <code>Warehouses</code>, delegates to
-     * <code>equals(Warehouses)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Warehouse</code> instance.  If
+     * <code>obj</code> is an instance of <code>Warehouse</code>, delegates to
+     * <code>equals(Warehouse)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -454,7 +454,7 @@ abstract class Warehouses implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[WarehousesTableMap::COL_ID] = true;
+            $this->modifiedColumns[WarehouseTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -474,7 +474,7 @@ abstract class Warehouses implements ActiveRecordInterface
 
         if ($this->name !== $v) {
             $this->name = $v;
-            $this->modifiedColumns[WarehousesTableMap::COL_NAME] = true;
+            $this->modifiedColumns[WarehouseTableMap::COL_NAME] = true;
         }
 
         return $this;
@@ -493,7 +493,7 @@ abstract class Warehouses implements ActiveRecordInterface
         if ($this->created_on !== null || $dt !== null) {
             if ($this->created_on === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_on->format("Y-m-d H:i:s.u")) {
                 $this->created_on = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[WarehousesTableMap::COL_CREATED_ON] = true;
+                $this->modifiedColumns[WarehouseTableMap::COL_CREATED_ON] = true;
             }
         } // if either are not null
 
@@ -536,13 +536,13 @@ abstract class Warehouses implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WarehousesTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : WarehouseTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WarehousesTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : WarehouseTableMap::translateFieldName('Name', TableMap::TYPE_PHPNAME, $indexType)];
             $this->name = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WarehousesTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WarehouseTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -555,10 +555,10 @@ abstract class Warehouses implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = WarehousesTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = WarehouseTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\Warehouses'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\Warehouse'), 0, $e);
         }
     }
 
@@ -601,13 +601,13 @@ abstract class Warehouses implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildWarehousesQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildWarehouseQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -617,9 +617,9 @@ abstract class Warehouses implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collStockTransactionssRelatedByFromWarehouseId = null;
+            $this->collStockTransactionsRelatedByFromWarehouseId = null;
 
-            $this->collStockTransactionssRelatedByToWarehouseId = null;
+            $this->collStockTransactionsRelatedByToWarehouseId = null;
 
             $this->collWarehouseProductStocks = null;
 
@@ -634,8 +634,8 @@ abstract class Warehouses implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see Warehouses::setDeleted()
-     * @see Warehouses::isDeleted()
+     * @see Warehouse::setDeleted()
+     * @see Warehouse::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -644,11 +644,11 @@ abstract class Warehouses implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildWarehousesQuery::create()
+            $deleteQuery = ChildWarehouseQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -683,7 +683,7 @@ abstract class Warehouses implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -702,7 +702,7 @@ abstract class Warehouses implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                WarehousesTableMap::addInstanceToPool($this);
+                WarehouseTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -739,36 +739,36 @@ abstract class Warehouses implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion !== null) {
-                if (!$this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion->isEmpty()) {
-                    foreach ($this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion as $stockTransactionsRelatedByFromWarehouseId) {
+            if ($this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion !== null) {
+                if (!$this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion as $stockTransactionRelatedByFromWarehouseId) {
                         // need to save related object because we set the relation to null
-                        $stockTransactionsRelatedByFromWarehouseId->save($con);
+                        $stockTransactionRelatedByFromWarehouseId->save($con);
                     }
-                    $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion = null;
+                    $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collStockTransactionssRelatedByFromWarehouseId !== null) {
-                foreach ($this->collStockTransactionssRelatedByFromWarehouseId as $referrerFK) {
+            if ($this->collStockTransactionsRelatedByFromWarehouseId !== null) {
+                foreach ($this->collStockTransactionsRelatedByFromWarehouseId as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
                 }
             }
 
-            if ($this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion !== null) {
-                if (!$this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion->isEmpty()) {
-                    foreach ($this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion as $stockTransactionsRelatedByToWarehouseId) {
+            if ($this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion !== null) {
+                if (!$this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion->isEmpty()) {
+                    foreach ($this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion as $stockTransactionRelatedByToWarehouseId) {
                         // need to save related object because we set the relation to null
-                        $stockTransactionsRelatedByToWarehouseId->save($con);
+                        $stockTransactionRelatedByToWarehouseId->save($con);
                     }
-                    $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion = null;
+                    $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collStockTransactionssRelatedByToWarehouseId !== null) {
-                foreach ($this->collStockTransactionssRelatedByToWarehouseId as $referrerFK) {
+            if ($this->collStockTransactionsRelatedByToWarehouseId !== null) {
+                foreach ($this->collStockTransactionsRelatedByToWarehouseId as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -829,19 +829,19 @@ abstract class Warehouses implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[WarehousesTableMap::COL_ID] = true;
+        $this->modifiedColumns[WarehouseTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . WarehousesTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . WarehouseTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(WarehousesTableMap::COL_ID)) {
+        if ($this->isColumnModified(WarehouseTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(WarehousesTableMap::COL_NAME)) {
+        if ($this->isColumnModified(WarehouseTableMap::COL_NAME)) {
             $modifiedColumns[':p' . $index++]  = 'NAME';
         }
-        if ($this->isColumnModified(WarehousesTableMap::COL_CREATED_ON)) {
+        if ($this->isColumnModified(WarehouseTableMap::COL_CREATED_ON)) {
             $modifiedColumns[':p' . $index++]  = 'created_on';
         }
 
@@ -913,7 +913,7 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = WarehousesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = WarehouseTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -960,11 +960,11 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['Warehouses'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Warehouse'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Warehouses'][$this->hashCode()] = true;
-        $keys = WarehousesTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Warehouse'][$this->hashCode()] = true;
+        $keys = WarehouseTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
@@ -980,35 +980,35 @@ abstract class Warehouses implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collStockTransactionssRelatedByFromWarehouseId) {
+            if (null !== $this->collStockTransactionsRelatedByFromWarehouseId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stockTransactionss';
+                        $key = 'stockTransactions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'stock_transactionss';
                         break;
                     default:
-                        $key = 'StockTransactionss';
+                        $key = 'StockTransactions';
                 }
 
-                $result[$key] = $this->collStockTransactionssRelatedByFromWarehouseId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collStockTransactionsRelatedByFromWarehouseId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collStockTransactionssRelatedByToWarehouseId) {
+            if (null !== $this->collStockTransactionsRelatedByToWarehouseId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stockTransactionss';
+                        $key = 'stockTransactions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'stock_transactionss';
                         break;
                     default:
-                        $key = 'StockTransactionss';
+                        $key = 'StockTransactions';
                 }
 
-                $result[$key] = $this->collStockTransactionssRelatedByToWarehouseId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collStockTransactionsRelatedByToWarehouseId->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collWarehouseProductStocks) {
 
@@ -1058,7 +1058,7 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = WarehousesTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = WarehouseTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -1109,7 +1109,7 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = WarehousesTableMap::getFieldNames($keyType);
+        $keys = WarehouseTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
@@ -1161,16 +1161,16 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(WarehousesTableMap::DATABASE_NAME);
+        $criteria = new Criteria(WarehouseTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(WarehousesTableMap::COL_ID)) {
-            $criteria->add(WarehousesTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(WarehouseTableMap::COL_ID)) {
+            $criteria->add(WarehouseTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(WarehousesTableMap::COL_NAME)) {
-            $criteria->add(WarehousesTableMap::COL_NAME, $this->name);
+        if ($this->isColumnModified(WarehouseTableMap::COL_NAME)) {
+            $criteria->add(WarehouseTableMap::COL_NAME, $this->name);
         }
-        if ($this->isColumnModified(WarehousesTableMap::COL_CREATED_ON)) {
-            $criteria->add(WarehousesTableMap::COL_CREATED_ON, $this->created_on);
+        if ($this->isColumnModified(WarehouseTableMap::COL_CREATED_ON)) {
+            $criteria->add(WarehouseTableMap::COL_CREATED_ON, $this->created_on);
         }
 
         return $criteria;
@@ -1188,8 +1188,8 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildWarehousesQuery::create();
-        $criteria->add(WarehousesTableMap::COL_ID, $this->id);
+        $criteria = ChildWarehouseQuery::create();
+        $criteria->add(WarehouseTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1252,7 +1252,7 @@ abstract class Warehouses implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \DbModel\Warehouses (or compatible) type.
+     * @param object $copyObj An object of \DbModel\Warehouse (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1268,15 +1268,15 @@ abstract class Warehouses implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getStockTransactionssRelatedByFromWarehouseId() as $relObj) {
+            foreach ($this->getStockTransactionsRelatedByFromWarehouseId() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStockTransactionsRelatedByFromWarehouseId($relObj->copy($deepCopy));
+                    $copyObj->addStockTransactionRelatedByFromWarehouseId($relObj->copy($deepCopy));
                 }
             }
 
-            foreach ($this->getStockTransactionssRelatedByToWarehouseId() as $relObj) {
+            foreach ($this->getStockTransactionsRelatedByToWarehouseId() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStockTransactionsRelatedByToWarehouseId($relObj->copy($deepCopy));
+                    $copyObj->addStockTransactionRelatedByToWarehouseId($relObj->copy($deepCopy));
                 }
             }
 
@@ -1309,7 +1309,7 @@ abstract class Warehouses implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \DbModel\Warehouses Clone of current object.
+     * @return \DbModel\Warehouse Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1333,12 +1333,12 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('StockTransactionsRelatedByFromWarehouseId' === $relationName) {
-            $this->initStockTransactionssRelatedByFromWarehouseId();
+        if ('StockTransactionRelatedByFromWarehouseId' === $relationName) {
+            $this->initStockTransactionsRelatedByFromWarehouseId();
             return;
         }
-        if ('StockTransactionsRelatedByToWarehouseId' === $relationName) {
-            $this->initStockTransactionssRelatedByToWarehouseId();
+        if ('StockTransactionRelatedByToWarehouseId' === $relationName) {
+            $this->initStockTransactionsRelatedByToWarehouseId();
             return;
         }
         if ('WarehouseProductStock' === $relationName) {
@@ -1352,35 +1352,35 @@ abstract class Warehouses implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collStockTransactionssRelatedByFromWarehouseId collection
+     * Clears out the collStockTransactionsRelatedByFromWarehouseId collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addStockTransactionssRelatedByFromWarehouseId()
+     * @see addStockTransactionsRelatedByFromWarehouseId()
      */
-    public function clearStockTransactionssRelatedByFromWarehouseId()
+    public function clearStockTransactionsRelatedByFromWarehouseId()
     {
-        $this->collStockTransactionssRelatedByFromWarehouseId = null; // important to set this to NULL since that means it is uninitialized
+        $this->collStockTransactionsRelatedByFromWarehouseId = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collStockTransactionssRelatedByFromWarehouseId collection loaded partially.
+     * Reset is the collStockTransactionsRelatedByFromWarehouseId collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialStockTransactionssRelatedByFromWarehouseId($v = true): void
+    public function resetPartialStockTransactionsRelatedByFromWarehouseId($v = true): void
     {
-        $this->collStockTransactionssRelatedByFromWarehouseIdPartial = $v;
+        $this->collStockTransactionsRelatedByFromWarehouseIdPartial = $v;
     }
 
     /**
-     * Initializes the collStockTransactionssRelatedByFromWarehouseId collection.
+     * Initializes the collStockTransactionsRelatedByFromWarehouseId collection.
      *
-     * By default this just sets the collStockTransactionssRelatedByFromWarehouseId collection to an empty array (like clearcollStockTransactionssRelatedByFromWarehouseId());
+     * By default this just sets the collStockTransactionsRelatedByFromWarehouseId collection to an empty array (like clearcollStockTransactionsRelatedByFromWarehouseId());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1389,172 +1389,172 @@ abstract class Warehouses implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initStockTransactionssRelatedByFromWarehouseId(bool $overrideExisting = true): void
+    public function initStockTransactionsRelatedByFromWarehouseId(bool $overrideExisting = true): void
     {
-        if (null !== $this->collStockTransactionssRelatedByFromWarehouseId && !$overrideExisting) {
+        if (null !== $this->collStockTransactionsRelatedByFromWarehouseId && !$overrideExisting) {
             return;
         }
 
-        $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+        $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collStockTransactionssRelatedByFromWarehouseId = new $collectionClassName;
-        $this->collStockTransactionssRelatedByFromWarehouseId->setModel('\DbModel\StockTransactions');
+        $this->collStockTransactionsRelatedByFromWarehouseId = new $collectionClassName;
+        $this->collStockTransactionsRelatedByFromWarehouseId->setModel('\DbModel\StockTransaction');
     }
 
     /**
-     * Gets an array of ChildStockTransactions objects which contain a foreign key that references this object.
+     * Gets an array of ChildStockTransaction objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildWarehouses is new, it will return
+     * If this ChildWarehouse is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction> List of ChildStockTransaction objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStockTransactionssRelatedByFromWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getStockTransactionsRelatedByFromWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collStockTransactionssRelatedByFromWarehouseIdPartial && !$this->isNew();
-        if (null === $this->collStockTransactionssRelatedByFromWarehouseId || null !== $criteria || $partial) {
+        $partial = $this->collStockTransactionsRelatedByFromWarehouseIdPartial && !$this->isNew();
+        if (null === $this->collStockTransactionsRelatedByFromWarehouseId || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collStockTransactionssRelatedByFromWarehouseId) {
-                    $this->initStockTransactionssRelatedByFromWarehouseId();
+                if (null === $this->collStockTransactionsRelatedByFromWarehouseId) {
+                    $this->initStockTransactionsRelatedByFromWarehouseId();
                 } else {
-                    $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+                    $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-                    $collStockTransactionssRelatedByFromWarehouseId = new $collectionClassName;
-                    $collStockTransactionssRelatedByFromWarehouseId->setModel('\DbModel\StockTransactions');
+                    $collStockTransactionsRelatedByFromWarehouseId = new $collectionClassName;
+                    $collStockTransactionsRelatedByFromWarehouseId->setModel('\DbModel\StockTransaction');
 
-                    return $collStockTransactionssRelatedByFromWarehouseId;
+                    return $collStockTransactionsRelatedByFromWarehouseId;
                 }
             } else {
-                $collStockTransactionssRelatedByFromWarehouseId = ChildStockTransactionsQuery::create(null, $criteria)
-                    ->filterByWarehousesRelatedByFromWarehouseId($this)
+                $collStockTransactionsRelatedByFromWarehouseId = ChildStockTransactionQuery::create(null, $criteria)
+                    ->filterByWarehouseRelatedByFromWarehouseId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collStockTransactionssRelatedByFromWarehouseIdPartial && count($collStockTransactionssRelatedByFromWarehouseId)) {
-                        $this->initStockTransactionssRelatedByFromWarehouseId(false);
+                    if (false !== $this->collStockTransactionsRelatedByFromWarehouseIdPartial && count($collStockTransactionsRelatedByFromWarehouseId)) {
+                        $this->initStockTransactionsRelatedByFromWarehouseId(false);
 
-                        foreach ($collStockTransactionssRelatedByFromWarehouseId as $obj) {
-                            if (false == $this->collStockTransactionssRelatedByFromWarehouseId->contains($obj)) {
-                                $this->collStockTransactionssRelatedByFromWarehouseId->append($obj);
+                        foreach ($collStockTransactionsRelatedByFromWarehouseId as $obj) {
+                            if (false == $this->collStockTransactionsRelatedByFromWarehouseId->contains($obj)) {
+                                $this->collStockTransactionsRelatedByFromWarehouseId->append($obj);
                             }
                         }
 
-                        $this->collStockTransactionssRelatedByFromWarehouseIdPartial = true;
+                        $this->collStockTransactionsRelatedByFromWarehouseIdPartial = true;
                     }
 
-                    return $collStockTransactionssRelatedByFromWarehouseId;
+                    return $collStockTransactionsRelatedByFromWarehouseId;
                 }
 
-                if ($partial && $this->collStockTransactionssRelatedByFromWarehouseId) {
-                    foreach ($this->collStockTransactionssRelatedByFromWarehouseId as $obj) {
+                if ($partial && $this->collStockTransactionsRelatedByFromWarehouseId) {
+                    foreach ($this->collStockTransactionsRelatedByFromWarehouseId as $obj) {
                         if ($obj->isNew()) {
-                            $collStockTransactionssRelatedByFromWarehouseId[] = $obj;
+                            $collStockTransactionsRelatedByFromWarehouseId[] = $obj;
                         }
                     }
                 }
 
-                $this->collStockTransactionssRelatedByFromWarehouseId = $collStockTransactionssRelatedByFromWarehouseId;
-                $this->collStockTransactionssRelatedByFromWarehouseIdPartial = false;
+                $this->collStockTransactionsRelatedByFromWarehouseId = $collStockTransactionsRelatedByFromWarehouseId;
+                $this->collStockTransactionsRelatedByFromWarehouseIdPartial = false;
             }
         }
 
-        return $this->collStockTransactionssRelatedByFromWarehouseId;
+        return $this->collStockTransactionsRelatedByFromWarehouseId;
     }
 
     /**
-     * Sets a collection of ChildStockTransactions objects related by a one-to-many relationship
+     * Sets a collection of ChildStockTransaction objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $stockTransactionssRelatedByFromWarehouseId A Propel collection.
+     * @param Collection $stockTransactionsRelatedByFromWarehouseId A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setStockTransactionssRelatedByFromWarehouseId(Collection $stockTransactionssRelatedByFromWarehouseId, ?ConnectionInterface $con = null)
+    public function setStockTransactionsRelatedByFromWarehouseId(Collection $stockTransactionsRelatedByFromWarehouseId, ?ConnectionInterface $con = null)
     {
-        /** @var ChildStockTransactions[] $stockTransactionssRelatedByFromWarehouseIdToDelete */
-        $stockTransactionssRelatedByFromWarehouseIdToDelete = $this->getStockTransactionssRelatedByFromWarehouseId(new Criteria(), $con)->diff($stockTransactionssRelatedByFromWarehouseId);
+        /** @var ChildStockTransaction[] $stockTransactionsRelatedByFromWarehouseIdToDelete */
+        $stockTransactionsRelatedByFromWarehouseIdToDelete = $this->getStockTransactionsRelatedByFromWarehouseId(new Criteria(), $con)->diff($stockTransactionsRelatedByFromWarehouseId);
 
 
-        $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion = $stockTransactionssRelatedByFromWarehouseIdToDelete;
+        $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion = $stockTransactionsRelatedByFromWarehouseIdToDelete;
 
-        foreach ($stockTransactionssRelatedByFromWarehouseIdToDelete as $stockTransactionsRelatedByFromWarehouseIdRemoved) {
-            $stockTransactionsRelatedByFromWarehouseIdRemoved->setWarehousesRelatedByFromWarehouseId(null);
+        foreach ($stockTransactionsRelatedByFromWarehouseIdToDelete as $stockTransactionRelatedByFromWarehouseIdRemoved) {
+            $stockTransactionRelatedByFromWarehouseIdRemoved->setWarehouseRelatedByFromWarehouseId(null);
         }
 
-        $this->collStockTransactionssRelatedByFromWarehouseId = null;
-        foreach ($stockTransactionssRelatedByFromWarehouseId as $stockTransactionsRelatedByFromWarehouseId) {
-            $this->addStockTransactionsRelatedByFromWarehouseId($stockTransactionsRelatedByFromWarehouseId);
+        $this->collStockTransactionsRelatedByFromWarehouseId = null;
+        foreach ($stockTransactionsRelatedByFromWarehouseId as $stockTransactionRelatedByFromWarehouseId) {
+            $this->addStockTransactionRelatedByFromWarehouseId($stockTransactionRelatedByFromWarehouseId);
         }
 
-        $this->collStockTransactionssRelatedByFromWarehouseId = $stockTransactionssRelatedByFromWarehouseId;
-        $this->collStockTransactionssRelatedByFromWarehouseIdPartial = false;
+        $this->collStockTransactionsRelatedByFromWarehouseId = $stockTransactionsRelatedByFromWarehouseId;
+        $this->collStockTransactionsRelatedByFromWarehouseIdPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related StockTransactions objects.
+     * Returns the number of related StockTransaction objects.
      *
      * @param Criteria $criteria
      * @param bool $distinct
      * @param ConnectionInterface $con
-     * @return int Count of related StockTransactions objects.
+     * @return int Count of related StockTransaction objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countStockTransactionssRelatedByFromWarehouseId(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countStockTransactionsRelatedByFromWarehouseId(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collStockTransactionssRelatedByFromWarehouseIdPartial && !$this->isNew();
-        if (null === $this->collStockTransactionssRelatedByFromWarehouseId || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStockTransactionssRelatedByFromWarehouseId) {
+        $partial = $this->collStockTransactionsRelatedByFromWarehouseIdPartial && !$this->isNew();
+        if (null === $this->collStockTransactionsRelatedByFromWarehouseId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStockTransactionsRelatedByFromWarehouseId) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getStockTransactionssRelatedByFromWarehouseId());
+                return count($this->getStockTransactionsRelatedByFromWarehouseId());
             }
 
-            $query = ChildStockTransactionsQuery::create(null, $criteria);
+            $query = ChildStockTransactionQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByWarehousesRelatedByFromWarehouseId($this)
+                ->filterByWarehouseRelatedByFromWarehouseId($this)
                 ->count($con);
         }
 
-        return count($this->collStockTransactionssRelatedByFromWarehouseId);
+        return count($this->collStockTransactionsRelatedByFromWarehouseId);
     }
 
     /**
-     * Method called to associate a ChildStockTransactions object to this object
-     * through the ChildStockTransactions foreign key attribute.
+     * Method called to associate a ChildStockTransaction object to this object
+     * through the ChildStockTransaction foreign key attribute.
      *
-     * @param ChildStockTransactions $l ChildStockTransactions
+     * @param ChildStockTransaction $l ChildStockTransaction
      * @return $this The current object (for fluent API support)
      */
-    public function addStockTransactionsRelatedByFromWarehouseId(ChildStockTransactions $l)
+    public function addStockTransactionRelatedByFromWarehouseId(ChildStockTransaction $l)
     {
-        if ($this->collStockTransactionssRelatedByFromWarehouseId === null) {
-            $this->initStockTransactionssRelatedByFromWarehouseId();
-            $this->collStockTransactionssRelatedByFromWarehouseIdPartial = true;
+        if ($this->collStockTransactionsRelatedByFromWarehouseId === null) {
+            $this->initStockTransactionsRelatedByFromWarehouseId();
+            $this->collStockTransactionsRelatedByFromWarehouseIdPartial = true;
         }
 
-        if (!$this->collStockTransactionssRelatedByFromWarehouseId->contains($l)) {
-            $this->doAddStockTransactionsRelatedByFromWarehouseId($l);
+        if (!$this->collStockTransactionsRelatedByFromWarehouseId->contains($l)) {
+            $this->doAddStockTransactionRelatedByFromWarehouseId($l);
 
-            if ($this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion and $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion->contains($l)) {
-                $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion->remove($this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion->search($l));
+            if ($this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion and $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion->contains($l)) {
+                $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion->remove($this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion->search($l));
             }
         }
 
@@ -1562,29 +1562,29 @@ abstract class Warehouses implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactionsRelatedByFromWarehouseId The ChildStockTransactions object to add.
+     * @param ChildStockTransaction $stockTransactionRelatedByFromWarehouseId The ChildStockTransaction object to add.
      */
-    protected function doAddStockTransactionsRelatedByFromWarehouseId(ChildStockTransactions $stockTransactionsRelatedByFromWarehouseId): void
+    protected function doAddStockTransactionRelatedByFromWarehouseId(ChildStockTransaction $stockTransactionRelatedByFromWarehouseId): void
     {
-        $this->collStockTransactionssRelatedByFromWarehouseId[]= $stockTransactionsRelatedByFromWarehouseId;
-        $stockTransactionsRelatedByFromWarehouseId->setWarehousesRelatedByFromWarehouseId($this);
+        $this->collStockTransactionsRelatedByFromWarehouseId[]= $stockTransactionRelatedByFromWarehouseId;
+        $stockTransactionRelatedByFromWarehouseId->setWarehouseRelatedByFromWarehouseId($this);
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactionsRelatedByFromWarehouseId The ChildStockTransactions object to remove.
+     * @param ChildStockTransaction $stockTransactionRelatedByFromWarehouseId The ChildStockTransaction object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeStockTransactionsRelatedByFromWarehouseId(ChildStockTransactions $stockTransactionsRelatedByFromWarehouseId)
+    public function removeStockTransactionRelatedByFromWarehouseId(ChildStockTransaction $stockTransactionRelatedByFromWarehouseId)
     {
-        if ($this->getStockTransactionssRelatedByFromWarehouseId()->contains($stockTransactionsRelatedByFromWarehouseId)) {
-            $pos = $this->collStockTransactionssRelatedByFromWarehouseId->search($stockTransactionsRelatedByFromWarehouseId);
-            $this->collStockTransactionssRelatedByFromWarehouseId->remove($pos);
-            if (null === $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion) {
-                $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion = clone $this->collStockTransactionssRelatedByFromWarehouseId;
-                $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion->clear();
+        if ($this->getStockTransactionsRelatedByFromWarehouseId()->contains($stockTransactionRelatedByFromWarehouseId)) {
+            $pos = $this->collStockTransactionsRelatedByFromWarehouseId->search($stockTransactionRelatedByFromWarehouseId);
+            $this->collStockTransactionsRelatedByFromWarehouseId->remove($pos);
+            if (null === $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion) {
+                $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion = clone $this->collStockTransactionsRelatedByFromWarehouseId;
+                $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion->clear();
             }
-            $this->stockTransactionssRelatedByFromWarehouseIdScheduledForDeletion[]= $stockTransactionsRelatedByFromWarehouseId;
-            $stockTransactionsRelatedByFromWarehouseId->setWarehousesRelatedByFromWarehouseId(null);
+            $this->stockTransactionsRelatedByFromWarehouseIdScheduledForDeletion[]= $stockTransactionRelatedByFromWarehouseId;
+            $stockTransactionRelatedByFromWarehouseId->setWarehouseRelatedByFromWarehouseId(null);
         }
 
         return $this;
@@ -1594,110 +1594,110 @@ abstract class Warehouses implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByFromWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByFromWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByFromWarehouseIdJoinProducts(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByFromWarehouseIdJoinProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Products', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Product', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByFromWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByFromWarehouseId($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByFromWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByFromWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByFromWarehouseIdJoinVehicles(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByFromWarehouseIdJoinVehicle(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Vehicles', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Vehicle', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByFromWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByFromWarehouseId($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByFromWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByFromWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByFromWarehouseIdJoinUsers(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByFromWarehouseIdJoinUser(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Users', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByFromWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByFromWarehouseId($query, $con);
     }
 
     /**
-     * Clears out the collStockTransactionssRelatedByToWarehouseId collection
+     * Clears out the collStockTransactionsRelatedByToWarehouseId collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addStockTransactionssRelatedByToWarehouseId()
+     * @see addStockTransactionsRelatedByToWarehouseId()
      */
-    public function clearStockTransactionssRelatedByToWarehouseId()
+    public function clearStockTransactionsRelatedByToWarehouseId()
     {
-        $this->collStockTransactionssRelatedByToWarehouseId = null; // important to set this to NULL since that means it is uninitialized
+        $this->collStockTransactionsRelatedByToWarehouseId = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collStockTransactionssRelatedByToWarehouseId collection loaded partially.
+     * Reset is the collStockTransactionsRelatedByToWarehouseId collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialStockTransactionssRelatedByToWarehouseId($v = true): void
+    public function resetPartialStockTransactionsRelatedByToWarehouseId($v = true): void
     {
-        $this->collStockTransactionssRelatedByToWarehouseIdPartial = $v;
+        $this->collStockTransactionsRelatedByToWarehouseIdPartial = $v;
     }
 
     /**
-     * Initializes the collStockTransactionssRelatedByToWarehouseId collection.
+     * Initializes the collStockTransactionsRelatedByToWarehouseId collection.
      *
-     * By default this just sets the collStockTransactionssRelatedByToWarehouseId collection to an empty array (like clearcollStockTransactionssRelatedByToWarehouseId());
+     * By default this just sets the collStockTransactionsRelatedByToWarehouseId collection to an empty array (like clearcollStockTransactionsRelatedByToWarehouseId());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1706,172 +1706,172 @@ abstract class Warehouses implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initStockTransactionssRelatedByToWarehouseId(bool $overrideExisting = true): void
+    public function initStockTransactionsRelatedByToWarehouseId(bool $overrideExisting = true): void
     {
-        if (null !== $this->collStockTransactionssRelatedByToWarehouseId && !$overrideExisting) {
+        if (null !== $this->collStockTransactionsRelatedByToWarehouseId && !$overrideExisting) {
             return;
         }
 
-        $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+        $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collStockTransactionssRelatedByToWarehouseId = new $collectionClassName;
-        $this->collStockTransactionssRelatedByToWarehouseId->setModel('\DbModel\StockTransactions');
+        $this->collStockTransactionsRelatedByToWarehouseId = new $collectionClassName;
+        $this->collStockTransactionsRelatedByToWarehouseId->setModel('\DbModel\StockTransaction');
     }
 
     /**
-     * Gets an array of ChildStockTransactions objects which contain a foreign key that references this object.
+     * Gets an array of ChildStockTransaction objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildWarehouses is new, it will return
+     * If this ChildWarehouse is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction> List of ChildStockTransaction objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStockTransactionssRelatedByToWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getStockTransactionsRelatedByToWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collStockTransactionssRelatedByToWarehouseIdPartial && !$this->isNew();
-        if (null === $this->collStockTransactionssRelatedByToWarehouseId || null !== $criteria || $partial) {
+        $partial = $this->collStockTransactionsRelatedByToWarehouseIdPartial && !$this->isNew();
+        if (null === $this->collStockTransactionsRelatedByToWarehouseId || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collStockTransactionssRelatedByToWarehouseId) {
-                    $this->initStockTransactionssRelatedByToWarehouseId();
+                if (null === $this->collStockTransactionsRelatedByToWarehouseId) {
+                    $this->initStockTransactionsRelatedByToWarehouseId();
                 } else {
-                    $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+                    $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-                    $collStockTransactionssRelatedByToWarehouseId = new $collectionClassName;
-                    $collStockTransactionssRelatedByToWarehouseId->setModel('\DbModel\StockTransactions');
+                    $collStockTransactionsRelatedByToWarehouseId = new $collectionClassName;
+                    $collStockTransactionsRelatedByToWarehouseId->setModel('\DbModel\StockTransaction');
 
-                    return $collStockTransactionssRelatedByToWarehouseId;
+                    return $collStockTransactionsRelatedByToWarehouseId;
                 }
             } else {
-                $collStockTransactionssRelatedByToWarehouseId = ChildStockTransactionsQuery::create(null, $criteria)
-                    ->filterByWarehousesRelatedByToWarehouseId($this)
+                $collStockTransactionsRelatedByToWarehouseId = ChildStockTransactionQuery::create(null, $criteria)
+                    ->filterByWarehouseRelatedByToWarehouseId($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collStockTransactionssRelatedByToWarehouseIdPartial && count($collStockTransactionssRelatedByToWarehouseId)) {
-                        $this->initStockTransactionssRelatedByToWarehouseId(false);
+                    if (false !== $this->collStockTransactionsRelatedByToWarehouseIdPartial && count($collStockTransactionsRelatedByToWarehouseId)) {
+                        $this->initStockTransactionsRelatedByToWarehouseId(false);
 
-                        foreach ($collStockTransactionssRelatedByToWarehouseId as $obj) {
-                            if (false == $this->collStockTransactionssRelatedByToWarehouseId->contains($obj)) {
-                                $this->collStockTransactionssRelatedByToWarehouseId->append($obj);
+                        foreach ($collStockTransactionsRelatedByToWarehouseId as $obj) {
+                            if (false == $this->collStockTransactionsRelatedByToWarehouseId->contains($obj)) {
+                                $this->collStockTransactionsRelatedByToWarehouseId->append($obj);
                             }
                         }
 
-                        $this->collStockTransactionssRelatedByToWarehouseIdPartial = true;
+                        $this->collStockTransactionsRelatedByToWarehouseIdPartial = true;
                     }
 
-                    return $collStockTransactionssRelatedByToWarehouseId;
+                    return $collStockTransactionsRelatedByToWarehouseId;
                 }
 
-                if ($partial && $this->collStockTransactionssRelatedByToWarehouseId) {
-                    foreach ($this->collStockTransactionssRelatedByToWarehouseId as $obj) {
+                if ($partial && $this->collStockTransactionsRelatedByToWarehouseId) {
+                    foreach ($this->collStockTransactionsRelatedByToWarehouseId as $obj) {
                         if ($obj->isNew()) {
-                            $collStockTransactionssRelatedByToWarehouseId[] = $obj;
+                            $collStockTransactionsRelatedByToWarehouseId[] = $obj;
                         }
                     }
                 }
 
-                $this->collStockTransactionssRelatedByToWarehouseId = $collStockTransactionssRelatedByToWarehouseId;
-                $this->collStockTransactionssRelatedByToWarehouseIdPartial = false;
+                $this->collStockTransactionsRelatedByToWarehouseId = $collStockTransactionsRelatedByToWarehouseId;
+                $this->collStockTransactionsRelatedByToWarehouseIdPartial = false;
             }
         }
 
-        return $this->collStockTransactionssRelatedByToWarehouseId;
+        return $this->collStockTransactionsRelatedByToWarehouseId;
     }
 
     /**
-     * Sets a collection of ChildStockTransactions objects related by a one-to-many relationship
+     * Sets a collection of ChildStockTransaction objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $stockTransactionssRelatedByToWarehouseId A Propel collection.
+     * @param Collection $stockTransactionsRelatedByToWarehouseId A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setStockTransactionssRelatedByToWarehouseId(Collection $stockTransactionssRelatedByToWarehouseId, ?ConnectionInterface $con = null)
+    public function setStockTransactionsRelatedByToWarehouseId(Collection $stockTransactionsRelatedByToWarehouseId, ?ConnectionInterface $con = null)
     {
-        /** @var ChildStockTransactions[] $stockTransactionssRelatedByToWarehouseIdToDelete */
-        $stockTransactionssRelatedByToWarehouseIdToDelete = $this->getStockTransactionssRelatedByToWarehouseId(new Criteria(), $con)->diff($stockTransactionssRelatedByToWarehouseId);
+        /** @var ChildStockTransaction[] $stockTransactionsRelatedByToWarehouseIdToDelete */
+        $stockTransactionsRelatedByToWarehouseIdToDelete = $this->getStockTransactionsRelatedByToWarehouseId(new Criteria(), $con)->diff($stockTransactionsRelatedByToWarehouseId);
 
 
-        $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion = $stockTransactionssRelatedByToWarehouseIdToDelete;
+        $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion = $stockTransactionsRelatedByToWarehouseIdToDelete;
 
-        foreach ($stockTransactionssRelatedByToWarehouseIdToDelete as $stockTransactionsRelatedByToWarehouseIdRemoved) {
-            $stockTransactionsRelatedByToWarehouseIdRemoved->setWarehousesRelatedByToWarehouseId(null);
+        foreach ($stockTransactionsRelatedByToWarehouseIdToDelete as $stockTransactionRelatedByToWarehouseIdRemoved) {
+            $stockTransactionRelatedByToWarehouseIdRemoved->setWarehouseRelatedByToWarehouseId(null);
         }
 
-        $this->collStockTransactionssRelatedByToWarehouseId = null;
-        foreach ($stockTransactionssRelatedByToWarehouseId as $stockTransactionsRelatedByToWarehouseId) {
-            $this->addStockTransactionsRelatedByToWarehouseId($stockTransactionsRelatedByToWarehouseId);
+        $this->collStockTransactionsRelatedByToWarehouseId = null;
+        foreach ($stockTransactionsRelatedByToWarehouseId as $stockTransactionRelatedByToWarehouseId) {
+            $this->addStockTransactionRelatedByToWarehouseId($stockTransactionRelatedByToWarehouseId);
         }
 
-        $this->collStockTransactionssRelatedByToWarehouseId = $stockTransactionssRelatedByToWarehouseId;
-        $this->collStockTransactionssRelatedByToWarehouseIdPartial = false;
+        $this->collStockTransactionsRelatedByToWarehouseId = $stockTransactionsRelatedByToWarehouseId;
+        $this->collStockTransactionsRelatedByToWarehouseIdPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related StockTransactions objects.
+     * Returns the number of related StockTransaction objects.
      *
      * @param Criteria $criteria
      * @param bool $distinct
      * @param ConnectionInterface $con
-     * @return int Count of related StockTransactions objects.
+     * @return int Count of related StockTransaction objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countStockTransactionssRelatedByToWarehouseId(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countStockTransactionsRelatedByToWarehouseId(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collStockTransactionssRelatedByToWarehouseIdPartial && !$this->isNew();
-        if (null === $this->collStockTransactionssRelatedByToWarehouseId || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStockTransactionssRelatedByToWarehouseId) {
+        $partial = $this->collStockTransactionsRelatedByToWarehouseIdPartial && !$this->isNew();
+        if (null === $this->collStockTransactionsRelatedByToWarehouseId || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStockTransactionsRelatedByToWarehouseId) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getStockTransactionssRelatedByToWarehouseId());
+                return count($this->getStockTransactionsRelatedByToWarehouseId());
             }
 
-            $query = ChildStockTransactionsQuery::create(null, $criteria);
+            $query = ChildStockTransactionQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByWarehousesRelatedByToWarehouseId($this)
+                ->filterByWarehouseRelatedByToWarehouseId($this)
                 ->count($con);
         }
 
-        return count($this->collStockTransactionssRelatedByToWarehouseId);
+        return count($this->collStockTransactionsRelatedByToWarehouseId);
     }
 
     /**
-     * Method called to associate a ChildStockTransactions object to this object
-     * through the ChildStockTransactions foreign key attribute.
+     * Method called to associate a ChildStockTransaction object to this object
+     * through the ChildStockTransaction foreign key attribute.
      *
-     * @param ChildStockTransactions $l ChildStockTransactions
+     * @param ChildStockTransaction $l ChildStockTransaction
      * @return $this The current object (for fluent API support)
      */
-    public function addStockTransactionsRelatedByToWarehouseId(ChildStockTransactions $l)
+    public function addStockTransactionRelatedByToWarehouseId(ChildStockTransaction $l)
     {
-        if ($this->collStockTransactionssRelatedByToWarehouseId === null) {
-            $this->initStockTransactionssRelatedByToWarehouseId();
-            $this->collStockTransactionssRelatedByToWarehouseIdPartial = true;
+        if ($this->collStockTransactionsRelatedByToWarehouseId === null) {
+            $this->initStockTransactionsRelatedByToWarehouseId();
+            $this->collStockTransactionsRelatedByToWarehouseIdPartial = true;
         }
 
-        if (!$this->collStockTransactionssRelatedByToWarehouseId->contains($l)) {
-            $this->doAddStockTransactionsRelatedByToWarehouseId($l);
+        if (!$this->collStockTransactionsRelatedByToWarehouseId->contains($l)) {
+            $this->doAddStockTransactionRelatedByToWarehouseId($l);
 
-            if ($this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion and $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion->contains($l)) {
-                $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion->remove($this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion->search($l));
+            if ($this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion and $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion->contains($l)) {
+                $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion->remove($this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion->search($l));
             }
         }
 
@@ -1879,29 +1879,29 @@ abstract class Warehouses implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactionsRelatedByToWarehouseId The ChildStockTransactions object to add.
+     * @param ChildStockTransaction $stockTransactionRelatedByToWarehouseId The ChildStockTransaction object to add.
      */
-    protected function doAddStockTransactionsRelatedByToWarehouseId(ChildStockTransactions $stockTransactionsRelatedByToWarehouseId): void
+    protected function doAddStockTransactionRelatedByToWarehouseId(ChildStockTransaction $stockTransactionRelatedByToWarehouseId): void
     {
-        $this->collStockTransactionssRelatedByToWarehouseId[]= $stockTransactionsRelatedByToWarehouseId;
-        $stockTransactionsRelatedByToWarehouseId->setWarehousesRelatedByToWarehouseId($this);
+        $this->collStockTransactionsRelatedByToWarehouseId[]= $stockTransactionRelatedByToWarehouseId;
+        $stockTransactionRelatedByToWarehouseId->setWarehouseRelatedByToWarehouseId($this);
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactionsRelatedByToWarehouseId The ChildStockTransactions object to remove.
+     * @param ChildStockTransaction $stockTransactionRelatedByToWarehouseId The ChildStockTransaction object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeStockTransactionsRelatedByToWarehouseId(ChildStockTransactions $stockTransactionsRelatedByToWarehouseId)
+    public function removeStockTransactionRelatedByToWarehouseId(ChildStockTransaction $stockTransactionRelatedByToWarehouseId)
     {
-        if ($this->getStockTransactionssRelatedByToWarehouseId()->contains($stockTransactionsRelatedByToWarehouseId)) {
-            $pos = $this->collStockTransactionssRelatedByToWarehouseId->search($stockTransactionsRelatedByToWarehouseId);
-            $this->collStockTransactionssRelatedByToWarehouseId->remove($pos);
-            if (null === $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion) {
-                $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion = clone $this->collStockTransactionssRelatedByToWarehouseId;
-                $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion->clear();
+        if ($this->getStockTransactionsRelatedByToWarehouseId()->contains($stockTransactionRelatedByToWarehouseId)) {
+            $pos = $this->collStockTransactionsRelatedByToWarehouseId->search($stockTransactionRelatedByToWarehouseId);
+            $this->collStockTransactionsRelatedByToWarehouseId->remove($pos);
+            if (null === $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion) {
+                $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion = clone $this->collStockTransactionsRelatedByToWarehouseId;
+                $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion->clear();
             }
-            $this->stockTransactionssRelatedByToWarehouseIdScheduledForDeletion[]= $stockTransactionsRelatedByToWarehouseId;
-            $stockTransactionsRelatedByToWarehouseId->setWarehousesRelatedByToWarehouseId(null);
+            $this->stockTransactionsRelatedByToWarehouseIdScheduledForDeletion[]= $stockTransactionRelatedByToWarehouseId;
+            $stockTransactionRelatedByToWarehouseId->setWarehouseRelatedByToWarehouseId(null);
         }
 
         return $this;
@@ -1911,78 +1911,78 @@ abstract class Warehouses implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByToWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByToWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByToWarehouseIdJoinProducts(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByToWarehouseIdJoinProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Products', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Product', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByToWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByToWarehouseId($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByToWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByToWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByToWarehouseIdJoinVehicles(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByToWarehouseIdJoinVehicle(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Vehicles', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Vehicle', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByToWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByToWarehouseId($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
-     * been saved, it will retrieve related StockTransactionssRelatedByToWarehouseId from storage.
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
+     * been saved, it will retrieve related StockTransactionsRelatedByToWarehouseId from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssRelatedByToWarehouseIdJoinUsers(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsRelatedByToWarehouseIdJoinUser(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Users', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('User', $joinBehavior);
 
-        return $this->getStockTransactionssRelatedByToWarehouseId($query, $con);
+        return $this->getStockTransactionsRelatedByToWarehouseId($query, $con);
     }
 
     /**
@@ -2041,7 +2041,7 @@ abstract class Warehouses implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildWarehouses is new, it will return
+     * If this ChildWarehouse is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
@@ -2068,7 +2068,7 @@ abstract class Warehouses implements ActiveRecordInterface
                 }
             } else {
                 $collWarehouseProductStocks = ChildWarehouseProductStockQuery::create(null, $criteria)
-                    ->filterByWarehouses($this)
+                    ->filterByWarehouse($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2122,7 +2122,7 @@ abstract class Warehouses implements ActiveRecordInterface
         $this->warehouseProductStocksScheduledForDeletion = $warehouseProductStocksToDelete;
 
         foreach ($warehouseProductStocksToDelete as $warehouseProductStockRemoved) {
-            $warehouseProductStockRemoved->setWarehouses(null);
+            $warehouseProductStockRemoved->setWarehouse(null);
         }
 
         $this->collWarehouseProductStocks = null;
@@ -2163,7 +2163,7 @@ abstract class Warehouses implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByWarehouses($this)
+                ->filterByWarehouse($this)
                 ->count($con);
         }
 
@@ -2201,7 +2201,7 @@ abstract class Warehouses implements ActiveRecordInterface
     protected function doAddWarehouseProductStock(ChildWarehouseProductStock $warehouseProductStock): void
     {
         $this->collWarehouseProductStocks[]= $warehouseProductStock;
-        $warehouseProductStock->setWarehouses($this);
+        $warehouseProductStock->setWarehouse($this);
     }
 
     /**
@@ -2218,7 +2218,7 @@ abstract class Warehouses implements ActiveRecordInterface
                 $this->warehouseProductStocksScheduledForDeletion->clear();
             }
             $this->warehouseProductStocksScheduledForDeletion[]= clone $warehouseProductStock;
-            $warehouseProductStock->setWarehouses(null);
+            $warehouseProductStock->setWarehouse(null);
         }
 
         return $this;
@@ -2228,13 +2228,13 @@ abstract class Warehouses implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
      * been saved, it will retrieve related WarehouseProductStocks from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
@@ -2242,10 +2242,10 @@ abstract class Warehouses implements ActiveRecordInterface
      * @return ObjectCollection|ChildWarehouseProductStock[] List of ChildWarehouseProductStock objects
      * @phpstan-return ObjectCollection&\Traversable<ChildWarehouseProductStock}> List of ChildWarehouseProductStock objects
      */
-    public function getWarehouseProductStocksJoinProducts(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getWarehouseProductStocksJoinProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildWarehouseProductStockQuery::create(null, $criteria);
-        $query->joinWith('Products', $joinBehavior);
+        $query->joinWith('Product', $joinBehavior);
 
         return $this->getWarehouseProductStocks($query, $con);
     }
@@ -2306,7 +2306,7 @@ abstract class Warehouses implements ActiveRecordInterface
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildWarehouses is new, it will return
+     * If this ChildWarehouse is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
@@ -2333,7 +2333,7 @@ abstract class Warehouses implements ActiveRecordInterface
                 }
             } else {
                 $collWarehouseProductStockLogs = ChildWarehouseProductStockLogQuery::create(null, $criteria)
-                    ->filterByWarehouses($this)
+                    ->filterByWarehouse($this)
                     ->find($con);
 
                 if (null !== $criteria) {
@@ -2387,7 +2387,7 @@ abstract class Warehouses implements ActiveRecordInterface
         $this->warehouseProductStockLogsScheduledForDeletion = $warehouseProductStockLogsToDelete;
 
         foreach ($warehouseProductStockLogsToDelete as $warehouseProductStockLogRemoved) {
-            $warehouseProductStockLogRemoved->setWarehouses(null);
+            $warehouseProductStockLogRemoved->setWarehouse(null);
         }
 
         $this->collWarehouseProductStockLogs = null;
@@ -2428,7 +2428,7 @@ abstract class Warehouses implements ActiveRecordInterface
             }
 
             return $query
-                ->filterByWarehouses($this)
+                ->filterByWarehouse($this)
                 ->count($con);
         }
 
@@ -2466,7 +2466,7 @@ abstract class Warehouses implements ActiveRecordInterface
     protected function doAddWarehouseProductStockLog(ChildWarehouseProductStockLog $warehouseProductStockLog): void
     {
         $this->collWarehouseProductStockLogs[]= $warehouseProductStockLog;
-        $warehouseProductStockLog->setWarehouses($this);
+        $warehouseProductStockLog->setWarehouse($this);
     }
 
     /**
@@ -2483,7 +2483,7 @@ abstract class Warehouses implements ActiveRecordInterface
                 $this->warehouseProductStockLogsScheduledForDeletion->clear();
             }
             $this->warehouseProductStockLogsScheduledForDeletion[]= clone $warehouseProductStockLog;
-            $warehouseProductStockLog->setWarehouses(null);
+            $warehouseProductStockLog->setWarehouse(null);
         }
 
         return $this;
@@ -2493,13 +2493,13 @@ abstract class Warehouses implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Warehouses is new, it will return
-     * an empty collection; or if this Warehouses has previously
+     * Otherwise if this Warehouse is new, it will return
+     * an empty collection; or if this Warehouse has previously
      * been saved, it will retrieve related WarehouseProductStockLogs from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Warehouses.
+     * actually need in Warehouse.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
@@ -2507,10 +2507,10 @@ abstract class Warehouses implements ActiveRecordInterface
      * @return ObjectCollection|ChildWarehouseProductStockLog[] List of ChildWarehouseProductStockLog objects
      * @phpstan-return ObjectCollection&\Traversable<ChildWarehouseProductStockLog}> List of ChildWarehouseProductStockLog objects
      */
-    public function getWarehouseProductStockLogsJoinProducts(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getWarehouseProductStockLogsJoinProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
         $query = ChildWarehouseProductStockLogQuery::create(null, $criteria);
-        $query->joinWith('Products', $joinBehavior);
+        $query->joinWith('Product', $joinBehavior);
 
         return $this->getWarehouseProductStockLogs($query, $con);
     }
@@ -2549,13 +2549,13 @@ abstract class Warehouses implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collStockTransactionssRelatedByFromWarehouseId) {
-                foreach ($this->collStockTransactionssRelatedByFromWarehouseId as $o) {
+            if ($this->collStockTransactionsRelatedByFromWarehouseId) {
+                foreach ($this->collStockTransactionsRelatedByFromWarehouseId as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collStockTransactionssRelatedByToWarehouseId) {
-                foreach ($this->collStockTransactionssRelatedByToWarehouseId as $o) {
+            if ($this->collStockTransactionsRelatedByToWarehouseId) {
+                foreach ($this->collStockTransactionsRelatedByToWarehouseId as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2571,8 +2571,8 @@ abstract class Warehouses implements ActiveRecordInterface
             }
         } // if ($deep)
 
-        $this->collStockTransactionssRelatedByFromWarehouseId = null;
-        $this->collStockTransactionssRelatedByToWarehouseId = null;
+        $this->collStockTransactionsRelatedByFromWarehouseId = null;
+        $this->collStockTransactionsRelatedByToWarehouseId = null;
         $this->collWarehouseProductStocks = null;
         $this->collWarehouseProductStockLogs = null;
         return $this;
@@ -2585,7 +2585,7 @@ abstract class Warehouses implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(WarehousesTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(WarehouseTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

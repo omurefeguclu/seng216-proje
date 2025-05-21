@@ -228,14 +228,14 @@ class WarehouseProductStockLogTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Warehouses', '\\DbModel\\Warehouses', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Warehouse', '\\DbModel\\Warehouse', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':warehouse_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Products', '\\DbModel\\Products', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Product', '\\DbModel\\Product', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':product_id',

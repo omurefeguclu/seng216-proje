@@ -1,5 +1,7 @@
 <?php
-require_once __DIR__.'/../http/RequestContext.php';
+namespace Core\Router;
+
+use Core\Http\RequestContext as RequestContext;
 
 class RouteMetadata {
     public string $method;
@@ -21,13 +23,14 @@ class RouteMetadata {
     }
 
     private function compilePattern($path) {
-        // Replace {param} with regex capture group and store param names
-        $pattern = preg_replace_callback('/\{(\w+)\}/', function($matches) {
+        $this->paramNames = [];
+
+        $pattern = preg_replace_callback('/\{(\w+)\}/', function ($matches) {
             $this->paramNames[] = $matches[1];
             return '([^\/]+)';
-        }, preg_quote($path, '/'));
+        }, $path);
 
-        $this->pattern = '/^' . $pattern . '$/';
+        $this->pattern = '#^' . $pattern . '$#';
     }
 
     public function matches(string $uri, array &$paramsOut): bool {
@@ -47,7 +50,7 @@ class RouteMetadata {
             }
         }
 
-        $ref = new ReflectionFunction($this->handler);
+        $ref = new \ReflectionFunction($this->handler);
         $args = [];
 
         foreach ($ref->getParameters() as $param) {
@@ -61,7 +64,11 @@ class RouteMetadata {
             }
         }
 
-        echo $ref->invokeArgs($args);
+        $result = $ref->invokeArgs($args);
+        if ($result) {
+            echo $result;
+        }
+
 
     }
 }

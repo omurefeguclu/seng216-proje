@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\ProductsQuery as BaseProductsQuery;
+use DbModel\Base\WarehouseQuery as BaseWarehouseQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'products' table.
+ * Skeleton subclass for performing query and update operations on the 'warehouses' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\ProductsQuery as BaseProductsQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class ProductsQuery extends BaseProductsQuery
+class WarehouseQuery extends BaseWarehouseQuery
 {
 
 }

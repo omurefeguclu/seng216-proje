@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\WarehousesQuery as BaseWarehousesQuery;
+use DbModel\Base\User as BaseUser;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'warehouses' table.
+ * Skeleton subclass for representing a row from the 'users' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\WarehousesQuery as BaseWarehousesQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class WarehousesQuery extends BaseWarehousesQuery
+class User extends BaseUser
 {
 
 }

@@ -1,5 +1,5 @@
 <?php
-require_once 'RouteBuilder.php';
+namespace Core\Router;
 
 class RouteGroup extends RouteBuilder {
     private string $prefix;

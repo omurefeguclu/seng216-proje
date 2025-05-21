@@ -5,16 +5,16 @@ namespace DbModel\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use DbModel\Products as ChildProducts;
-use DbModel\ProductsQuery as ChildProductsQuery;
-use DbModel\StockTransactionsQuery as ChildStockTransactionsQuery;
-use DbModel\Users as ChildUsers;
-use DbModel\UsersQuery as ChildUsersQuery;
-use DbModel\Vehicles as ChildVehicles;
-use DbModel\VehiclesQuery as ChildVehiclesQuery;
-use DbModel\Warehouses as ChildWarehouses;
-use DbModel\WarehousesQuery as ChildWarehousesQuery;
-use DbModel\Map\StockTransactionsTableMap;
+use DbModel\Product as ChildProduct;
+use DbModel\ProductQuery as ChildProductQuery;
+use DbModel\StockTransactionQuery as ChildStockTransactionQuery;
+use DbModel\User as ChildUser;
+use DbModel\UserQuery as ChildUserQuery;
+use DbModel\Vehicle as ChildVehicle;
+use DbModel\VehicleQuery as ChildVehicleQuery;
+use DbModel\Warehouse as ChildWarehouse;
+use DbModel\WarehouseQuery as ChildWarehouseQuery;
+use DbModel\Map\StockTransactionTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -35,14 +35,14 @@ use Propel\Runtime\Util\PropelDateTime;
  *
  * @package    propel.generator.DbModel.Base
  */
-abstract class StockTransactions implements ActiveRecordInterface
+abstract class StockTransaction implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\DbModel\\Map\\StockTransactionsTableMap';
+    public const TABLE_MAP = '\\DbModel\\Map\\StockTransactionTableMap';
 
 
     /**
@@ -129,29 +129,29 @@ abstract class StockTransactions implements ActiveRecordInterface
     protected $created_on;
 
     /**
-     * @var        ChildProducts
+     * @var        ChildProduct
      */
-    protected $aProducts;
+    protected $aProduct;
 
     /**
-     * @var        ChildWarehouses
+     * @var        ChildWarehouse
      */
-    protected $aWarehousesRelatedByFromWarehouseId;
+    protected $aWarehouseRelatedByFromWarehouseId;
 
     /**
-     * @var        ChildWarehouses
+     * @var        ChildWarehouse
      */
-    protected $aWarehousesRelatedByToWarehouseId;
+    protected $aWarehouseRelatedByToWarehouseId;
 
     /**
-     * @var        ChildVehicles
+     * @var        ChildVehicle
      */
-    protected $aVehicles;
+    protected $aVehicle;
 
     /**
-     * @var        ChildUsers
+     * @var        ChildUser
      */
-    protected $aUsers;
+    protected $aUser;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -172,7 +172,7 @@ abstract class StockTransactions implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of DbModel\Base\StockTransactions object.
+     * Initializes internal state of DbModel\Base\StockTransaction object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -267,9 +267,9 @@ abstract class StockTransactions implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>StockTransactions</code> instance.  If
-     * <code>obj</code> is an instance of <code>StockTransactions</code>, delegates to
-     * <code>equals(StockTransactions)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>StockTransaction</code> instance.  If
+     * <code>obj</code> is an instance of <code>StockTransaction</code>, delegates to
+     * <code>equals(StockTransaction)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -505,7 +505,7 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -525,11 +525,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->product_id !== $v) {
             $this->product_id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_PRODUCT_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_PRODUCT_ID] = true;
         }
 
-        if ($this->aProducts !== null && $this->aProducts->getId() !== $v) {
-            $this->aProducts = null;
+        if ($this->aProduct !== null && $this->aProduct->getId() !== $v) {
+            $this->aProduct = null;
         }
 
         return $this;
@@ -549,11 +549,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->from_warehouse_id !== $v) {
             $this->from_warehouse_id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_FROM_WAREHOUSE_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_FROM_WAREHOUSE_ID] = true;
         }
 
-        if ($this->aWarehousesRelatedByFromWarehouseId !== null && $this->aWarehousesRelatedByFromWarehouseId->getId() !== $v) {
-            $this->aWarehousesRelatedByFromWarehouseId = null;
+        if ($this->aWarehouseRelatedByFromWarehouseId !== null && $this->aWarehouseRelatedByFromWarehouseId->getId() !== $v) {
+            $this->aWarehouseRelatedByFromWarehouseId = null;
         }
 
         return $this;
@@ -573,11 +573,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->to_warehouse_id !== $v) {
             $this->to_warehouse_id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_TO_WAREHOUSE_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_TO_WAREHOUSE_ID] = true;
         }
 
-        if ($this->aWarehousesRelatedByToWarehouseId !== null && $this->aWarehousesRelatedByToWarehouseId->getId() !== $v) {
-            $this->aWarehousesRelatedByToWarehouseId = null;
+        if ($this->aWarehouseRelatedByToWarehouseId !== null && $this->aWarehouseRelatedByToWarehouseId->getId() !== $v) {
+            $this->aWarehouseRelatedByToWarehouseId = null;
         }
 
         return $this;
@@ -597,11 +597,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->vehicle_id !== $v) {
             $this->vehicle_id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_VEHICLE_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_VEHICLE_ID] = true;
         }
 
-        if ($this->aVehicles !== null && $this->aVehicles->getId() !== $v) {
-            $this->aVehicles = null;
+        if ($this->aVehicle !== null && $this->aVehicle->getId() !== $v) {
+            $this->aVehicle = null;
         }
 
         return $this;
@@ -621,11 +621,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->creator_user_id !== $v) {
             $this->creator_user_id = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_CREATOR_USER_ID] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_CREATOR_USER_ID] = true;
         }
 
-        if ($this->aUsers !== null && $this->aUsers->getId() !== $v) {
-            $this->aUsers = null;
+        if ($this->aUser !== null && $this->aUser->getId() !== $v) {
+            $this->aUser = null;
         }
 
         return $this;
@@ -645,7 +645,7 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($this->amount !== $v) {
             $this->amount = $v;
-            $this->modifiedColumns[StockTransactionsTableMap::COL_AMOUNT] = true;
+            $this->modifiedColumns[StockTransactionTableMap::COL_AMOUNT] = true;
         }
 
         return $this;
@@ -664,7 +664,7 @@ abstract class StockTransactions implements ActiveRecordInterface
         if ($this->created_on !== null || $dt !== null) {
             if ($this->created_on === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_on->format("Y-m-d H:i:s.u")) {
                 $this->created_on = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[StockTransactionsTableMap::COL_CREATED_ON] = true;
+                $this->modifiedColumns[StockTransactionTableMap::COL_CREATED_ON] = true;
             }
         } // if either are not null
 
@@ -707,28 +707,28 @@ abstract class StockTransactions implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : StockTransactionsTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : StockTransactionTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : StockTransactionsTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : StockTransactionTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StockTransactionsTableMap::translateFieldName('FromWarehouseId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : StockTransactionTableMap::translateFieldName('FromWarehouseId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->from_warehouse_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StockTransactionsTableMap::translateFieldName('ToWarehouseId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : StockTransactionTableMap::translateFieldName('ToWarehouseId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->to_warehouse_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StockTransactionsTableMap::translateFieldName('VehicleId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : StockTransactionTableMap::translateFieldName('VehicleId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->vehicle_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StockTransactionsTableMap::translateFieldName('CreatorUserId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : StockTransactionTableMap::translateFieldName('CreatorUserId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->creator_user_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StockTransactionsTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : StockTransactionTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StockTransactionsTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : StockTransactionTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -741,10 +741,10 @@ abstract class StockTransactions implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 8; // 8 = StockTransactionsTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = StockTransactionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\StockTransactions'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\StockTransaction'), 0, $e);
         }
     }
 
@@ -764,20 +764,20 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aProducts !== null && $this->product_id !== $this->aProducts->getId()) {
-            $this->aProducts = null;
+        if ($this->aProduct !== null && $this->product_id !== $this->aProduct->getId()) {
+            $this->aProduct = null;
         }
-        if ($this->aWarehousesRelatedByFromWarehouseId !== null && $this->from_warehouse_id !== $this->aWarehousesRelatedByFromWarehouseId->getId()) {
-            $this->aWarehousesRelatedByFromWarehouseId = null;
+        if ($this->aWarehouseRelatedByFromWarehouseId !== null && $this->from_warehouse_id !== $this->aWarehouseRelatedByFromWarehouseId->getId()) {
+            $this->aWarehouseRelatedByFromWarehouseId = null;
         }
-        if ($this->aWarehousesRelatedByToWarehouseId !== null && $this->to_warehouse_id !== $this->aWarehousesRelatedByToWarehouseId->getId()) {
-            $this->aWarehousesRelatedByToWarehouseId = null;
+        if ($this->aWarehouseRelatedByToWarehouseId !== null && $this->to_warehouse_id !== $this->aWarehouseRelatedByToWarehouseId->getId()) {
+            $this->aWarehouseRelatedByToWarehouseId = null;
         }
-        if ($this->aVehicles !== null && $this->vehicle_id !== $this->aVehicles->getId()) {
-            $this->aVehicles = null;
+        if ($this->aVehicle !== null && $this->vehicle_id !== $this->aVehicle->getId()) {
+            $this->aVehicle = null;
         }
-        if ($this->aUsers !== null && $this->creator_user_id !== $this->aUsers->getId()) {
-            $this->aUsers = null;
+        if ($this->aUser !== null && $this->creator_user_id !== $this->aUser->getId()) {
+            $this->aUser = null;
         }
     }
 
@@ -802,13 +802,13 @@ abstract class StockTransactions implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(StockTransactionsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(StockTransactionTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildStockTransactionsQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildStockTransactionQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -818,11 +818,11 @@ abstract class StockTransactions implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aProducts = null;
-            $this->aWarehousesRelatedByFromWarehouseId = null;
-            $this->aWarehousesRelatedByToWarehouseId = null;
-            $this->aVehicles = null;
-            $this->aUsers = null;
+            $this->aProduct = null;
+            $this->aWarehouseRelatedByFromWarehouseId = null;
+            $this->aWarehouseRelatedByToWarehouseId = null;
+            $this->aVehicle = null;
+            $this->aUser = null;
         } // if (deep)
     }
 
@@ -832,8 +832,8 @@ abstract class StockTransactions implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see StockTransactions::setDeleted()
-     * @see StockTransactions::isDeleted()
+     * @see StockTransaction::setDeleted()
+     * @see StockTransaction::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -842,11 +842,11 @@ abstract class StockTransactions implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildStockTransactionsQuery::create()
+            $deleteQuery = ChildStockTransactionQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -881,7 +881,7 @@ abstract class StockTransactions implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -900,7 +900,7 @@ abstract class StockTransactions implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                StockTransactionsTableMap::addInstanceToPool($this);
+                StockTransactionTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -931,39 +931,39 @@ abstract class StockTransactions implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aProducts !== null) {
-                if ($this->aProducts->isModified() || $this->aProducts->isNew()) {
-                    $affectedRows += $this->aProducts->save($con);
+            if ($this->aProduct !== null) {
+                if ($this->aProduct->isModified() || $this->aProduct->isNew()) {
+                    $affectedRows += $this->aProduct->save($con);
                 }
-                $this->setProducts($this->aProducts);
+                $this->setProduct($this->aProduct);
             }
 
-            if ($this->aWarehousesRelatedByFromWarehouseId !== null) {
-                if ($this->aWarehousesRelatedByFromWarehouseId->isModified() || $this->aWarehousesRelatedByFromWarehouseId->isNew()) {
-                    $affectedRows += $this->aWarehousesRelatedByFromWarehouseId->save($con);
+            if ($this->aWarehouseRelatedByFromWarehouseId !== null) {
+                if ($this->aWarehouseRelatedByFromWarehouseId->isModified() || $this->aWarehouseRelatedByFromWarehouseId->isNew()) {
+                    $affectedRows += $this->aWarehouseRelatedByFromWarehouseId->save($con);
                 }
-                $this->setWarehousesRelatedByFromWarehouseId($this->aWarehousesRelatedByFromWarehouseId);
+                $this->setWarehouseRelatedByFromWarehouseId($this->aWarehouseRelatedByFromWarehouseId);
             }
 
-            if ($this->aWarehousesRelatedByToWarehouseId !== null) {
-                if ($this->aWarehousesRelatedByToWarehouseId->isModified() || $this->aWarehousesRelatedByToWarehouseId->isNew()) {
-                    $affectedRows += $this->aWarehousesRelatedByToWarehouseId->save($con);
+            if ($this->aWarehouseRelatedByToWarehouseId !== null) {
+                if ($this->aWarehouseRelatedByToWarehouseId->isModified() || $this->aWarehouseRelatedByToWarehouseId->isNew()) {
+                    $affectedRows += $this->aWarehouseRelatedByToWarehouseId->save($con);
                 }
-                $this->setWarehousesRelatedByToWarehouseId($this->aWarehousesRelatedByToWarehouseId);
+                $this->setWarehouseRelatedByToWarehouseId($this->aWarehouseRelatedByToWarehouseId);
             }
 
-            if ($this->aVehicles !== null) {
-                if ($this->aVehicles->isModified() || $this->aVehicles->isNew()) {
-                    $affectedRows += $this->aVehicles->save($con);
+            if ($this->aVehicle !== null) {
+                if ($this->aVehicle->isModified() || $this->aVehicle->isNew()) {
+                    $affectedRows += $this->aVehicle->save($con);
                 }
-                $this->setVehicles($this->aVehicles);
+                $this->setVehicle($this->aVehicle);
             }
 
-            if ($this->aUsers !== null) {
-                if ($this->aUsers->isModified() || $this->aUsers->isNew()) {
-                    $affectedRows += $this->aUsers->save($con);
+            if ($this->aUser !== null) {
+                if ($this->aUser->isModified() || $this->aUser->isNew()) {
+                    $affectedRows += $this->aUser->save($con);
                 }
-                $this->setUsers($this->aUsers);
+                $this->setUser($this->aUser);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -997,34 +997,34 @@ abstract class StockTransactions implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[StockTransactionsTableMap::COL_ID] = true;
+        $this->modifiedColumns[StockTransactionTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . StockTransactionsTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . StockTransactionTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_PRODUCT_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_PRODUCT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'product_id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_FROM_WAREHOUSE_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_FROM_WAREHOUSE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'from_warehouse_id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_TO_WAREHOUSE_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_TO_WAREHOUSE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'to_warehouse_id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_VEHICLE_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_VEHICLE_ID)) {
             $modifiedColumns[':p' . $index++]  = 'vehicle_id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_CREATOR_USER_ID)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_CREATOR_USER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'creator_user_id';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_AMOUNT)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_CREATED_ON)) {
+        if ($this->isColumnModified(StockTransactionTableMap::COL_CREATED_ON)) {
             $modifiedColumns[':p' . $index++]  = 'created_on';
         }
 
@@ -1116,7 +1116,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = StockTransactionsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = StockTransactionTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1178,11 +1178,11 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['StockTransactions'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['StockTransaction'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['StockTransactions'][$this->hashCode()] = true;
-        $keys = StockTransactionsTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['StockTransaction'][$this->hashCode()] = true;
+        $keys = StockTransactionTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getProductId(),
@@ -1203,80 +1203,80 @@ abstract class StockTransactions implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aProducts) {
+            if (null !== $this->aProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'products';
+                        $key = 'product';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'products';
                         break;
                     default:
-                        $key = 'Products';
+                        $key = 'Product';
                 }
 
-                $result[$key] = $this->aProducts->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aWarehousesRelatedByFromWarehouseId) {
+            if (null !== $this->aWarehouseRelatedByFromWarehouseId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'warehouses';
+                        $key = 'warehouse';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'warehouses';
                         break;
                     default:
-                        $key = 'Warehouses';
+                        $key = 'Warehouse';
                 }
 
-                $result[$key] = $this->aWarehousesRelatedByFromWarehouseId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aWarehouseRelatedByFromWarehouseId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aWarehousesRelatedByToWarehouseId) {
+            if (null !== $this->aWarehouseRelatedByToWarehouseId) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'warehouses';
+                        $key = 'warehouse';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'warehouses';
                         break;
                     default:
-                        $key = 'Warehouses';
+                        $key = 'Warehouse';
                 }
 
-                $result[$key] = $this->aWarehousesRelatedByToWarehouseId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aWarehouseRelatedByToWarehouseId->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aVehicles) {
+            if (null !== $this->aVehicle) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
+                        $key = 'vehicle';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
                         $key = 'vehicles';
                         break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'vehicles';
-                        break;
                     default:
-                        $key = 'Vehicles';
+                        $key = 'Vehicle';
                 }
 
-                $result[$key] = $this->aVehicles->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aVehicle->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aUsers) {
+            if (null !== $this->aUser) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'users';
+                        $key = 'user';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'users';
                         break;
                     default:
-                        $key = 'Users';
+                        $key = 'User';
                 }
 
-                $result[$key] = $this->aUsers->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aUser->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1296,7 +1296,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = StockTransactionsTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = StockTransactionTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -1362,7 +1362,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = StockTransactionsTableMap::getFieldNames($keyType);
+        $keys = StockTransactionTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
@@ -1429,31 +1429,31 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(StockTransactionsTableMap::DATABASE_NAME);
+        $criteria = new Criteria(StockTransactionTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_PRODUCT_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_PRODUCT_ID, $this->product_id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_PRODUCT_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_PRODUCT_ID, $this->product_id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_FROM_WAREHOUSE_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_FROM_WAREHOUSE_ID, $this->from_warehouse_id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_FROM_WAREHOUSE_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_FROM_WAREHOUSE_ID, $this->from_warehouse_id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_TO_WAREHOUSE_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_TO_WAREHOUSE_ID, $this->to_warehouse_id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_TO_WAREHOUSE_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_TO_WAREHOUSE_ID, $this->to_warehouse_id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_VEHICLE_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_VEHICLE_ID, $this->vehicle_id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_VEHICLE_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_VEHICLE_ID, $this->vehicle_id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_CREATOR_USER_ID)) {
-            $criteria->add(StockTransactionsTableMap::COL_CREATOR_USER_ID, $this->creator_user_id);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_CREATOR_USER_ID)) {
+            $criteria->add(StockTransactionTableMap::COL_CREATOR_USER_ID, $this->creator_user_id);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_AMOUNT)) {
-            $criteria->add(StockTransactionsTableMap::COL_AMOUNT, $this->amount);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_AMOUNT)) {
+            $criteria->add(StockTransactionTableMap::COL_AMOUNT, $this->amount);
         }
-        if ($this->isColumnModified(StockTransactionsTableMap::COL_CREATED_ON)) {
-            $criteria->add(StockTransactionsTableMap::COL_CREATED_ON, $this->created_on);
+        if ($this->isColumnModified(StockTransactionTableMap::COL_CREATED_ON)) {
+            $criteria->add(StockTransactionTableMap::COL_CREATED_ON, $this->created_on);
         }
 
         return $criteria;
@@ -1471,8 +1471,8 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildStockTransactionsQuery::create();
-        $criteria->add(StockTransactionsTableMap::COL_ID, $this->id);
+        $criteria = ChildStockTransactionQuery::create();
+        $criteria->add(StockTransactionTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1535,7 +1535,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \DbModel\StockTransactions (or compatible) type.
+     * @param object $copyObj An object of \DbModel\StockTransaction (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1565,7 +1565,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \DbModel\StockTransactions Clone of current object.
+     * @return \DbModel\StockTransaction Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1579,13 +1579,13 @@ abstract class StockTransactions implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildProducts object.
+     * Declares an association between this object and a ChildProduct object.
      *
-     * @param ChildProducts $v
+     * @param ChildProduct $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setProducts(ChildProducts $v = null)
+    public function setProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setProductId(NULL);
@@ -1593,12 +1593,12 @@ abstract class StockTransactions implements ActiveRecordInterface
             $this->setProductId($v->getId());
         }
 
-        $this->aProducts = $v;
+        $this->aProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildProducts object, it will not be re-added.
+        // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
-            $v->addStockTransactions($this);
+            $v->addStockTransaction($this);
         }
 
 
@@ -1607,36 +1607,36 @@ abstract class StockTransactions implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildProducts object
+     * Get the associated ChildProduct object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildProducts The associated ChildProducts object.
+     * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getProducts(?ConnectionInterface $con = null)
+    public function getProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aProducts === null && ($this->product_id != 0)) {
-            $this->aProducts = ChildProductsQuery::create()->findPk($this->product_id, $con);
+        if ($this->aProduct === null && ($this->product_id != 0)) {
+            $this->aProduct = ChildProductQuery::create()->findPk($this->product_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aProducts->addStockTransactionss($this);
+                $this->aProduct->addStockTransactions($this);
              */
         }
 
-        return $this->aProducts;
+        return $this->aProduct;
     }
 
     /**
-     * Declares an association between this object and a ChildWarehouses object.
+     * Declares an association between this object and a ChildWarehouse object.
      *
-     * @param ChildWarehouses|null $v
+     * @param ChildWarehouse|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setWarehousesRelatedByFromWarehouseId(ChildWarehouses $v = null)
+    public function setWarehouseRelatedByFromWarehouseId(ChildWarehouse $v = null)
     {
         if ($v === null) {
             $this->setFromWarehouseId(NULL);
@@ -1644,12 +1644,12 @@ abstract class StockTransactions implements ActiveRecordInterface
             $this->setFromWarehouseId($v->getId());
         }
 
-        $this->aWarehousesRelatedByFromWarehouseId = $v;
+        $this->aWarehouseRelatedByFromWarehouseId = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildWarehouses object, it will not be re-added.
+        // If this object has already been added to the ChildWarehouse object, it will not be re-added.
         if ($v !== null) {
-            $v->addStockTransactionsRelatedByFromWarehouseId($this);
+            $v->addStockTransactionRelatedByFromWarehouseId($this);
         }
 
 
@@ -1658,36 +1658,36 @@ abstract class StockTransactions implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildWarehouses object
+     * Get the associated ChildWarehouse object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildWarehouses|null The associated ChildWarehouses object.
+     * @return ChildWarehouse|null The associated ChildWarehouse object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getWarehousesRelatedByFromWarehouseId(?ConnectionInterface $con = null)
+    public function getWarehouseRelatedByFromWarehouseId(?ConnectionInterface $con = null)
     {
-        if ($this->aWarehousesRelatedByFromWarehouseId === null && ($this->from_warehouse_id != 0)) {
-            $this->aWarehousesRelatedByFromWarehouseId = ChildWarehousesQuery::create()->findPk($this->from_warehouse_id, $con);
+        if ($this->aWarehouseRelatedByFromWarehouseId === null && ($this->from_warehouse_id != 0)) {
+            $this->aWarehouseRelatedByFromWarehouseId = ChildWarehouseQuery::create()->findPk($this->from_warehouse_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aWarehousesRelatedByFromWarehouseId->addStockTransactionssRelatedByFromWarehouseId($this);
+                $this->aWarehouseRelatedByFromWarehouseId->addStockTransactionsRelatedByFromWarehouseId($this);
              */
         }
 
-        return $this->aWarehousesRelatedByFromWarehouseId;
+        return $this->aWarehouseRelatedByFromWarehouseId;
     }
 
     /**
-     * Declares an association between this object and a ChildWarehouses object.
+     * Declares an association between this object and a ChildWarehouse object.
      *
-     * @param ChildWarehouses|null $v
+     * @param ChildWarehouse|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setWarehousesRelatedByToWarehouseId(ChildWarehouses $v = null)
+    public function setWarehouseRelatedByToWarehouseId(ChildWarehouse $v = null)
     {
         if ($v === null) {
             $this->setToWarehouseId(NULL);
@@ -1695,12 +1695,12 @@ abstract class StockTransactions implements ActiveRecordInterface
             $this->setToWarehouseId($v->getId());
         }
 
-        $this->aWarehousesRelatedByToWarehouseId = $v;
+        $this->aWarehouseRelatedByToWarehouseId = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildWarehouses object, it will not be re-added.
+        // If this object has already been added to the ChildWarehouse object, it will not be re-added.
         if ($v !== null) {
-            $v->addStockTransactionsRelatedByToWarehouseId($this);
+            $v->addStockTransactionRelatedByToWarehouseId($this);
         }
 
 
@@ -1709,36 +1709,36 @@ abstract class StockTransactions implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildWarehouses object
+     * Get the associated ChildWarehouse object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildWarehouses|null The associated ChildWarehouses object.
+     * @return ChildWarehouse|null The associated ChildWarehouse object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getWarehousesRelatedByToWarehouseId(?ConnectionInterface $con = null)
+    public function getWarehouseRelatedByToWarehouseId(?ConnectionInterface $con = null)
     {
-        if ($this->aWarehousesRelatedByToWarehouseId === null && ($this->to_warehouse_id != 0)) {
-            $this->aWarehousesRelatedByToWarehouseId = ChildWarehousesQuery::create()->findPk($this->to_warehouse_id, $con);
+        if ($this->aWarehouseRelatedByToWarehouseId === null && ($this->to_warehouse_id != 0)) {
+            $this->aWarehouseRelatedByToWarehouseId = ChildWarehouseQuery::create()->findPk($this->to_warehouse_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aWarehousesRelatedByToWarehouseId->addStockTransactionssRelatedByToWarehouseId($this);
+                $this->aWarehouseRelatedByToWarehouseId->addStockTransactionsRelatedByToWarehouseId($this);
              */
         }
 
-        return $this->aWarehousesRelatedByToWarehouseId;
+        return $this->aWarehouseRelatedByToWarehouseId;
     }
 
     /**
-     * Declares an association between this object and a ChildVehicles object.
+     * Declares an association between this object and a ChildVehicle object.
      *
-     * @param ChildVehicles|null $v
+     * @param ChildVehicle|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setVehicles(ChildVehicles $v = null)
+    public function setVehicle(ChildVehicle $v = null)
     {
         if ($v === null) {
             $this->setVehicleId(NULL);
@@ -1746,12 +1746,12 @@ abstract class StockTransactions implements ActiveRecordInterface
             $this->setVehicleId($v->getId());
         }
 
-        $this->aVehicles = $v;
+        $this->aVehicle = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildVehicles object, it will not be re-added.
+        // If this object has already been added to the ChildVehicle object, it will not be re-added.
         if ($v !== null) {
-            $v->addStockTransactions($this);
+            $v->addStockTransaction($this);
         }
 
 
@@ -1760,36 +1760,36 @@ abstract class StockTransactions implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildVehicles object
+     * Get the associated ChildVehicle object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildVehicles|null The associated ChildVehicles object.
+     * @return ChildVehicle|null The associated ChildVehicle object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getVehicles(?ConnectionInterface $con = null)
+    public function getVehicle(?ConnectionInterface $con = null)
     {
-        if ($this->aVehicles === null && ($this->vehicle_id != 0)) {
-            $this->aVehicles = ChildVehiclesQuery::create()->findPk($this->vehicle_id, $con);
+        if ($this->aVehicle === null && ($this->vehicle_id != 0)) {
+            $this->aVehicle = ChildVehicleQuery::create()->findPk($this->vehicle_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aVehicles->addStockTransactionss($this);
+                $this->aVehicle->addStockTransactions($this);
              */
         }
 
-        return $this->aVehicles;
+        return $this->aVehicle;
     }
 
     /**
-     * Declares an association between this object and a ChildUsers object.
+     * Declares an association between this object and a ChildUser object.
      *
-     * @param ChildUsers|null $v
+     * @param ChildUser|null $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setUsers(ChildUsers $v = null)
+    public function setUser(ChildUser $v = null)
     {
         if ($v === null) {
             $this->setCreatorUserId(NULL);
@@ -1797,12 +1797,12 @@ abstract class StockTransactions implements ActiveRecordInterface
             $this->setCreatorUserId($v->getId());
         }
 
-        $this->aUsers = $v;
+        $this->aUser = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildUsers object, it will not be re-added.
+        // If this object has already been added to the ChildUser object, it will not be re-added.
         if ($v !== null) {
-            $v->addStockTransactions($this);
+            $v->addStockTransaction($this);
         }
 
 
@@ -1811,26 +1811,26 @@ abstract class StockTransactions implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildUsers object
+     * Get the associated ChildUser object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildUsers|null The associated ChildUsers object.
+     * @return ChildUser|null The associated ChildUser object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getUsers(?ConnectionInterface $con = null)
+    public function getUser(?ConnectionInterface $con = null)
     {
-        if ($this->aUsers === null && ($this->creator_user_id != 0)) {
-            $this->aUsers = ChildUsersQuery::create()->findPk($this->creator_user_id, $con);
+        if ($this->aUser === null && ($this->creator_user_id != 0)) {
+            $this->aUser = ChildUserQuery::create()->findPk($this->creator_user_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aUsers->addStockTransactionss($this);
+                $this->aUser->addStockTransactions($this);
              */
         }
 
-        return $this->aUsers;
+        return $this->aUser;
     }
 
     /**
@@ -1842,20 +1842,20 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aProducts) {
-            $this->aProducts->removeStockTransactions($this);
+        if (null !== $this->aProduct) {
+            $this->aProduct->removeStockTransaction($this);
         }
-        if (null !== $this->aWarehousesRelatedByFromWarehouseId) {
-            $this->aWarehousesRelatedByFromWarehouseId->removeStockTransactionsRelatedByFromWarehouseId($this);
+        if (null !== $this->aWarehouseRelatedByFromWarehouseId) {
+            $this->aWarehouseRelatedByFromWarehouseId->removeStockTransactionRelatedByFromWarehouseId($this);
         }
-        if (null !== $this->aWarehousesRelatedByToWarehouseId) {
-            $this->aWarehousesRelatedByToWarehouseId->removeStockTransactionsRelatedByToWarehouseId($this);
+        if (null !== $this->aWarehouseRelatedByToWarehouseId) {
+            $this->aWarehouseRelatedByToWarehouseId->removeStockTransactionRelatedByToWarehouseId($this);
         }
-        if (null !== $this->aVehicles) {
-            $this->aVehicles->removeStockTransactions($this);
+        if (null !== $this->aVehicle) {
+            $this->aVehicle->removeStockTransaction($this);
         }
-        if (null !== $this->aUsers) {
-            $this->aUsers->removeStockTransactions($this);
+        if (null !== $this->aUser) {
+            $this->aUser->removeStockTransaction($this);
         }
         $this->id = null;
         $this->product_id = null;
@@ -1889,11 +1889,11 @@ abstract class StockTransactions implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aProducts = null;
-        $this->aWarehousesRelatedByFromWarehouseId = null;
-        $this->aWarehousesRelatedByToWarehouseId = null;
-        $this->aVehicles = null;
-        $this->aUsers = null;
+        $this->aProduct = null;
+        $this->aWarehouseRelatedByFromWarehouseId = null;
+        $this->aWarehouseRelatedByToWarehouseId = null;
+        $this->aVehicle = null;
+        $this->aUser = null;
         return $this;
     }
 
@@ -1904,7 +1904,7 @@ abstract class StockTransactions implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(StockTransactionsTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(StockTransactionTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

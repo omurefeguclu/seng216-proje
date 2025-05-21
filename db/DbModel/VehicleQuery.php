@@ -2,7 +2,7 @@
 
 namespace DbModel;
 
-use DbModel\Base\VehiclesQuery as BaseVehiclesQuery;
+use DbModel\Base\VehicleQuery as BaseVehicleQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'vehicles' table.
@@ -13,7 +13,7 @@ use DbModel\Base\VehiclesQuery as BaseVehiclesQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class VehiclesQuery extends BaseVehiclesQuery
+class VehicleQuery extends BaseVehicleQuery
 {
 
 }

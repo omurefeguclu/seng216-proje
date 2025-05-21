@@ -1,4 +1,6 @@
 <?php
+namespace Core\Router;
+
 class RouteBuilder {
     protected Router $router;
     protected array $sharedMiddleware = [];

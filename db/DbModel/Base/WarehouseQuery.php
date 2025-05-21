@@ -4,9 +4,9 @@ namespace DbModel\Base;
 
 use \Exception;
 use \PDO;
-use DbModel\Warehouses as ChildWarehouses;
-use DbModel\WarehousesQuery as ChildWarehousesQuery;
-use DbModel\Map\WarehousesTableMap;
+use DbModel\Warehouse as ChildWarehouse;
+use DbModel\WarehouseQuery as ChildWarehouseQuery;
+use DbModel\Map\WarehouseTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -19,121 +19,121 @@ use Propel\Runtime\Exception\PropelException;
 /**
  * Base class that represents a query for the `warehouses` table.
  *
- * @method     ChildWarehousesQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildWarehousesQuery orderByName($order = Criteria::ASC) Order by the NAME column
- * @method     ChildWarehousesQuery orderByCreatedOn($order = Criteria::ASC) Order by the created_on column
+ * @method     ChildWarehouseQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildWarehouseQuery orderByName($order = Criteria::ASC) Order by the NAME column
+ * @method     ChildWarehouseQuery orderByCreatedOn($order = Criteria::ASC) Order by the created_on column
  *
- * @method     ChildWarehousesQuery groupById() Group by the id column
- * @method     ChildWarehousesQuery groupByName() Group by the NAME column
- * @method     ChildWarehousesQuery groupByCreatedOn() Group by the created_on column
+ * @method     ChildWarehouseQuery groupById() Group by the id column
+ * @method     ChildWarehouseQuery groupByName() Group by the NAME column
+ * @method     ChildWarehouseQuery groupByCreatedOn() Group by the created_on column
  *
- * @method     ChildWarehousesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildWarehousesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildWarehousesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildWarehouseQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildWarehouseQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildWarehouseQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildWarehousesQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
- * @method     ChildWarehousesQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
- * @method     ChildWarehousesQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ * @method     ChildWarehouseQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildWarehouseQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildWarehouseQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildWarehousesQuery leftJoinStockTransactionsRelatedByFromWarehouseId($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransactionsRelatedByFromWarehouseId relation
- * @method     ChildWarehousesQuery rightJoinStockTransactionsRelatedByFromWarehouseId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransactionsRelatedByFromWarehouseId relation
- * @method     ChildWarehousesQuery innerJoinStockTransactionsRelatedByFromWarehouseId($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransactionsRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery leftJoinStockTransactionRelatedByFromWarehouseId($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransactionRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery rightJoinStockTransactionRelatedByFromWarehouseId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransactionRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery innerJoinStockTransactionRelatedByFromWarehouseId($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransactionRelatedByFromWarehouseId relation
  *
- * @method     ChildWarehousesQuery joinWithStockTransactionsRelatedByFromWarehouseId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransactionsRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery joinWithStockTransactionRelatedByFromWarehouseId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransactionRelatedByFromWarehouseId relation
  *
- * @method     ChildWarehousesQuery leftJoinWithStockTransactionsRelatedByFromWarehouseId() Adds a LEFT JOIN clause and with to the query using the StockTransactionsRelatedByFromWarehouseId relation
- * @method     ChildWarehousesQuery rightJoinWithStockTransactionsRelatedByFromWarehouseId() Adds a RIGHT JOIN clause and with to the query using the StockTransactionsRelatedByFromWarehouseId relation
- * @method     ChildWarehousesQuery innerJoinWithStockTransactionsRelatedByFromWarehouseId() Adds a INNER JOIN clause and with to the query using the StockTransactionsRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery leftJoinWithStockTransactionRelatedByFromWarehouseId() Adds a LEFT JOIN clause and with to the query using the StockTransactionRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery rightJoinWithStockTransactionRelatedByFromWarehouseId() Adds a RIGHT JOIN clause and with to the query using the StockTransactionRelatedByFromWarehouseId relation
+ * @method     ChildWarehouseQuery innerJoinWithStockTransactionRelatedByFromWarehouseId() Adds a INNER JOIN clause and with to the query using the StockTransactionRelatedByFromWarehouseId relation
  *
- * @method     ChildWarehousesQuery leftJoinStockTransactionsRelatedByToWarehouseId($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransactionsRelatedByToWarehouseId relation
- * @method     ChildWarehousesQuery rightJoinStockTransactionsRelatedByToWarehouseId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransactionsRelatedByToWarehouseId relation
- * @method     ChildWarehousesQuery innerJoinStockTransactionsRelatedByToWarehouseId($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransactionsRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery leftJoinStockTransactionRelatedByToWarehouseId($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransactionRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery rightJoinStockTransactionRelatedByToWarehouseId($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransactionRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery innerJoinStockTransactionRelatedByToWarehouseId($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransactionRelatedByToWarehouseId relation
  *
- * @method     ChildWarehousesQuery joinWithStockTransactionsRelatedByToWarehouseId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransactionsRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery joinWithStockTransactionRelatedByToWarehouseId($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransactionRelatedByToWarehouseId relation
  *
- * @method     ChildWarehousesQuery leftJoinWithStockTransactionsRelatedByToWarehouseId() Adds a LEFT JOIN clause and with to the query using the StockTransactionsRelatedByToWarehouseId relation
- * @method     ChildWarehousesQuery rightJoinWithStockTransactionsRelatedByToWarehouseId() Adds a RIGHT JOIN clause and with to the query using the StockTransactionsRelatedByToWarehouseId relation
- * @method     ChildWarehousesQuery innerJoinWithStockTransactionsRelatedByToWarehouseId() Adds a INNER JOIN clause and with to the query using the StockTransactionsRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery leftJoinWithStockTransactionRelatedByToWarehouseId() Adds a LEFT JOIN clause and with to the query using the StockTransactionRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery rightJoinWithStockTransactionRelatedByToWarehouseId() Adds a RIGHT JOIN clause and with to the query using the StockTransactionRelatedByToWarehouseId relation
+ * @method     ChildWarehouseQuery innerJoinWithStockTransactionRelatedByToWarehouseId() Adds a INNER JOIN clause and with to the query using the StockTransactionRelatedByToWarehouseId relation
  *
- * @method     ChildWarehousesQuery leftJoinWarehouseProductStock($relationAlias = null) Adds a LEFT JOIN clause to the query using the WarehouseProductStock relation
- * @method     ChildWarehousesQuery rightJoinWarehouseProductStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WarehouseProductStock relation
- * @method     ChildWarehousesQuery innerJoinWarehouseProductStock($relationAlias = null) Adds a INNER JOIN clause to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery leftJoinWarehouseProductStock($relationAlias = null) Adds a LEFT JOIN clause to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery rightJoinWarehouseProductStock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery innerJoinWarehouseProductStock($relationAlias = null) Adds a INNER JOIN clause to the query using the WarehouseProductStock relation
  *
- * @method     ChildWarehousesQuery joinWithWarehouseProductStock($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery joinWithWarehouseProductStock($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WarehouseProductStock relation
  *
- * @method     ChildWarehousesQuery leftJoinWithWarehouseProductStock() Adds a LEFT JOIN clause and with to the query using the WarehouseProductStock relation
- * @method     ChildWarehousesQuery rightJoinWithWarehouseProductStock() Adds a RIGHT JOIN clause and with to the query using the WarehouseProductStock relation
- * @method     ChildWarehousesQuery innerJoinWithWarehouseProductStock() Adds a INNER JOIN clause and with to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery leftJoinWithWarehouseProductStock() Adds a LEFT JOIN clause and with to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery rightJoinWithWarehouseProductStock() Adds a RIGHT JOIN clause and with to the query using the WarehouseProductStock relation
+ * @method     ChildWarehouseQuery innerJoinWithWarehouseProductStock() Adds a INNER JOIN clause and with to the query using the WarehouseProductStock relation
  *
- * @method     ChildWarehousesQuery leftJoinWarehouseProductStockLog($relationAlias = null) Adds a LEFT JOIN clause to the query using the WarehouseProductStockLog relation
- * @method     ChildWarehousesQuery rightJoinWarehouseProductStockLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WarehouseProductStockLog relation
- * @method     ChildWarehousesQuery innerJoinWarehouseProductStockLog($relationAlias = null) Adds a INNER JOIN clause to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery leftJoinWarehouseProductStockLog($relationAlias = null) Adds a LEFT JOIN clause to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery rightJoinWarehouseProductStockLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery innerJoinWarehouseProductStockLog($relationAlias = null) Adds a INNER JOIN clause to the query using the WarehouseProductStockLog relation
  *
- * @method     ChildWarehousesQuery joinWithWarehouseProductStockLog($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery joinWithWarehouseProductStockLog($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WarehouseProductStockLog relation
  *
- * @method     ChildWarehousesQuery leftJoinWithWarehouseProductStockLog() Adds a LEFT JOIN clause and with to the query using the WarehouseProductStockLog relation
- * @method     ChildWarehousesQuery rightJoinWithWarehouseProductStockLog() Adds a RIGHT JOIN clause and with to the query using the WarehouseProductStockLog relation
- * @method     ChildWarehousesQuery innerJoinWithWarehouseProductStockLog() Adds a INNER JOIN clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery leftJoinWithWarehouseProductStockLog() Adds a LEFT JOIN clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery rightJoinWithWarehouseProductStockLog() Adds a RIGHT JOIN clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildWarehouseQuery innerJoinWithWarehouseProductStockLog() Adds a INNER JOIN clause and with to the query using the WarehouseProductStockLog relation
  *
- * @method     \DbModel\StockTransactionsQuery|\DbModel\StockTransactionsQuery|\DbModel\WarehouseProductStockQuery|\DbModel\WarehouseProductStockLogQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DbModel\StockTransactionQuery|\DbModel\StockTransactionQuery|\DbModel\WarehouseProductStockQuery|\DbModel\WarehouseProductStockLogQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildWarehouses|null findOne(?ConnectionInterface $con = null) Return the first ChildWarehouses matching the query
- * @method     ChildWarehouses findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildWarehouses matching the query, or a new ChildWarehouses object populated from the query conditions when no match is found
+ * @method     ChildWarehouse|null findOne(?ConnectionInterface $con = null) Return the first ChildWarehouse matching the query
+ * @method     ChildWarehouse findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildWarehouse matching the query, or a new ChildWarehouse object populated from the query conditions when no match is found
  *
- * @method     ChildWarehouses|null findOneById(int $id) Return the first ChildWarehouses filtered by the id column
- * @method     ChildWarehouses|null findOneByName(string $NAME) Return the first ChildWarehouses filtered by the NAME column
- * @method     ChildWarehouses|null findOneByCreatedOn(string $created_on) Return the first ChildWarehouses filtered by the created_on column
+ * @method     ChildWarehouse|null findOneById(int $id) Return the first ChildWarehouse filtered by the id column
+ * @method     ChildWarehouse|null findOneByName(string $NAME) Return the first ChildWarehouse filtered by the NAME column
+ * @method     ChildWarehouse|null findOneByCreatedOn(string $created_on) Return the first ChildWarehouse filtered by the created_on column
  *
- * @method     ChildWarehouses requirePk($key, ?ConnectionInterface $con = null) Return the ChildWarehouses by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildWarehouses requireOne(?ConnectionInterface $con = null) Return the first ChildWarehouses matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWarehouse requirePk($key, ?ConnectionInterface $con = null) Return the ChildWarehouse by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWarehouse requireOne(?ConnectionInterface $con = null) Return the first ChildWarehouse matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildWarehouses requireOneById(int $id) Return the first ChildWarehouses filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildWarehouses requireOneByName(string $NAME) Return the first ChildWarehouses filtered by the NAME column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildWarehouses requireOneByCreatedOn(string $created_on) Return the first ChildWarehouses filtered by the created_on column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWarehouse requireOneById(int $id) Return the first ChildWarehouse filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWarehouse requireOneByName(string $NAME) Return the first ChildWarehouse filtered by the NAME column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildWarehouse requireOneByCreatedOn(string $created_on) Return the first ChildWarehouse filtered by the created_on column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildWarehouses[]|Collection find(?ConnectionInterface $con = null) Return ChildWarehouses objects based on current ModelCriteria
- * @psalm-method Collection&\Traversable<ChildWarehouses> find(?ConnectionInterface $con = null) Return ChildWarehouses objects based on current ModelCriteria
+ * @method     ChildWarehouse[]|Collection find(?ConnectionInterface $con = null) Return ChildWarehouse objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildWarehouse> find(?ConnectionInterface $con = null) Return ChildWarehouse objects based on current ModelCriteria
  *
- * @method     ChildWarehouses[]|Collection findById(int|array<int> $id) Return ChildWarehouses objects filtered by the id column
- * @psalm-method Collection&\Traversable<ChildWarehouses> findById(int|array<int> $id) Return ChildWarehouses objects filtered by the id column
- * @method     ChildWarehouses[]|Collection findByName(string|array<string> $NAME) Return ChildWarehouses objects filtered by the NAME column
- * @psalm-method Collection&\Traversable<ChildWarehouses> findByName(string|array<string> $NAME) Return ChildWarehouses objects filtered by the NAME column
- * @method     ChildWarehouses[]|Collection findByCreatedOn(string|array<string> $created_on) Return ChildWarehouses objects filtered by the created_on column
- * @psalm-method Collection&\Traversable<ChildWarehouses> findByCreatedOn(string|array<string> $created_on) Return ChildWarehouses objects filtered by the created_on column
+ * @method     ChildWarehouse[]|Collection findById(int|array<int> $id) Return ChildWarehouse objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildWarehouse> findById(int|array<int> $id) Return ChildWarehouse objects filtered by the id column
+ * @method     ChildWarehouse[]|Collection findByName(string|array<string> $NAME) Return ChildWarehouse objects filtered by the NAME column
+ * @psalm-method Collection&\Traversable<ChildWarehouse> findByName(string|array<string> $NAME) Return ChildWarehouse objects filtered by the NAME column
+ * @method     ChildWarehouse[]|Collection findByCreatedOn(string|array<string> $created_on) Return ChildWarehouse objects filtered by the created_on column
+ * @psalm-method Collection&\Traversable<ChildWarehouse> findByCreatedOn(string|array<string> $created_on) Return ChildWarehouse objects filtered by the created_on column
  *
- * @method     ChildWarehouses[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildWarehouses> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildWarehouse[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildWarehouse> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  */
-abstract class WarehousesQuery extends ModelCriteria
+abstract class WarehouseQuery extends ModelCriteria
 {
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \DbModel\Base\WarehousesQuery object.
+     * Initializes internal state of \DbModel\Base\WarehouseQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\DbModel\\Warehouses', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\DbModel\\Warehouse', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildWarehousesQuery object.
+     * Returns a new ChildWarehouseQuery object.
      *
      * @param string $modelAlias The alias of a model in the query
      * @param Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildWarehousesQuery
+     * @return ChildWarehouseQuery
      */
     public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof ChildWarehousesQuery) {
+        if ($criteria instanceof ChildWarehouseQuery) {
             return $criteria;
         }
-        $query = new ChildWarehousesQuery();
+        $query = new ChildWarehouseQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -156,7 +156,7 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildWarehouses|array|mixed the result, formatted by the current formatter
+     * @return ChildWarehouse|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ?ConnectionInterface $con = null)
     {
@@ -165,7 +165,7 @@ abstract class WarehousesQuery extends ModelCriteria
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         $this->basePreSelect($con);
@@ -178,7 +178,7 @@ abstract class WarehousesQuery extends ModelCriteria
             return $this->findPkComplex($key, $con);
         }
 
-        if ((null !== ($obj = WarehousesTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+        if ((null !== ($obj = WarehouseTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -195,7 +195,7 @@ abstract class WarehousesQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildWarehouses A model object, or null if the key is not found
+     * @return ChildWarehouse A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
@@ -210,10 +210,10 @@ abstract class WarehousesQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildWarehouses $obj */
-            $obj = new ChildWarehouses();
+            /** @var ChildWarehouse $obj */
+            $obj = new ChildWarehouse();
             $obj->hydrate($row);
-            WarehousesTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
+            WarehouseTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -226,7 +226,7 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con A connection object
      *
-     * @return ChildWarehouses|array|mixed the result, formatted by the current formatter
+     * @return ChildWarehouse|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -273,7 +273,7 @@ abstract class WarehousesQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        $this->addUsingAlias(WarehousesTableMap::COL_ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(WarehouseTableMap::COL_ID, $key, Criteria::EQUAL);
 
         return $this;
     }
@@ -288,7 +288,7 @@ abstract class WarehousesQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        $this->addUsingAlias(WarehousesTableMap::COL_ID, $keys, Criteria::IN);
+        $this->addUsingAlias(WarehouseTableMap::COL_ID, $keys, Criteria::IN);
 
         return $this;
     }
@@ -316,11 +316,11 @@ abstract class WarehousesQuery extends ModelCriteria
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(WarehousesTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(WarehouseTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(WarehousesTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(WarehouseTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -331,7 +331,7 @@ abstract class WarehousesQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(WarehousesTableMap::COL_ID, $id, $comparison);
+        $this->addUsingAlias(WarehouseTableMap::COL_ID, $id, $comparison);
 
         return $this;
     }
@@ -359,7 +359,7 @@ abstract class WarehousesQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(WarehousesTableMap::COL_NAME, $name, $comparison);
+        $this->addUsingAlias(WarehouseTableMap::COL_NAME, $name, $comparison);
 
         return $this;
     }
@@ -389,11 +389,11 @@ abstract class WarehousesQuery extends ModelCriteria
         if (is_array($createdOn)) {
             $useMinMax = false;
             if (isset($createdOn['min'])) {
-                $this->addUsingAlias(WarehousesTableMap::COL_CREATED_ON, $createdOn['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(WarehouseTableMap::COL_CREATED_ON, $createdOn['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($createdOn['max'])) {
-                $this->addUsingAlias(WarehousesTableMap::COL_CREATED_ON, $createdOn['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(WarehouseTableMap::COL_CREATED_ON, $createdOn['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -404,50 +404,50 @@ abstract class WarehousesQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(WarehousesTableMap::COL_CREATED_ON, $createdOn, $comparison);
+        $this->addUsingAlias(WarehouseTableMap::COL_CREATED_ON, $createdOn, $comparison);
 
         return $this;
     }
 
     /**
-     * Filter the query by a related \DbModel\StockTransactions object
+     * Filter the query by a related \DbModel\StockTransaction object
      *
-     * @param \DbModel\StockTransactions|ObjectCollection $stockTransactions the related object to use as filter
+     * @param \DbModel\StockTransaction|ObjectCollection $stockTransaction the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStockTransactionsRelatedByFromWarehouseId($stockTransactions, ?string $comparison = null)
+    public function filterByStockTransactionRelatedByFromWarehouseId($stockTransaction, ?string $comparison = null)
     {
-        if ($stockTransactions instanceof \DbModel\StockTransactions) {
+        if ($stockTransaction instanceof \DbModel\StockTransaction) {
             $this
-                ->addUsingAlias(WarehousesTableMap::COL_ID, $stockTransactions->getFromWarehouseId(), $comparison);
+                ->addUsingAlias(WarehouseTableMap::COL_ID, $stockTransaction->getFromWarehouseId(), $comparison);
 
             return $this;
-        } elseif ($stockTransactions instanceof ObjectCollection) {
+        } elseif ($stockTransaction instanceof ObjectCollection) {
             $this
-                ->useStockTransactionsRelatedByFromWarehouseIdQuery()
-                ->filterByPrimaryKeys($stockTransactions->getPrimaryKeys())
+                ->useStockTransactionRelatedByFromWarehouseIdQuery()
+                ->filterByPrimaryKeys($stockTransaction->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByStockTransactionsRelatedByFromWarehouseId() only accepts arguments of type \DbModel\StockTransactions or Collection');
+            throw new PropelException('filterByStockTransactionRelatedByFromWarehouseId() only accepts arguments of type \DbModel\StockTransaction or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the StockTransactionsRelatedByFromWarehouseId relation
+     * Adds a JOIN clause to the query using the StockTransactionRelatedByFromWarehouseId relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinStockTransactionsRelatedByFromWarehouseId(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinStockTransactionRelatedByFromWarehouseId(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StockTransactionsRelatedByFromWarehouseId');
+        $relationMap = $tableMap->getRelation('StockTransactionRelatedByFromWarehouseId');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -462,14 +462,14 @@ abstract class WarehousesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'StockTransactionsRelatedByFromWarehouseId');
+            $this->addJoinObject($join, 'StockTransactionRelatedByFromWarehouseId');
         }
 
         return $this;
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation StockTransactions object
+     * Use the StockTransactionRelatedByFromWarehouseId relation StockTransaction object
      *
      * @see useQuery()
      *
@@ -477,19 +477,19 @@ abstract class WarehousesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DbModel\StockTransactionsQuery A secondary query class using the current class as primary query
+     * @return \DbModel\StockTransactionQuery A secondary query class using the current class as primary query
      */
-    public function useStockTransactionsRelatedByFromWarehouseIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useStockTransactionRelatedByFromWarehouseIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinStockTransactionsRelatedByFromWarehouseId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StockTransactionsRelatedByFromWarehouseId', '\DbModel\StockTransactionsQuery');
+            ->joinStockTransactionRelatedByFromWarehouseId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StockTransactionRelatedByFromWarehouseId', '\DbModel\StockTransactionQuery');
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation StockTransactions object
+     * Use the StockTransactionRelatedByFromWarehouseId relation StockTransaction object
      *
-     * @param callable(\DbModel\StockTransactionsQuery):\DbModel\StockTransactionsQuery $callable A function working on the related query
+     * @param callable(\DbModel\StockTransactionQuery):\DbModel\StockTransactionQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -497,12 +497,12 @@ abstract class WarehousesQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withStockTransactionsRelatedByFromWarehouseIdQuery(
+    public function withStockTransactionRelatedByFromWarehouseIdQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useStockTransactionsRelatedByFromWarehouseIdQuery(
+        $relatedQuery = $this->useStockTransactionRelatedByFromWarehouseIdQuery(
             $relationAlias,
             $joinType
         );
@@ -513,7 +513,7 @@ abstract class WarehousesQuery extends ModelCriteria
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation to the StockTransactions table for an EXISTS query.
+     * Use the StockTransactionRelatedByFromWarehouseId relation to the StockTransaction table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -521,34 +521,34 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the EXISTS statement
      */
-    public function useStockTransactionsRelatedByFromWarehouseIdExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useStockTransactionRelatedByFromWarehouseIdExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactionsRelatedByFromWarehouseId', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransactionRelatedByFromWarehouseId', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation to the StockTransactions table for a NOT EXISTS query.
+     * Use the StockTransactionRelatedByFromWarehouseId relation to the StockTransaction table for a NOT EXISTS query.
      *
-     * @see useStockTransactionsRelatedByFromWarehouseIdExistsQuery()
+     * @see useStockTransactionRelatedByFromWarehouseIdExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useStockTransactionsRelatedByFromWarehouseIdNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useStockTransactionRelatedByFromWarehouseIdNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactionsRelatedByFromWarehouseId', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransactionRelatedByFromWarehouseId', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation to the StockTransactions table for an IN query.
+     * Use the StockTransactionRelatedByFromWarehouseId relation to the StockTransaction table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -556,71 +556,71 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
      * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the IN statement
      */
-    public function useInStockTransactionsRelatedByFromWarehouseIdQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInStockTransactionRelatedByFromWarehouseIdQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactionsRelatedByFromWarehouseId', $modelAlias, $queryClass, $typeOfIn);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransactionRelatedByFromWarehouseId', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByFromWarehouseId relation to the StockTransactions table for a NOT IN query.
+     * Use the StockTransactionRelatedByFromWarehouseId relation to the StockTransaction table for a NOT IN query.
      *
-     * @see useStockTransactionsRelatedByFromWarehouseIdInQuery()
+     * @see useStockTransactionRelatedByFromWarehouseIdInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT IN statement
      */
-    public function useNotInStockTransactionsRelatedByFromWarehouseIdQuery($modelAlias = null, $queryClass = null)
+    public function useNotInStockTransactionRelatedByFromWarehouseIdQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactionsRelatedByFromWarehouseId', $modelAlias, $queryClass, 'NOT IN');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransactionRelatedByFromWarehouseId', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
     /**
-     * Filter the query by a related \DbModel\StockTransactions object
+     * Filter the query by a related \DbModel\StockTransaction object
      *
-     * @param \DbModel\StockTransactions|ObjectCollection $stockTransactions the related object to use as filter
+     * @param \DbModel\StockTransaction|ObjectCollection $stockTransaction the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStockTransactionsRelatedByToWarehouseId($stockTransactions, ?string $comparison = null)
+    public function filterByStockTransactionRelatedByToWarehouseId($stockTransaction, ?string $comparison = null)
     {
-        if ($stockTransactions instanceof \DbModel\StockTransactions) {
+        if ($stockTransaction instanceof \DbModel\StockTransaction) {
             $this
-                ->addUsingAlias(WarehousesTableMap::COL_ID, $stockTransactions->getToWarehouseId(), $comparison);
+                ->addUsingAlias(WarehouseTableMap::COL_ID, $stockTransaction->getToWarehouseId(), $comparison);
 
             return $this;
-        } elseif ($stockTransactions instanceof ObjectCollection) {
+        } elseif ($stockTransaction instanceof ObjectCollection) {
             $this
-                ->useStockTransactionsRelatedByToWarehouseIdQuery()
-                ->filterByPrimaryKeys($stockTransactions->getPrimaryKeys())
+                ->useStockTransactionRelatedByToWarehouseIdQuery()
+                ->filterByPrimaryKeys($stockTransaction->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByStockTransactionsRelatedByToWarehouseId() only accepts arguments of type \DbModel\StockTransactions or Collection');
+            throw new PropelException('filterByStockTransactionRelatedByToWarehouseId() only accepts arguments of type \DbModel\StockTransaction or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the StockTransactionsRelatedByToWarehouseId relation
+     * Adds a JOIN clause to the query using the StockTransactionRelatedByToWarehouseId relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinStockTransactionsRelatedByToWarehouseId(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinStockTransactionRelatedByToWarehouseId(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StockTransactionsRelatedByToWarehouseId');
+        $relationMap = $tableMap->getRelation('StockTransactionRelatedByToWarehouseId');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -635,14 +635,14 @@ abstract class WarehousesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'StockTransactionsRelatedByToWarehouseId');
+            $this->addJoinObject($join, 'StockTransactionRelatedByToWarehouseId');
         }
 
         return $this;
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation StockTransactions object
+     * Use the StockTransactionRelatedByToWarehouseId relation StockTransaction object
      *
      * @see useQuery()
      *
@@ -650,19 +650,19 @@ abstract class WarehousesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DbModel\StockTransactionsQuery A secondary query class using the current class as primary query
+     * @return \DbModel\StockTransactionQuery A secondary query class using the current class as primary query
      */
-    public function useStockTransactionsRelatedByToWarehouseIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useStockTransactionRelatedByToWarehouseIdQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinStockTransactionsRelatedByToWarehouseId($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StockTransactionsRelatedByToWarehouseId', '\DbModel\StockTransactionsQuery');
+            ->joinStockTransactionRelatedByToWarehouseId($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StockTransactionRelatedByToWarehouseId', '\DbModel\StockTransactionQuery');
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation StockTransactions object
+     * Use the StockTransactionRelatedByToWarehouseId relation StockTransaction object
      *
-     * @param callable(\DbModel\StockTransactionsQuery):\DbModel\StockTransactionsQuery $callable A function working on the related query
+     * @param callable(\DbModel\StockTransactionQuery):\DbModel\StockTransactionQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -670,12 +670,12 @@ abstract class WarehousesQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withStockTransactionsRelatedByToWarehouseIdQuery(
+    public function withStockTransactionRelatedByToWarehouseIdQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useStockTransactionsRelatedByToWarehouseIdQuery(
+        $relatedQuery = $this->useStockTransactionRelatedByToWarehouseIdQuery(
             $relationAlias,
             $joinType
         );
@@ -686,7 +686,7 @@ abstract class WarehousesQuery extends ModelCriteria
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation to the StockTransactions table for an EXISTS query.
+     * Use the StockTransactionRelatedByToWarehouseId relation to the StockTransaction table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -694,34 +694,34 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the EXISTS statement
      */
-    public function useStockTransactionsRelatedByToWarehouseIdExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useStockTransactionRelatedByToWarehouseIdExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactionsRelatedByToWarehouseId', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransactionRelatedByToWarehouseId', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation to the StockTransactions table for a NOT EXISTS query.
+     * Use the StockTransactionRelatedByToWarehouseId relation to the StockTransaction table for a NOT EXISTS query.
      *
-     * @see useStockTransactionsRelatedByToWarehouseIdExistsQuery()
+     * @see useStockTransactionRelatedByToWarehouseIdExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useStockTransactionsRelatedByToWarehouseIdNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useStockTransactionRelatedByToWarehouseIdNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactionsRelatedByToWarehouseId', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransactionRelatedByToWarehouseId', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation to the StockTransactions table for an IN query.
+     * Use the StockTransactionRelatedByToWarehouseId relation to the StockTransaction table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -729,29 +729,29 @@ abstract class WarehousesQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
      * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the IN statement
      */
-    public function useInStockTransactionsRelatedByToWarehouseIdQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInStockTransactionRelatedByToWarehouseIdQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactionsRelatedByToWarehouseId', $modelAlias, $queryClass, $typeOfIn);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransactionRelatedByToWarehouseId', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the StockTransactionsRelatedByToWarehouseId relation to the StockTransactions table for a NOT IN query.
+     * Use the StockTransactionRelatedByToWarehouseId relation to the StockTransaction table for a NOT IN query.
      *
-     * @see useStockTransactionsRelatedByToWarehouseIdInQuery()
+     * @see useStockTransactionRelatedByToWarehouseIdInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT IN statement
      */
-    public function useNotInStockTransactionsRelatedByToWarehouseIdQuery($modelAlias = null, $queryClass = null)
+    public function useNotInStockTransactionRelatedByToWarehouseIdQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactionsRelatedByToWarehouseId', $modelAlias, $queryClass, 'NOT IN');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransactionRelatedByToWarehouseId', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
@@ -767,7 +767,7 @@ abstract class WarehousesQuery extends ModelCriteria
     {
         if ($warehouseProductStock instanceof \DbModel\WarehouseProductStock) {
             $this
-                ->addUsingAlias(WarehousesTableMap::COL_ID, $warehouseProductStock->getWarehouseId(), $comparison);
+                ->addUsingAlias(WarehouseTableMap::COL_ID, $warehouseProductStock->getWarehouseId(), $comparison);
 
             return $this;
         } elseif ($warehouseProductStock instanceof ObjectCollection) {
@@ -940,7 +940,7 @@ abstract class WarehousesQuery extends ModelCriteria
     {
         if ($warehouseProductStockLog instanceof \DbModel\WarehouseProductStockLog) {
             $this
-                ->addUsingAlias(WarehousesTableMap::COL_ID, $warehouseProductStockLog->getWarehouseId(), $comparison);
+                ->addUsingAlias(WarehouseTableMap::COL_ID, $warehouseProductStockLog->getWarehouseId(), $comparison);
 
             return $this;
         } elseif ($warehouseProductStockLog instanceof ObjectCollection) {
@@ -1104,14 +1104,14 @@ abstract class WarehousesQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param ChildWarehouses $warehouses Object to remove from the list of results
+     * @param ChildWarehouse $warehouse Object to remove from the list of results
      *
      * @return $this The current query, for fluid interface
      */
-    public function prune($warehouses = null)
+    public function prune($warehouse = null)
     {
-        if ($warehouses) {
-            $this->addUsingAlias(WarehousesTableMap::COL_ID, $warehouses->getId(), Criteria::NOT_EQUAL);
+        if ($warehouse) {
+            $this->addUsingAlias(WarehouseTableMap::COL_ID, $warehouse->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
@@ -1126,7 +1126,7 @@ abstract class WarehousesQuery extends ModelCriteria
     public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -1137,8 +1137,8 @@ abstract class WarehousesQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            WarehousesTableMap::clearInstancePool();
-            WarehousesTableMap::clearRelatedInstancePool();
+            WarehouseTableMap::clearInstancePool();
+            WarehouseTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -1156,23 +1156,23 @@ abstract class WarehousesQuery extends ModelCriteria
     public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(WarehouseTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(WarehousesTableMap::DATABASE_NAME);
+        $criteria->setDbName(WarehouseTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            WarehousesTableMap::removeInstanceFromPool($criteria);
+            WarehouseTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            WarehousesTableMap::clearRelatedInstancePool();
+            WarehouseTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });

@@ -5,23 +5,23 @@ $serviceContainer->initDatabaseMapFromDumps(array (
   array (
     'tablesByName' => 
     array (
-      'products' => '\\DbModel\\Map\\ProductsTableMap',
-      'stock_transactions' => '\\DbModel\\Map\\StockTransactionsTableMap',
-      'users' => '\\DbModel\\Map\\UsersTableMap',
-      'vehicles' => '\\DbModel\\Map\\VehiclesTableMap',
+      'products' => '\\DbModel\\Map\\ProductTableMap',
+      'stock_transactions' => '\\DbModel\\Map\\StockTransactionTableMap',
+      'users' => '\\DbModel\\Map\\UserTableMap',
+      'vehicles' => '\\DbModel\\Map\\VehicleTableMap',
       'warehouse_product_stock' => '\\DbModel\\Map\\WarehouseProductStockTableMap',
       'warehouse_product_stock_log' => '\\DbModel\\Map\\WarehouseProductStockLogTableMap',
-      'warehouses' => '\\DbModel\\Map\\WarehousesTableMap',
+      'warehouses' => '\\DbModel\\Map\\WarehouseTableMap',
     ),
     'tablesByPhpName' => 
     array (
-      '\\Products' => '\\DbModel\\Map\\ProductsTableMap',
-      '\\StockTransactions' => '\\DbModel\\Map\\StockTransactionsTableMap',
-      '\\Users' => '\\DbModel\\Map\\UsersTableMap',
-      '\\Vehicles' => '\\DbModel\\Map\\VehiclesTableMap',
+      '\\Product' => '\\DbModel\\Map\\ProductTableMap',
+      '\\StockTransaction' => '\\DbModel\\Map\\StockTransactionTableMap',
+      '\\User' => '\\DbModel\\Map\\UserTableMap',
+      '\\Vehicle' => '\\DbModel\\Map\\VehicleTableMap',
+      '\\Warehouse' => '\\DbModel\\Map\\WarehouseTableMap',
       '\\WarehouseProductStock' => '\\DbModel\\Map\\WarehouseProductStockTableMap',
       '\\WarehouseProductStockLog' => '\\DbModel\\Map\\WarehouseProductStockLogTableMap',
-      '\\Warehouses' => '\\DbModel\\Map\\WarehousesTableMap',
     ),
   ),
 ));

@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\Products as BaseProducts;
+use DbModel\Base\StockTransaction as BaseStockTransaction;
 
 /**
- * Skeleton subclass for representing a row from the 'products' table.
+ * Skeleton subclass for representing a row from the 'stock_transactions' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\Products as BaseProducts;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class Products extends BaseProducts
+class StockTransaction extends BaseStockTransaction
 {
 
 }

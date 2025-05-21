@@ -1,5 +1,4 @@
 <?php
-
 function validate_not_null(array $params): bool
 {
     if (empty($params)) { return true; }

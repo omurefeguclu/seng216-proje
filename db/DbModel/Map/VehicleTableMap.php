@@ -2,8 +2,8 @@
 
 namespace DbModel\Map;
 
-use DbModel\Warehouses;
-use DbModel\WarehousesQuery;
+use DbModel\Vehicle;
+use DbModel\VehicleQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'warehouses' table.
+ * This class defines the structure of the 'vehicles' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class WarehousesTableMap extends TableMap
+class VehicleTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class WarehousesTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'DbModel.Map.WarehousesTableMap';
+    public const CLASS_NAME = 'DbModel.Map.VehicleTableMap';
 
     /**
      * The default database name for this class
@@ -43,22 +43,22 @@ class WarehousesTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'warehouses';
+    public const TABLE_NAME = 'vehicles';
 
     /**
      * The PHP name of this class (PascalCase)
      */
-    public const TABLE_PHP_NAME = 'Warehouses';
+    public const TABLE_PHP_NAME = 'Vehicle';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\DbModel\\Warehouses';
+    public const OM_CLASS = '\\DbModel\\Vehicle';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'DbModel.Warehouses';
+    public const CLASS_DEFAULT = 'DbModel.Vehicle';
 
     /**
      * The total number of columns
@@ -78,17 +78,17 @@ class WarehousesTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'warehouses.id';
+    public const COL_ID = 'vehicles.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the plate_number field
      */
-    public const COL_NAME = 'warehouses.NAME';
+    public const COL_PLATE_NUMBER = 'vehicles.plate_number';
 
     /**
      * the column name for the created_on field
      */
-    public const COL_CREATED_ON = 'warehouses.created_on';
+    public const COL_CREATED_ON = 'vehicles.created_on';
 
     /**
      * The default string format for model objects of the related table
@@ -104,10 +104,10 @@ class WarehousesTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'CreatedOn', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'createdOn', ],
-        self::TYPE_COLNAME       => [WarehousesTableMap::COL_ID, WarehousesTableMap::COL_NAME, WarehousesTableMap::COL_CREATED_ON, ],
-        self::TYPE_FIELDNAME     => ['id', 'NAME', 'created_on', ],
+        self::TYPE_PHPNAME       => ['Id', 'PlateNumber', 'CreatedOn', ],
+        self::TYPE_CAMELNAME     => ['id', 'plateNumber', 'createdOn', ],
+        self::TYPE_COLNAME       => [VehicleTableMap::COL_ID, VehicleTableMap::COL_PLATE_NUMBER, VehicleTableMap::COL_CREATED_ON, ],
+        self::TYPE_FIELDNAME     => ['id', 'plate_number', 'created_on', ],
         self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
@@ -120,10 +120,10 @@ class WarehousesTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'CreatedOn' => 2, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'createdOn' => 2, ],
-        self::TYPE_COLNAME       => [WarehousesTableMap::COL_ID => 0, WarehousesTableMap::COL_NAME => 1, WarehousesTableMap::COL_CREATED_ON => 2, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'NAME' => 1, 'created_on' => 2, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'PlateNumber' => 1, 'CreatedOn' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'plateNumber' => 1, 'createdOn' => 2, ],
+        self::TYPE_COLNAME       => [VehicleTableMap::COL_ID => 0, VehicleTableMap::COL_PLATE_NUMBER => 1, VehicleTableMap::COL_CREATED_ON => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'plate_number' => 1, 'created_on' => 2, ],
         self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
@@ -134,27 +134,28 @@ class WarehousesTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Warehouses.Id' => 'ID',
+        'Vehicle.Id' => 'ID',
         'id' => 'ID',
-        'warehouses.id' => 'ID',
-        'WarehousesTableMap::COL_ID' => 'ID',
+        'vehicle.id' => 'ID',
+        'VehicleTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Name' => 'NAME',
-        'Warehouses.Name' => 'NAME',
-        'name' => 'NAME',
-        'warehouses.name' => 'NAME',
-        'WarehousesTableMap::COL_NAME' => 'NAME',
-        'COL_NAME' => 'NAME',
-        'NAME' => 'NAME',
-        'warehouses.NAME' => 'NAME',
+        'vehicles.id' => 'ID',
+        'PlateNumber' => 'PLATE_NUMBER',
+        'Vehicle.PlateNumber' => 'PLATE_NUMBER',
+        'plateNumber' => 'PLATE_NUMBER',
+        'vehicle.plateNumber' => 'PLATE_NUMBER',
+        'VehicleTableMap::COL_PLATE_NUMBER' => 'PLATE_NUMBER',
+        'COL_PLATE_NUMBER' => 'PLATE_NUMBER',
+        'plate_number' => 'PLATE_NUMBER',
+        'vehicles.plate_number' => 'PLATE_NUMBER',
         'CreatedOn' => 'CREATED_ON',
-        'Warehouses.CreatedOn' => 'CREATED_ON',
+        'Vehicle.CreatedOn' => 'CREATED_ON',
         'createdOn' => 'CREATED_ON',
-        'warehouses.createdOn' => 'CREATED_ON',
-        'WarehousesTableMap::COL_CREATED_ON' => 'CREATED_ON',
+        'vehicle.createdOn' => 'CREATED_ON',
+        'VehicleTableMap::COL_CREATED_ON' => 'CREATED_ON',
         'COL_CREATED_ON' => 'CREATED_ON',
         'created_on' => 'CREATED_ON',
-        'warehouses.created_on' => 'CREATED_ON',
+        'vehicles.created_on' => 'CREATED_ON',
     ];
 
     /**
@@ -167,15 +168,15 @@ class WarehousesTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('warehouses');
-        $this->setPhpName('Warehouses');
+        $this->setName('vehicles');
+        $this->setPhpName('Vehicle');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\DbModel\\Warehouses');
+        $this->setClassName('\\DbModel\\Vehicle');
         $this->setPackage('DbModel');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 255, null);
+        $this->addColumn('plate_number', 'PlateNumber', 'VARCHAR', true, 20, null);
         $this->addColumn('created_on', 'CreatedOn', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
     }
 
@@ -186,34 +187,13 @@ class WarehousesTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('StockTransactionsRelatedByFromWarehouseId', '\\DbModel\\StockTransactions', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('StockTransaction', '\\DbModel\\StockTransaction', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
-    0 => ':from_warehouse_id',
+    0 => ':vehicle_id',
     1 => ':id',
   ),
-), null, null, 'StockTransactionssRelatedByFromWarehouseId', false);
-        $this->addRelation('StockTransactionsRelatedByToWarehouseId', '\\DbModel\\StockTransactions', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':to_warehouse_id',
-    1 => ':id',
-  ),
-), null, null, 'StockTransactionssRelatedByToWarehouseId', false);
-        $this->addRelation('WarehouseProductStock', '\\DbModel\\WarehouseProductStock', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':warehouse_id',
-    1 => ':id',
-  ),
-), null, null, 'WarehouseProductStocks', false);
-        $this->addRelation('WarehouseProductStockLog', '\\DbModel\\WarehouseProductStockLog', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':warehouse_id',
-    1 => ':id',
-  ),
-), null, null, 'WarehouseProductStockLogs', false);
+), null, null, 'StockTransactions', false);
     }
 
     /**
@@ -273,7 +253,7 @@ class WarehousesTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? WarehousesTableMap::CLASS_DEFAULT : WarehousesTableMap::OM_CLASS;
+        return $withPrefix ? VehicleTableMap::CLASS_DEFAULT : VehicleTableMap::OM_CLASS;
     }
 
     /**
@@ -287,22 +267,22 @@ class WarehousesTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Warehouses object, last column rank)
+     * @return array (Vehicle object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = WarehousesTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = WarehousesTableMap::getInstanceFromPool($key))) {
+        $key = VehicleTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = VehicleTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + WarehousesTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + VehicleTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = WarehousesTableMap::OM_CLASS;
-            /** @var Warehouses $obj */
+            $cls = VehicleTableMap::OM_CLASS;
+            /** @var Vehicle $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            WarehousesTableMap::addInstanceToPool($obj, $key);
+            VehicleTableMap::addInstanceToPool($obj, $key);
         }
 
         return [$obj, $col];
@@ -325,18 +305,18 @@ class WarehousesTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = WarehousesTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = WarehousesTableMap::getInstanceFromPool($key))) {
+            $key = VehicleTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = VehicleTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Warehouses $obj */
+                /** @var Vehicle $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                WarehousesTableMap::addInstanceToPool($obj, $key);
+                VehicleTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -358,12 +338,12 @@ class WarehousesTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(WarehousesTableMap::COL_ID);
-            $criteria->addSelectColumn(WarehousesTableMap::COL_NAME);
-            $criteria->addSelectColumn(WarehousesTableMap::COL_CREATED_ON);
+            $criteria->addSelectColumn(VehicleTableMap::COL_ID);
+            $criteria->addSelectColumn(VehicleTableMap::COL_PLATE_NUMBER);
+            $criteria->addSelectColumn(VehicleTableMap::COL_CREATED_ON);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.NAME');
+            $criteria->addSelectColumn($alias . '.plate_number');
             $criteria->addSelectColumn($alias . '.created_on');
         }
     }
@@ -383,12 +363,12 @@ class WarehousesTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(WarehousesTableMap::COL_ID);
-            $criteria->removeSelectColumn(WarehousesTableMap::COL_NAME);
-            $criteria->removeSelectColumn(WarehousesTableMap::COL_CREATED_ON);
+            $criteria->removeSelectColumn(VehicleTableMap::COL_ID);
+            $criteria->removeSelectColumn(VehicleTableMap::COL_PLATE_NUMBER);
+            $criteria->removeSelectColumn(VehicleTableMap::COL_CREATED_ON);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.NAME');
+            $criteria->removeSelectColumn($alias . '.plate_number');
             $criteria->removeSelectColumn($alias . '.created_on');
         }
     }
@@ -402,13 +382,13 @@ class WarehousesTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(WarehousesTableMap::DATABASE_NAME)->getTable(WarehousesTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(VehicleTableMap::DATABASE_NAME)->getTable(VehicleTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Warehouses or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Vehicle or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Warehouses object or primary key or array of primary keys
+     * @param mixed $values Criteria or Vehicle object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -419,27 +399,27 @@ class WarehousesTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(VehicleTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \DbModel\Warehouses) { // it's a model object
+        } elseif ($values instanceof \DbModel\Vehicle) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(WarehousesTableMap::DATABASE_NAME);
-            $criteria->add(WarehousesTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(VehicleTableMap::DATABASE_NAME);
+            $criteria->add(VehicleTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = WarehousesQuery::create()->mergeWith($criteria);
+        $query = VehicleQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            WarehousesTableMap::clearInstancePool();
+            VehicleTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                WarehousesTableMap::removeInstanceFromPool($singleval);
+                VehicleTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -447,20 +427,20 @@ class WarehousesTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the warehouses table.
+     * Deletes all rows from the vehicles table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return WarehousesQuery::create()->doDeleteAll($con);
+        return VehicleQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Warehouses or Criteria object.
+     * Performs an INSERT on the database, given a Vehicle or Criteria object.
      *
-     * @param mixed $criteria Criteria or Warehouses object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Vehicle object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -469,22 +449,22 @@ class WarehousesTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(WarehousesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(VehicleTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Warehouses object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Vehicle object
         }
 
-        if ($criteria->containsKey(WarehousesTableMap::COL_ID) && $criteria->keyContainsValue(WarehousesTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.WarehousesTableMap::COL_ID.')');
+        if ($criteria->containsKey(VehicleTableMap::COL_ID) && $criteria->keyContainsValue(VehicleTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.VehicleTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = WarehousesQuery::create()->mergeWith($criteria);
+        $query = VehicleQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

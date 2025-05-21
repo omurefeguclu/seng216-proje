@@ -5,11 +5,11 @@ namespace DbModel\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use DbModel\Products as ChildProducts;
-use DbModel\ProductsQuery as ChildProductsQuery;
+use DbModel\Product as ChildProduct;
+use DbModel\ProductQuery as ChildProductQuery;
+use DbModel\Warehouse as ChildWarehouse;
 use DbModel\WarehouseProductStockLogQuery as ChildWarehouseProductStockLogQuery;
-use DbModel\Warehouses as ChildWarehouses;
-use DbModel\WarehousesQuery as ChildWarehousesQuery;
+use DbModel\WarehouseQuery as ChildWarehouseQuery;
 use DbModel\Map\WarehouseProductStockLogTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
@@ -111,14 +111,14 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     protected $created_on;
 
     /**
-     * @var        ChildWarehouses
+     * @var        ChildWarehouse
      */
-    protected $aWarehouses;
+    protected $aWarehouse;
 
     /**
-     * @var        ChildProducts
+     * @var        ChildProduct
      */
-    protected $aProducts;
+    protected $aProduct;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -485,8 +485,8 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $this->modifiedColumns[WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID] = true;
         }
 
-        if ($this->aWarehouses !== null && $this->aWarehouses->getId() !== $v) {
-            $this->aWarehouses = null;
+        if ($this->aWarehouse !== null && $this->aWarehouse->getId() !== $v) {
+            $this->aWarehouse = null;
         }
 
         return $this;
@@ -509,8 +509,8 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $this->modifiedColumns[WarehouseProductStockLogTableMap::COL_PRODUCT_ID] = true;
         }
 
-        if ($this->aProducts !== null && $this->aProducts->getId() !== $v) {
-            $this->aProducts = null;
+        if ($this->aProduct !== null && $this->aProduct->getId() !== $v) {
+            $this->aProduct = null;
         }
 
         return $this;
@@ -671,11 +671,11 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
-        if ($this->aWarehouses !== null && $this->warehouse_id !== $this->aWarehouses->getId()) {
-            $this->aWarehouses = null;
+        if ($this->aWarehouse !== null && $this->warehouse_id !== $this->aWarehouse->getId()) {
+            $this->aWarehouse = null;
         }
-        if ($this->aProducts !== null && $this->product_id !== $this->aProducts->getId()) {
-            $this->aProducts = null;
+        if ($this->aProduct !== null && $this->product_id !== $this->aProduct->getId()) {
+            $this->aProduct = null;
         }
     }
 
@@ -716,8 +716,8 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aWarehouses = null;
-            $this->aProducts = null;
+            $this->aWarehouse = null;
+            $this->aProduct = null;
         } // if (deep)
     }
 
@@ -826,18 +826,18 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aWarehouses !== null) {
-                if ($this->aWarehouses->isModified() || $this->aWarehouses->isNew()) {
-                    $affectedRows += $this->aWarehouses->save($con);
+            if ($this->aWarehouse !== null) {
+                if ($this->aWarehouse->isModified() || $this->aWarehouse->isNew()) {
+                    $affectedRows += $this->aWarehouse->save($con);
                 }
-                $this->setWarehouses($this->aWarehouses);
+                $this->setWarehouse($this->aWarehouse);
             }
 
-            if ($this->aProducts !== null) {
-                if ($this->aProducts->isModified() || $this->aProducts->isNew()) {
-                    $affectedRows += $this->aProducts->save($con);
+            if ($this->aProduct !== null) {
+                if ($this->aProduct->isModified() || $this->aProduct->isNew()) {
+                    $affectedRows += $this->aProduct->save($con);
                 }
-                $this->setProducts($this->aProducts);
+                $this->setProduct($this->aProduct);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -1055,35 +1055,35 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aWarehouses) {
+            if (null !== $this->aWarehouse) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'warehouses';
+                        $key = 'warehouse';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'warehouses';
                         break;
                     default:
-                        $key = 'Warehouses';
+                        $key = 'Warehouse';
                 }
 
-                $result[$key] = $this->aWarehouses->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aWarehouse->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
-            if (null !== $this->aProducts) {
+            if (null !== $this->aProduct) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'products';
+                        $key = 'product';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'products';
                         break;
                     default:
-                        $key = 'Products';
+                        $key = 'Product';
                 }
 
-                $result[$key] = $this->aProducts->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+                $result[$key] = $this->aProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1366,13 +1366,13 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     }
 
     /**
-     * Declares an association between this object and a ChildWarehouses object.
+     * Declares an association between this object and a ChildWarehouse object.
      *
-     * @param ChildWarehouses $v
+     * @param ChildWarehouse $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setWarehouses(ChildWarehouses $v = null)
+    public function setWarehouse(ChildWarehouse $v = null)
     {
         if ($v === null) {
             $this->setWarehouseId(NULL);
@@ -1380,10 +1380,10 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $this->setWarehouseId($v->getId());
         }
 
-        $this->aWarehouses = $v;
+        $this->aWarehouse = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildWarehouses object, it will not be re-added.
+        // If this object has already been added to the ChildWarehouse object, it will not be re-added.
         if ($v !== null) {
             $v->addWarehouseProductStockLog($this);
         }
@@ -1394,36 +1394,36 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildWarehouses object
+     * Get the associated ChildWarehouse object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildWarehouses The associated ChildWarehouses object.
+     * @return ChildWarehouse The associated ChildWarehouse object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getWarehouses(?ConnectionInterface $con = null)
+    public function getWarehouse(?ConnectionInterface $con = null)
     {
-        if ($this->aWarehouses === null && ($this->warehouse_id != 0)) {
-            $this->aWarehouses = ChildWarehousesQuery::create()->findPk($this->warehouse_id, $con);
+        if ($this->aWarehouse === null && ($this->warehouse_id != 0)) {
+            $this->aWarehouse = ChildWarehouseQuery::create()->findPk($this->warehouse_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aWarehouses->addWarehouseProductStockLogs($this);
+                $this->aWarehouse->addWarehouseProductStockLogs($this);
              */
         }
 
-        return $this->aWarehouses;
+        return $this->aWarehouse;
     }
 
     /**
-     * Declares an association between this object and a ChildProducts object.
+     * Declares an association between this object and a ChildProduct object.
      *
-     * @param ChildProducts $v
+     * @param ChildProduct $v
      * @return $this The current object (for fluent API support)
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function setProducts(ChildProducts $v = null)
+    public function setProduct(ChildProduct $v = null)
     {
         if ($v === null) {
             $this->setProductId(NULL);
@@ -1431,10 +1431,10 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $this->setProductId($v->getId());
         }
 
-        $this->aProducts = $v;
+        $this->aProduct = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the ChildProducts object, it will not be re-added.
+        // If this object has already been added to the ChildProduct object, it will not be re-added.
         if ($v !== null) {
             $v->addWarehouseProductStockLog($this);
         }
@@ -1445,26 +1445,26 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
 
 
     /**
-     * Get the associated ChildProducts object
+     * Get the associated ChildProduct object
      *
      * @param ConnectionInterface $con Optional Connection object.
-     * @return ChildProducts The associated ChildProducts object.
+     * @return ChildProduct The associated ChildProduct object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getProducts(?ConnectionInterface $con = null)
+    public function getProduct(?ConnectionInterface $con = null)
     {
-        if ($this->aProducts === null && ($this->product_id != 0)) {
-            $this->aProducts = ChildProductsQuery::create()->findPk($this->product_id, $con);
+        if ($this->aProduct === null && ($this->product_id != 0)) {
+            $this->aProduct = ChildProductQuery::create()->findPk($this->product_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aProducts->addWarehouseProductStockLogs($this);
+                $this->aProduct->addWarehouseProductStockLogs($this);
              */
         }
 
-        return $this->aProducts;
+        return $this->aProduct;
     }
 
     /**
@@ -1476,11 +1476,11 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
      */
     public function clear()
     {
-        if (null !== $this->aWarehouses) {
-            $this->aWarehouses->removeWarehouseProductStockLog($this);
+        if (null !== $this->aWarehouse) {
+            $this->aWarehouse->removeWarehouseProductStockLog($this);
         }
-        if (null !== $this->aProducts) {
-            $this->aProducts->removeWarehouseProductStockLog($this);
+        if (null !== $this->aProduct) {
+            $this->aProduct->removeWarehouseProductStockLog($this);
         }
         $this->id = null;
         $this->warehouse_id = null;
@@ -1512,8 +1512,8 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
-        $this->aWarehouses = null;
-        $this->aProducts = null;
+        $this->aWarehouse = null;
+        $this->aProduct = null;
         return $this;
     }
 

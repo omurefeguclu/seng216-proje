@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\StockTransactionsQuery as BaseStockTransactionsQuery;
+use DbModel\Base\ProductQuery as BaseProductQuery;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'stock_transactions' table.
+ * Skeleton subclass for performing query and update operations on the 'products' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\StockTransactionsQuery as BaseStockTransactionsQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class StockTransactionsQuery extends BaseStockTransactionsQuery
+class ProductQuery extends BaseProductQuery
 {
 
 }

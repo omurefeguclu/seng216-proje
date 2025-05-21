@@ -2,8 +2,8 @@
 
 namespace DbModel\Map;
 
-use DbModel\Products;
-use DbModel\ProductsQuery;
+use DbModel\StockTransaction;
+use DbModel\StockTransactionQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'products' table.
+ * This class defines the structure of the 'stock_transactions' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class ProductsTableMap extends TableMap
+class StockTransactionTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class ProductsTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'DbModel.Map.ProductsTableMap';
+    public const CLASS_NAME = 'DbModel.Map.StockTransactionTableMap';
 
     /**
      * The default database name for this class
@@ -43,27 +43,27 @@ class ProductsTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'products';
+    public const TABLE_NAME = 'stock_transactions';
 
     /**
      * The PHP name of this class (PascalCase)
      */
-    public const TABLE_PHP_NAME = 'Products';
+    public const TABLE_PHP_NAME = 'StockTransaction';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\DbModel\\Products';
+    public const OM_CLASS = '\\DbModel\\StockTransaction';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'DbModel.Products';
+    public const CLASS_DEFAULT = 'DbModel.StockTransaction';
 
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 3;
+    public const NUM_COLUMNS = 8;
 
     /**
      * The number of lazy-loaded columns
@@ -73,22 +73,47 @@ class ProductsTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 3;
+    public const NUM_HYDRATE_COLUMNS = 8;
 
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'products.id';
+    public const COL_ID = 'stock_transactions.id';
 
     /**
-     * the column name for the NAME field
+     * the column name for the product_id field
      */
-    public const COL_NAME = 'products.NAME';
+    public const COL_PRODUCT_ID = 'stock_transactions.product_id';
+
+    /**
+     * the column name for the from_warehouse_id field
+     */
+    public const COL_FROM_WAREHOUSE_ID = 'stock_transactions.from_warehouse_id';
+
+    /**
+     * the column name for the to_warehouse_id field
+     */
+    public const COL_TO_WAREHOUSE_ID = 'stock_transactions.to_warehouse_id';
+
+    /**
+     * the column name for the vehicle_id field
+     */
+    public const COL_VEHICLE_ID = 'stock_transactions.vehicle_id';
+
+    /**
+     * the column name for the creator_user_id field
+     */
+    public const COL_CREATOR_USER_ID = 'stock_transactions.creator_user_id';
+
+    /**
+     * the column name for the amount field
+     */
+    public const COL_AMOUNT = 'stock_transactions.amount';
 
     /**
      * the column name for the created_on field
      */
-    public const COL_CREATED_ON = 'products.created_on';
+    public const COL_CREATED_ON = 'stock_transactions.created_on';
 
     /**
      * The default string format for model objects of the related table
@@ -104,11 +129,11 @@ class ProductsTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Name', 'CreatedOn', ],
-        self::TYPE_CAMELNAME     => ['id', 'name', 'createdOn', ],
-        self::TYPE_COLNAME       => [ProductsTableMap::COL_ID, ProductsTableMap::COL_NAME, ProductsTableMap::COL_CREATED_ON, ],
-        self::TYPE_FIELDNAME     => ['id', 'NAME', 'created_on', ],
-        self::TYPE_NUM           => [0, 1, 2, ]
+        self::TYPE_PHPNAME       => ['Id', 'ProductId', 'FromWarehouseId', 'ToWarehouseId', 'VehicleId', 'CreatorUserId', 'Amount', 'CreatedOn', ],
+        self::TYPE_CAMELNAME     => ['id', 'productId', 'fromWarehouseId', 'toWarehouseId', 'vehicleId', 'creatorUserId', 'amount', 'createdOn', ],
+        self::TYPE_COLNAME       => [StockTransactionTableMap::COL_ID, StockTransactionTableMap::COL_PRODUCT_ID, StockTransactionTableMap::COL_FROM_WAREHOUSE_ID, StockTransactionTableMap::COL_TO_WAREHOUSE_ID, StockTransactionTableMap::COL_VEHICLE_ID, StockTransactionTableMap::COL_CREATOR_USER_ID, StockTransactionTableMap::COL_AMOUNT, StockTransactionTableMap::COL_CREATED_ON, ],
+        self::TYPE_FIELDNAME     => ['id', 'product_id', 'from_warehouse_id', 'to_warehouse_id', 'vehicle_id', 'creator_user_id', 'amount', 'created_on', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
     ];
 
     /**
@@ -120,11 +145,11 @@ class ProductsTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Name' => 1, 'CreatedOn' => 2, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'name' => 1, 'createdOn' => 2, ],
-        self::TYPE_COLNAME       => [ProductsTableMap::COL_ID => 0, ProductsTableMap::COL_NAME => 1, ProductsTableMap::COL_CREATED_ON => 2, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'NAME' => 1, 'created_on' => 2, ],
-        self::TYPE_NUM           => [0, 1, 2, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'ProductId' => 1, 'FromWarehouseId' => 2, 'ToWarehouseId' => 3, 'VehicleId' => 4, 'CreatorUserId' => 5, 'Amount' => 6, 'CreatedOn' => 7, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'productId' => 1, 'fromWarehouseId' => 2, 'toWarehouseId' => 3, 'vehicleId' => 4, 'creatorUserId' => 5, 'amount' => 6, 'createdOn' => 7, ],
+        self::TYPE_COLNAME       => [StockTransactionTableMap::COL_ID => 0, StockTransactionTableMap::COL_PRODUCT_ID => 1, StockTransactionTableMap::COL_FROM_WAREHOUSE_ID => 2, StockTransactionTableMap::COL_TO_WAREHOUSE_ID => 3, StockTransactionTableMap::COL_VEHICLE_ID => 4, StockTransactionTableMap::COL_CREATOR_USER_ID => 5, StockTransactionTableMap::COL_AMOUNT => 6, StockTransactionTableMap::COL_CREATED_ON => 7, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'product_id' => 1, 'from_warehouse_id' => 2, 'to_warehouse_id' => 3, 'vehicle_id' => 4, 'creator_user_id' => 5, 'amount' => 6, 'created_on' => 7, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, ]
     ];
 
     /**
@@ -134,27 +159,67 @@ class ProductsTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Products.Id' => 'ID',
+        'StockTransaction.Id' => 'ID',
         'id' => 'ID',
-        'products.id' => 'ID',
-        'ProductsTableMap::COL_ID' => 'ID',
+        'stockTransaction.id' => 'ID',
+        'StockTransactionTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Name' => 'NAME',
-        'Products.Name' => 'NAME',
-        'name' => 'NAME',
-        'products.name' => 'NAME',
-        'ProductsTableMap::COL_NAME' => 'NAME',
-        'COL_NAME' => 'NAME',
-        'NAME' => 'NAME',
-        'products.NAME' => 'NAME',
+        'stock_transactions.id' => 'ID',
+        'ProductId' => 'PRODUCT_ID',
+        'StockTransaction.ProductId' => 'PRODUCT_ID',
+        'productId' => 'PRODUCT_ID',
+        'stockTransaction.productId' => 'PRODUCT_ID',
+        'StockTransactionTableMap::COL_PRODUCT_ID' => 'PRODUCT_ID',
+        'COL_PRODUCT_ID' => 'PRODUCT_ID',
+        'product_id' => 'PRODUCT_ID',
+        'stock_transactions.product_id' => 'PRODUCT_ID',
+        'FromWarehouseId' => 'FROM_WAREHOUSE_ID',
+        'StockTransaction.FromWarehouseId' => 'FROM_WAREHOUSE_ID',
+        'fromWarehouseId' => 'FROM_WAREHOUSE_ID',
+        'stockTransaction.fromWarehouseId' => 'FROM_WAREHOUSE_ID',
+        'StockTransactionTableMap::COL_FROM_WAREHOUSE_ID' => 'FROM_WAREHOUSE_ID',
+        'COL_FROM_WAREHOUSE_ID' => 'FROM_WAREHOUSE_ID',
+        'from_warehouse_id' => 'FROM_WAREHOUSE_ID',
+        'stock_transactions.from_warehouse_id' => 'FROM_WAREHOUSE_ID',
+        'ToWarehouseId' => 'TO_WAREHOUSE_ID',
+        'StockTransaction.ToWarehouseId' => 'TO_WAREHOUSE_ID',
+        'toWarehouseId' => 'TO_WAREHOUSE_ID',
+        'stockTransaction.toWarehouseId' => 'TO_WAREHOUSE_ID',
+        'StockTransactionTableMap::COL_TO_WAREHOUSE_ID' => 'TO_WAREHOUSE_ID',
+        'COL_TO_WAREHOUSE_ID' => 'TO_WAREHOUSE_ID',
+        'to_warehouse_id' => 'TO_WAREHOUSE_ID',
+        'stock_transactions.to_warehouse_id' => 'TO_WAREHOUSE_ID',
+        'VehicleId' => 'VEHICLE_ID',
+        'StockTransaction.VehicleId' => 'VEHICLE_ID',
+        'vehicleId' => 'VEHICLE_ID',
+        'stockTransaction.vehicleId' => 'VEHICLE_ID',
+        'StockTransactionTableMap::COL_VEHICLE_ID' => 'VEHICLE_ID',
+        'COL_VEHICLE_ID' => 'VEHICLE_ID',
+        'vehicle_id' => 'VEHICLE_ID',
+        'stock_transactions.vehicle_id' => 'VEHICLE_ID',
+        'CreatorUserId' => 'CREATOR_USER_ID',
+        'StockTransaction.CreatorUserId' => 'CREATOR_USER_ID',
+        'creatorUserId' => 'CREATOR_USER_ID',
+        'stockTransaction.creatorUserId' => 'CREATOR_USER_ID',
+        'StockTransactionTableMap::COL_CREATOR_USER_ID' => 'CREATOR_USER_ID',
+        'COL_CREATOR_USER_ID' => 'CREATOR_USER_ID',
+        'creator_user_id' => 'CREATOR_USER_ID',
+        'stock_transactions.creator_user_id' => 'CREATOR_USER_ID',
+        'Amount' => 'AMOUNT',
+        'StockTransaction.Amount' => 'AMOUNT',
+        'amount' => 'AMOUNT',
+        'stockTransaction.amount' => 'AMOUNT',
+        'StockTransactionTableMap::COL_AMOUNT' => 'AMOUNT',
+        'COL_AMOUNT' => 'AMOUNT',
+        'stock_transactions.amount' => 'AMOUNT',
         'CreatedOn' => 'CREATED_ON',
-        'Products.CreatedOn' => 'CREATED_ON',
+        'StockTransaction.CreatedOn' => 'CREATED_ON',
         'createdOn' => 'CREATED_ON',
-        'products.createdOn' => 'CREATED_ON',
-        'ProductsTableMap::COL_CREATED_ON' => 'CREATED_ON',
+        'stockTransaction.createdOn' => 'CREATED_ON',
+        'StockTransactionTableMap::COL_CREATED_ON' => 'CREATED_ON',
         'COL_CREATED_ON' => 'CREATED_ON',
         'created_on' => 'CREATED_ON',
-        'products.created_on' => 'CREATED_ON',
+        'stock_transactions.created_on' => 'CREATED_ON',
     ];
 
     /**
@@ -167,15 +232,20 @@ class ProductsTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('products');
-        $this->setPhpName('Products');
+        $this->setName('stock_transactions');
+        $this->setPhpName('StockTransaction');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\DbModel\\Products');
+        $this->setClassName('\\DbModel\\StockTransaction');
         $this->setPackage('DbModel');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NAME', 'Name', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('product_id', 'ProductId', 'INTEGER', 'products', 'id', true, null, null);
+        $this->addForeignKey('from_warehouse_id', 'FromWarehouseId', 'INTEGER', 'warehouses', 'id', false, null, null);
+        $this->addForeignKey('to_warehouse_id', 'ToWarehouseId', 'INTEGER', 'warehouses', 'id', false, null, null);
+        $this->addForeignKey('vehicle_id', 'VehicleId', 'INTEGER', 'vehicles', 'id', false, null, null);
+        $this->addForeignKey('creator_user_id', 'CreatorUserId', 'INTEGER', 'users', 'id', false, null, null);
+        $this->addColumn('amount', 'Amount', 'INTEGER', true, null, null);
         $this->addColumn('created_on', 'CreatedOn', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
     }
 
@@ -186,27 +256,41 @@ class ProductsTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('StockTransactions', '\\DbModel\\StockTransactions', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Product', '\\DbModel\\Product', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':product_id',
     1 => ':id',
   ),
-), null, null, 'StockTransactionss', false);
-        $this->addRelation('WarehouseProductStock', '\\DbModel\\WarehouseProductStock', RelationMap::ONE_TO_MANY, array (
+), null, null, null, false);
+        $this->addRelation('WarehouseRelatedByFromWarehouseId', '\\DbModel\\Warehouse', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':product_id',
+    0 => ':from_warehouse_id',
     1 => ':id',
   ),
-), null, null, 'WarehouseProductStocks', false);
-        $this->addRelation('WarehouseProductStockLog', '\\DbModel\\WarehouseProductStockLog', RelationMap::ONE_TO_MANY, array (
+), null, null, null, false);
+        $this->addRelation('WarehouseRelatedByToWarehouseId', '\\DbModel\\Warehouse', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
-    0 => ':product_id',
+    0 => ':to_warehouse_id',
     1 => ':id',
   ),
-), null, null, 'WarehouseProductStockLogs', false);
+), null, null, null, false);
+        $this->addRelation('Vehicle', '\\DbModel\\Vehicle', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':vehicle_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('User', '\\DbModel\\User', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':creator_user_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
     }
 
     /**
@@ -266,7 +350,7 @@ class ProductsTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? ProductsTableMap::CLASS_DEFAULT : ProductsTableMap::OM_CLASS;
+        return $withPrefix ? StockTransactionTableMap::CLASS_DEFAULT : StockTransactionTableMap::OM_CLASS;
     }
 
     /**
@@ -280,22 +364,22 @@ class ProductsTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Products object, last column rank)
+     * @return array (StockTransaction object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = ProductsTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = ProductsTableMap::getInstanceFromPool($key))) {
+        $key = StockTransactionTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = StockTransactionTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + ProductsTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + StockTransactionTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = ProductsTableMap::OM_CLASS;
-            /** @var Products $obj */
+            $cls = StockTransactionTableMap::OM_CLASS;
+            /** @var StockTransaction $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            ProductsTableMap::addInstanceToPool($obj, $key);
+            StockTransactionTableMap::addInstanceToPool($obj, $key);
         }
 
         return [$obj, $col];
@@ -318,18 +402,18 @@ class ProductsTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = ProductsTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = ProductsTableMap::getInstanceFromPool($key))) {
+            $key = StockTransactionTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = StockTransactionTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Products $obj */
+                /** @var StockTransaction $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                ProductsTableMap::addInstanceToPool($obj, $key);
+                StockTransactionTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -351,12 +435,22 @@ class ProductsTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(ProductsTableMap::COL_ID);
-            $criteria->addSelectColumn(ProductsTableMap::COL_NAME);
-            $criteria->addSelectColumn(ProductsTableMap::COL_CREATED_ON);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_PRODUCT_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_FROM_WAREHOUSE_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_TO_WAREHOUSE_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_VEHICLE_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_CREATOR_USER_ID);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_AMOUNT);
+            $criteria->addSelectColumn(StockTransactionTableMap::COL_CREATED_ON);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.NAME');
+            $criteria->addSelectColumn($alias . '.product_id');
+            $criteria->addSelectColumn($alias . '.from_warehouse_id');
+            $criteria->addSelectColumn($alias . '.to_warehouse_id');
+            $criteria->addSelectColumn($alias . '.vehicle_id');
+            $criteria->addSelectColumn($alias . '.creator_user_id');
+            $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.created_on');
         }
     }
@@ -376,12 +470,22 @@ class ProductsTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(ProductsTableMap::COL_ID);
-            $criteria->removeSelectColumn(ProductsTableMap::COL_NAME);
-            $criteria->removeSelectColumn(ProductsTableMap::COL_CREATED_ON);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_PRODUCT_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_FROM_WAREHOUSE_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_TO_WAREHOUSE_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_VEHICLE_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_CREATOR_USER_ID);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_AMOUNT);
+            $criteria->removeSelectColumn(StockTransactionTableMap::COL_CREATED_ON);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.NAME');
+            $criteria->removeSelectColumn($alias . '.product_id');
+            $criteria->removeSelectColumn($alias . '.from_warehouse_id');
+            $criteria->removeSelectColumn($alias . '.to_warehouse_id');
+            $criteria->removeSelectColumn($alias . '.vehicle_id');
+            $criteria->removeSelectColumn($alias . '.creator_user_id');
+            $criteria->removeSelectColumn($alias . '.amount');
             $criteria->removeSelectColumn($alias . '.created_on');
         }
     }
@@ -395,13 +499,13 @@ class ProductsTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(ProductsTableMap::DATABASE_NAME)->getTable(ProductsTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(StockTransactionTableMap::DATABASE_NAME)->getTable(StockTransactionTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Products or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a StockTransaction or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Products object or primary key or array of primary keys
+     * @param mixed $values Criteria or StockTransaction object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -412,27 +516,27 @@ class ProductsTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ProductsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \DbModel\Products) { // it's a model object
+        } elseif ($values instanceof \DbModel\StockTransaction) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(ProductsTableMap::DATABASE_NAME);
-            $criteria->add(ProductsTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(StockTransactionTableMap::DATABASE_NAME);
+            $criteria->add(StockTransactionTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = ProductsQuery::create()->mergeWith($criteria);
+        $query = StockTransactionQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            ProductsTableMap::clearInstancePool();
+            StockTransactionTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                ProductsTableMap::removeInstanceFromPool($singleval);
+                StockTransactionTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -440,20 +544,20 @@ class ProductsTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the products table.
+     * Deletes all rows from the stock_transactions table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return ProductsQuery::create()->doDeleteAll($con);
+        return StockTransactionQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Products or Criteria object.
+     * Performs an INSERT on the database, given a StockTransaction or Criteria object.
      *
-     * @param mixed $criteria Criteria or Products object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or StockTransaction object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -462,22 +566,22 @@ class ProductsTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(ProductsTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(StockTransactionTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Products object
+            $criteria = $criteria->buildCriteria(); // build Criteria from StockTransaction object
         }
 
-        if ($criteria->containsKey(ProductsTableMap::COL_ID) && $criteria->keyContainsValue(ProductsTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ProductsTableMap::COL_ID.')');
+        if ($criteria->containsKey(StockTransactionTableMap::COL_ID) && $criteria->keyContainsValue(StockTransactionTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.StockTransactionTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = ProductsQuery::create()->mergeWith($criteria);
+        $query = StockTransactionQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

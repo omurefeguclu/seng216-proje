@@ -1,7 +1,5 @@
 <?php
-require_once 'RouteMetadata.php';
-require_once 'RouteGroup.php';
-require_once 'RouteBuilder.php';
+namespace Core\Router;
 
 class Router {
     private $routes = ['GET' => [], 'POST' => []];
@@ -29,7 +27,7 @@ class Router {
 
     public function dispatch(): void
     {
-        $ctx = new RequestContext();
+        $ctx = new \Core\Http\RequestContext();
 
         // ✅ Normalize trailing slash (except for root)
         if ($ctx->path !== '/' && str_ends_with($ctx->path, '/')) {

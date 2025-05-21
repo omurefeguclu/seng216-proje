@@ -5,12 +5,12 @@ namespace DbModel\Base;
 use \DateTime;
 use \Exception;
 use \PDO;
-use DbModel\StockTransactions as ChildStockTransactions;
-use DbModel\StockTransactionsQuery as ChildStockTransactionsQuery;
-use DbModel\Users as ChildUsers;
-use DbModel\UsersQuery as ChildUsersQuery;
-use DbModel\Map\StockTransactionsTableMap;
-use DbModel\Map\UsersTableMap;
+use DbModel\StockTransaction as ChildStockTransaction;
+use DbModel\StockTransactionQuery as ChildStockTransactionQuery;
+use DbModel\User as ChildUser;
+use DbModel\UserQuery as ChildUserQuery;
+use DbModel\Map\StockTransactionTableMap;
+use DbModel\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -32,14 +32,14 @@ use Propel\Runtime\Util\PropelDateTime;
  *
  * @package    propel.generator.DbModel.Base
  */
-abstract class Users implements ActiveRecordInterface
+abstract class User implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\DbModel\\Map\\UsersTableMap';
+    public const TABLE_MAP = '\\DbModel\\Map\\UserTableMap';
 
 
     /**
@@ -98,11 +98,11 @@ abstract class Users implements ActiveRecordInterface
     protected $created_on;
 
     /**
-     * @var        ObjectCollection|ChildStockTransactions[] Collection to store aggregation of ChildStockTransactions objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions> Collection to store aggregation of ChildStockTransactions objects.
+     * @var        ObjectCollection|ChildStockTransaction[] Collection to store aggregation of ChildStockTransaction objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction> Collection to store aggregation of ChildStockTransaction objects.
      */
-    protected $collStockTransactionss;
-    protected $collStockTransactionssPartial;
+    protected $collStockTransactions;
+    protected $collStockTransactionsPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -114,10 +114,10 @@ abstract class Users implements ActiveRecordInterface
 
     /**
      * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildStockTransactions[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransactions>
+     * @var ObjectCollection|ChildStockTransaction[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction>
      */
-    protected $stockTransactionssScheduledForDeletion = null;
+    protected $stockTransactionsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -130,7 +130,7 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Initializes internal state of DbModel\Base\Users object.
+     * Initializes internal state of DbModel\Base\User object.
      * @see applyDefaults()
      */
     public function __construct()
@@ -225,9 +225,9 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Users</code> instance.  If
-     * <code>obj</code> is an instance of <code>Users</code>, delegates to
-     * <code>equals(Users)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>User</code> instance.  If
+     * <code>obj</code> is an instance of <code>User</code>, delegates to
+     * <code>equals(User)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -423,7 +423,7 @@ abstract class Users implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[UsersTableMap::COL_ID] = true;
+            $this->modifiedColumns[UserTableMap::COL_ID] = true;
         }
 
         return $this;
@@ -443,7 +443,7 @@ abstract class Users implements ActiveRecordInterface
 
         if ($this->username !== $v) {
             $this->username = $v;
-            $this->modifiedColumns[UsersTableMap::COL_USERNAME] = true;
+            $this->modifiedColumns[UserTableMap::COL_USERNAME] = true;
         }
 
         return $this;
@@ -463,7 +463,7 @@ abstract class Users implements ActiveRecordInterface
 
         if ($this->password !== $v) {
             $this->password = $v;
-            $this->modifiedColumns[UsersTableMap::COL_PASSWORD] = true;
+            $this->modifiedColumns[UserTableMap::COL_PASSWORD] = true;
         }
 
         return $this;
@@ -482,7 +482,7 @@ abstract class Users implements ActiveRecordInterface
         if ($this->created_on !== null || $dt !== null) {
             if ($this->created_on === null || $dt === null || $dt->format("Y-m-d H:i:s.u") !== $this->created_on->format("Y-m-d H:i:s.u")) {
                 $this->created_on = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[UsersTableMap::COL_CREATED_ON] = true;
+                $this->modifiedColumns[UserTableMap::COL_CREATED_ON] = true;
             }
         } // if either are not null
 
@@ -525,16 +525,16 @@ abstract class Users implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UsersTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UserTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UsersTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UserTableMap::translateFieldName('Username', TableMap::TYPE_PHPNAME, $indexType)];
             $this->username = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UsersTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UserTableMap::translateFieldName('Password', TableMap::TYPE_PHPNAME, $indexType)];
             $this->password = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UsersTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UserTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -547,10 +547,10 @@ abstract class Users implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = UsersTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = UserTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\Users'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\User'), 0, $e);
         }
     }
 
@@ -593,13 +593,13 @@ abstract class Users implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UserTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildUsersQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildUserQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -609,7 +609,7 @@ abstract class Users implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collStockTransactionss = null;
+            $this->collStockTransactions = null;
 
         } // if (deep)
     }
@@ -620,8 +620,8 @@ abstract class Users implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see Users::setDeleted()
-     * @see Users::isDeleted()
+     * @see User::setDeleted()
+     * @see User::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -630,11 +630,11 @@ abstract class Users implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildUsersQuery::create()
+            $deleteQuery = ChildUserQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -669,7 +669,7 @@ abstract class Users implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -688,7 +688,7 @@ abstract class Users implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                UsersTableMap::addInstanceToPool($this);
+                UserTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -725,18 +725,18 @@ abstract class Users implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->stockTransactionssScheduledForDeletion !== null) {
-                if (!$this->stockTransactionssScheduledForDeletion->isEmpty()) {
-                    foreach ($this->stockTransactionssScheduledForDeletion as $stockTransactions) {
+            if ($this->stockTransactionsScheduledForDeletion !== null) {
+                if (!$this->stockTransactionsScheduledForDeletion->isEmpty()) {
+                    foreach ($this->stockTransactionsScheduledForDeletion as $stockTransaction) {
                         // need to save related object because we set the relation to null
-                        $stockTransactions->save($con);
+                        $stockTransaction->save($con);
                     }
-                    $this->stockTransactionssScheduledForDeletion = null;
+                    $this->stockTransactionsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collStockTransactionss !== null) {
-                foreach ($this->collStockTransactionss as $referrerFK) {
+            if ($this->collStockTransactions !== null) {
+                foreach ($this->collStockTransactions as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -763,22 +763,22 @@ abstract class Users implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[UsersTableMap::COL_ID] = true;
+        $this->modifiedColumns[UserTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UsersTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UserTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(UsersTableMap::COL_ID)) {
+        if ($this->isColumnModified(UserTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(UsersTableMap::COL_USERNAME)) {
+        if ($this->isColumnModified(UserTableMap::COL_USERNAME)) {
             $modifiedColumns[':p' . $index++]  = 'username';
         }
-        if ($this->isColumnModified(UsersTableMap::COL_PASSWORD)) {
+        if ($this->isColumnModified(UserTableMap::COL_PASSWORD)) {
             $modifiedColumns[':p' . $index++]  = 'PASSWORD';
         }
-        if ($this->isColumnModified(UsersTableMap::COL_CREATED_ON)) {
+        if ($this->isColumnModified(UserTableMap::COL_CREATED_ON)) {
             $modifiedColumns[':p' . $index++]  = 'created_on';
         }
 
@@ -854,7 +854,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UsersTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -904,11 +904,11 @@ abstract class Users implements ActiveRecordInterface
      */
     public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['Users'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['User'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Users'][$this->hashCode()] = true;
-        $keys = UsersTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['User'][$this->hashCode()] = true;
+        $keys = UserTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getUsername(),
@@ -925,20 +925,20 @@ abstract class Users implements ActiveRecordInterface
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collStockTransactionss) {
+            if (null !== $this->collStockTransactions) {
 
                 switch ($keyType) {
                     case TableMap::TYPE_CAMELNAME:
-                        $key = 'stockTransactionss';
+                        $key = 'stockTransactions';
                         break;
                     case TableMap::TYPE_FIELDNAME:
                         $key = 'stock_transactionss';
                         break;
                     default:
-                        $key = 'StockTransactionss';
+                        $key = 'StockTransactions';
                 }
 
-                $result[$key] = $this->collStockTransactionss->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+                $result[$key] = $this->collStockTransactions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -958,7 +958,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = UsersTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UserTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -1012,7 +1012,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = UsersTableMap::getFieldNames($keyType);
+        $keys = UserTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
@@ -1067,19 +1067,19 @@ abstract class Users implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(UsersTableMap::DATABASE_NAME);
+        $criteria = new Criteria(UserTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(UsersTableMap::COL_ID)) {
-            $criteria->add(UsersTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(UserTableMap::COL_ID)) {
+            $criteria->add(UserTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(UsersTableMap::COL_USERNAME)) {
-            $criteria->add(UsersTableMap::COL_USERNAME, $this->username);
+        if ($this->isColumnModified(UserTableMap::COL_USERNAME)) {
+            $criteria->add(UserTableMap::COL_USERNAME, $this->username);
         }
-        if ($this->isColumnModified(UsersTableMap::COL_PASSWORD)) {
-            $criteria->add(UsersTableMap::COL_PASSWORD, $this->password);
+        if ($this->isColumnModified(UserTableMap::COL_PASSWORD)) {
+            $criteria->add(UserTableMap::COL_PASSWORD, $this->password);
         }
-        if ($this->isColumnModified(UsersTableMap::COL_CREATED_ON)) {
-            $criteria->add(UsersTableMap::COL_CREATED_ON, $this->created_on);
+        if ($this->isColumnModified(UserTableMap::COL_CREATED_ON)) {
+            $criteria->add(UserTableMap::COL_CREATED_ON, $this->created_on);
         }
 
         return $criteria;
@@ -1097,8 +1097,8 @@ abstract class Users implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildUsersQuery::create();
-        $criteria->add(UsersTableMap::COL_ID, $this->id);
+        $criteria = ChildUserQuery::create();
+        $criteria->add(UserTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1161,7 +1161,7 @@ abstract class Users implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \DbModel\Users (or compatible) type.
+     * @param object $copyObj An object of \DbModel\User (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1178,9 +1178,9 @@ abstract class Users implements ActiveRecordInterface
             // the getter/setter methods for fkey referrer objects.
             $copyObj->setNew(false);
 
-            foreach ($this->getStockTransactionss() as $relObj) {
+            foreach ($this->getStockTransactions() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addStockTransactions($relObj->copy($deepCopy));
+                    $copyObj->addStockTransaction($relObj->copy($deepCopy));
                 }
             }
 
@@ -1201,7 +1201,7 @@ abstract class Users implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \DbModel\Users Clone of current object.
+     * @return \DbModel\User Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1225,42 +1225,42 @@ abstract class Users implements ActiveRecordInterface
      */
     public function initRelation($relationName): void
     {
-        if ('StockTransactions' === $relationName) {
-            $this->initStockTransactionss();
+        if ('StockTransaction' === $relationName) {
+            $this->initStockTransactions();
             return;
         }
     }
 
     /**
-     * Clears out the collStockTransactionss collection
+     * Clears out the collStockTransactions collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return $this
-     * @see addStockTransactionss()
+     * @see addStockTransactions()
      */
-    public function clearStockTransactionss()
+    public function clearStockTransactions()
     {
-        $this->collStockTransactionss = null; // important to set this to NULL since that means it is uninitialized
+        $this->collStockTransactions = null; // important to set this to NULL since that means it is uninitialized
 
         return $this;
     }
 
     /**
-     * Reset is the collStockTransactionss collection loaded partially.
+     * Reset is the collStockTransactions collection loaded partially.
      *
      * @return void
      */
-    public function resetPartialStockTransactionss($v = true): void
+    public function resetPartialStockTransactions($v = true): void
     {
-        $this->collStockTransactionssPartial = $v;
+        $this->collStockTransactionsPartial = $v;
     }
 
     /**
-     * Initializes the collStockTransactionss collection.
+     * Initializes the collStockTransactions collection.
      *
-     * By default this just sets the collStockTransactionss collection to an empty array (like clearcollStockTransactionss());
+     * By default this just sets the collStockTransactions collection to an empty array (like clearcollStockTransactions());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -1269,172 +1269,172 @@ abstract class Users implements ActiveRecordInterface
      *
      * @return void
      */
-    public function initStockTransactionss(bool $overrideExisting = true): void
+    public function initStockTransactions(bool $overrideExisting = true): void
     {
-        if (null !== $this->collStockTransactionss && !$overrideExisting) {
+        if (null !== $this->collStockTransactions && !$overrideExisting) {
             return;
         }
 
-        $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+        $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-        $this->collStockTransactionss = new $collectionClassName;
-        $this->collStockTransactionss->setModel('\DbModel\StockTransactions');
+        $this->collStockTransactions = new $collectionClassName;
+        $this->collStockTransactions->setModel('\DbModel\StockTransaction');
     }
 
     /**
-     * Gets an array of ChildStockTransactions objects which contain a foreign key that references this object.
+     * Gets an array of ChildStockTransaction objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
      * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildUsers is new, it will return
+     * If this ChildUser is new, it will return
      * an empty collection or the current collection; the criteria is ignored on a new object.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction> List of ChildStockTransaction objects
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function getStockTransactionss(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    public function getStockTransactions(?Criteria $criteria = null, ?ConnectionInterface $con = null)
     {
-        $partial = $this->collStockTransactionssPartial && !$this->isNew();
-        if (null === $this->collStockTransactionss || null !== $criteria || $partial) {
+        $partial = $this->collStockTransactionsPartial && !$this->isNew();
+        if (null === $this->collStockTransactions || null !== $criteria || $partial) {
             if ($this->isNew()) {
                 // return empty collection
-                if (null === $this->collStockTransactionss) {
-                    $this->initStockTransactionss();
+                if (null === $this->collStockTransactions) {
+                    $this->initStockTransactions();
                 } else {
-                    $collectionClassName = StockTransactionsTableMap::getTableMap()->getCollectionClassName();
+                    $collectionClassName = StockTransactionTableMap::getTableMap()->getCollectionClassName();
 
-                    $collStockTransactionss = new $collectionClassName;
-                    $collStockTransactionss->setModel('\DbModel\StockTransactions');
+                    $collStockTransactions = new $collectionClassName;
+                    $collStockTransactions->setModel('\DbModel\StockTransaction');
 
-                    return $collStockTransactionss;
+                    return $collStockTransactions;
                 }
             } else {
-                $collStockTransactionss = ChildStockTransactionsQuery::create(null, $criteria)
-                    ->filterByUsers($this)
+                $collStockTransactions = ChildStockTransactionQuery::create(null, $criteria)
+                    ->filterByUser($this)
                     ->find($con);
 
                 if (null !== $criteria) {
-                    if (false !== $this->collStockTransactionssPartial && count($collStockTransactionss)) {
-                        $this->initStockTransactionss(false);
+                    if (false !== $this->collStockTransactionsPartial && count($collStockTransactions)) {
+                        $this->initStockTransactions(false);
 
-                        foreach ($collStockTransactionss as $obj) {
-                            if (false == $this->collStockTransactionss->contains($obj)) {
-                                $this->collStockTransactionss->append($obj);
+                        foreach ($collStockTransactions as $obj) {
+                            if (false == $this->collStockTransactions->contains($obj)) {
+                                $this->collStockTransactions->append($obj);
                             }
                         }
 
-                        $this->collStockTransactionssPartial = true;
+                        $this->collStockTransactionsPartial = true;
                     }
 
-                    return $collStockTransactionss;
+                    return $collStockTransactions;
                 }
 
-                if ($partial && $this->collStockTransactionss) {
-                    foreach ($this->collStockTransactionss as $obj) {
+                if ($partial && $this->collStockTransactions) {
+                    foreach ($this->collStockTransactions as $obj) {
                         if ($obj->isNew()) {
-                            $collStockTransactionss[] = $obj;
+                            $collStockTransactions[] = $obj;
                         }
                     }
                 }
 
-                $this->collStockTransactionss = $collStockTransactionss;
-                $this->collStockTransactionssPartial = false;
+                $this->collStockTransactions = $collStockTransactions;
+                $this->collStockTransactionsPartial = false;
             }
         }
 
-        return $this->collStockTransactionss;
+        return $this->collStockTransactions;
     }
 
     /**
-     * Sets a collection of ChildStockTransactions objects related by a one-to-many relationship
+     * Sets a collection of ChildStockTransaction objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param Collection $stockTransactionss A Propel collection.
+     * @param Collection $stockTransactions A Propel collection.
      * @param ConnectionInterface $con Optional connection object
      * @return $this The current object (for fluent API support)
      */
-    public function setStockTransactionss(Collection $stockTransactionss, ?ConnectionInterface $con = null)
+    public function setStockTransactions(Collection $stockTransactions, ?ConnectionInterface $con = null)
     {
-        /** @var ChildStockTransactions[] $stockTransactionssToDelete */
-        $stockTransactionssToDelete = $this->getStockTransactionss(new Criteria(), $con)->diff($stockTransactionss);
+        /** @var ChildStockTransaction[] $stockTransactionsToDelete */
+        $stockTransactionsToDelete = $this->getStockTransactions(new Criteria(), $con)->diff($stockTransactions);
 
 
-        $this->stockTransactionssScheduledForDeletion = $stockTransactionssToDelete;
+        $this->stockTransactionsScheduledForDeletion = $stockTransactionsToDelete;
 
-        foreach ($stockTransactionssToDelete as $stockTransactionsRemoved) {
-            $stockTransactionsRemoved->setUsers(null);
+        foreach ($stockTransactionsToDelete as $stockTransactionRemoved) {
+            $stockTransactionRemoved->setUser(null);
         }
 
-        $this->collStockTransactionss = null;
-        foreach ($stockTransactionss as $stockTransactions) {
-            $this->addStockTransactions($stockTransactions);
+        $this->collStockTransactions = null;
+        foreach ($stockTransactions as $stockTransaction) {
+            $this->addStockTransaction($stockTransaction);
         }
 
-        $this->collStockTransactionss = $stockTransactionss;
-        $this->collStockTransactionssPartial = false;
+        $this->collStockTransactions = $stockTransactions;
+        $this->collStockTransactionsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related StockTransactions objects.
+     * Returns the number of related StockTransaction objects.
      *
      * @param Criteria $criteria
      * @param bool $distinct
      * @param ConnectionInterface $con
-     * @return int Count of related StockTransactions objects.
+     * @return int Count of related StockTransaction objects.
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function countStockTransactionss(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    public function countStockTransactions(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
     {
-        $partial = $this->collStockTransactionssPartial && !$this->isNew();
-        if (null === $this->collStockTransactionss || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collStockTransactionss) {
+        $partial = $this->collStockTransactionsPartial && !$this->isNew();
+        if (null === $this->collStockTransactions || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStockTransactions) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getStockTransactionss());
+                return count($this->getStockTransactions());
             }
 
-            $query = ChildStockTransactionsQuery::create(null, $criteria);
+            $query = ChildStockTransactionQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
 
             return $query
-                ->filterByUsers($this)
+                ->filterByUser($this)
                 ->count($con);
         }
 
-        return count($this->collStockTransactionss);
+        return count($this->collStockTransactions);
     }
 
     /**
-     * Method called to associate a ChildStockTransactions object to this object
-     * through the ChildStockTransactions foreign key attribute.
+     * Method called to associate a ChildStockTransaction object to this object
+     * through the ChildStockTransaction foreign key attribute.
      *
-     * @param ChildStockTransactions $l ChildStockTransactions
+     * @param ChildStockTransaction $l ChildStockTransaction
      * @return $this The current object (for fluent API support)
      */
-    public function addStockTransactions(ChildStockTransactions $l)
+    public function addStockTransaction(ChildStockTransaction $l)
     {
-        if ($this->collStockTransactionss === null) {
-            $this->initStockTransactionss();
-            $this->collStockTransactionssPartial = true;
+        if ($this->collStockTransactions === null) {
+            $this->initStockTransactions();
+            $this->collStockTransactionsPartial = true;
         }
 
-        if (!$this->collStockTransactionss->contains($l)) {
-            $this->doAddStockTransactions($l);
+        if (!$this->collStockTransactions->contains($l)) {
+            $this->doAddStockTransaction($l);
 
-            if ($this->stockTransactionssScheduledForDeletion and $this->stockTransactionssScheduledForDeletion->contains($l)) {
-                $this->stockTransactionssScheduledForDeletion->remove($this->stockTransactionssScheduledForDeletion->search($l));
+            if ($this->stockTransactionsScheduledForDeletion and $this->stockTransactionsScheduledForDeletion->contains($l)) {
+                $this->stockTransactionsScheduledForDeletion->remove($this->stockTransactionsScheduledForDeletion->search($l));
             }
         }
 
@@ -1442,29 +1442,29 @@ abstract class Users implements ActiveRecordInterface
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactions The ChildStockTransactions object to add.
+     * @param ChildStockTransaction $stockTransaction The ChildStockTransaction object to add.
      */
-    protected function doAddStockTransactions(ChildStockTransactions $stockTransactions): void
+    protected function doAddStockTransaction(ChildStockTransaction $stockTransaction): void
     {
-        $this->collStockTransactionss[]= $stockTransactions;
-        $stockTransactions->setUsers($this);
+        $this->collStockTransactions[]= $stockTransaction;
+        $stockTransaction->setUser($this);
     }
 
     /**
-     * @param ChildStockTransactions $stockTransactions The ChildStockTransactions object to remove.
+     * @param ChildStockTransaction $stockTransaction The ChildStockTransaction object to remove.
      * @return $this The current object (for fluent API support)
      */
-    public function removeStockTransactions(ChildStockTransactions $stockTransactions)
+    public function removeStockTransaction(ChildStockTransaction $stockTransaction)
     {
-        if ($this->getStockTransactionss()->contains($stockTransactions)) {
-            $pos = $this->collStockTransactionss->search($stockTransactions);
-            $this->collStockTransactionss->remove($pos);
-            if (null === $this->stockTransactionssScheduledForDeletion) {
-                $this->stockTransactionssScheduledForDeletion = clone $this->collStockTransactionss;
-                $this->stockTransactionssScheduledForDeletion->clear();
+        if ($this->getStockTransactions()->contains($stockTransaction)) {
+            $pos = $this->collStockTransactions->search($stockTransaction);
+            $this->collStockTransactions->remove($pos);
+            if (null === $this->stockTransactionsScheduledForDeletion) {
+                $this->stockTransactionsScheduledForDeletion = clone $this->collStockTransactions;
+                $this->stockTransactionsScheduledForDeletion->clear();
             }
-            $this->stockTransactionssScheduledForDeletion[]= $stockTransactions;
-            $stockTransactions->setUsers(null);
+            $this->stockTransactionsScheduledForDeletion[]= $stockTransaction;
+            $stockTransaction->setUser(null);
         }
 
         return $this;
@@ -1474,104 +1474,104 @@ abstract class Users implements ActiveRecordInterface
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Users is new, it will return
-     * an empty collection; or if this Users has previously
-     * been saved, it will retrieve related StockTransactionss from storage.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related StockTransactions from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Users.
+     * actually need in User.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssJoinProducts(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsJoinProduct(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Products', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Product', $joinBehavior);
 
-        return $this->getStockTransactionss($query, $con);
+        return $this->getStockTransactions($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Users is new, it will return
-     * an empty collection; or if this Users has previously
-     * been saved, it will retrieve related StockTransactionss from storage.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related StockTransactions from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Users.
+     * actually need in User.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssJoinWarehousesRelatedByFromWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsJoinWarehouseRelatedByFromWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('WarehousesRelatedByFromWarehouseId', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('WarehouseRelatedByFromWarehouseId', $joinBehavior);
 
-        return $this->getStockTransactionss($query, $con);
+        return $this->getStockTransactions($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Users is new, it will return
-     * an empty collection; or if this Users has previously
-     * been saved, it will retrieve related StockTransactionss from storage.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related StockTransactions from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Users.
+     * actually need in User.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssJoinWarehousesRelatedByToWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsJoinWarehouseRelatedByToWarehouseId(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('WarehousesRelatedByToWarehouseId', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('WarehouseRelatedByToWarehouseId', $joinBehavior);
 
-        return $this->getStockTransactionss($query, $con);
+        return $this->getStockTransactions($query, $con);
     }
 
 
     /**
      * If this collection has already been initialized with
      * an identical criteria, it returns the collection.
-     * Otherwise if this Users is new, it will return
-     * an empty collection; or if this Users has previously
-     * been saved, it will retrieve related StockTransactionss from storage.
+     * Otherwise if this User is new, it will return
+     * an empty collection; or if this User has previously
+     * been saved, it will retrieve related StockTransactions from storage.
      *
      * This method is protected by default in order to keep the public
      * api reasonable.  You can provide public methods for those you
-     * actually need in Users.
+     * actually need in User.
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param ConnectionInterface $con optional connection object
      * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildStockTransactions[] List of ChildStockTransactions objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransactions}> List of ChildStockTransactions objects
+     * @return ObjectCollection|ChildStockTransaction[] List of ChildStockTransaction objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildStockTransaction}> List of ChildStockTransaction objects
      */
-    public function getStockTransactionssJoinVehicles(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    public function getStockTransactionsJoinVehicle(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
     {
-        $query = ChildStockTransactionsQuery::create(null, $criteria);
-        $query->joinWith('Vehicles', $joinBehavior);
+        $query = ChildStockTransactionQuery::create(null, $criteria);
+        $query->joinWith('Vehicle', $joinBehavior);
 
-        return $this->getStockTransactionss($query, $con);
+        return $this->getStockTransactions($query, $con);
     }
 
     /**
@@ -1609,14 +1609,14 @@ abstract class Users implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collStockTransactionss) {
-                foreach ($this->collStockTransactionss as $o) {
+            if ($this->collStockTransactions) {
+                foreach ($this->collStockTransactions as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
         } // if ($deep)
 
-        $this->collStockTransactionss = null;
+        $this->collStockTransactions = null;
         return $this;
     }
 
@@ -1627,7 +1627,7 @@ abstract class Users implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(UsersTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(UserTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

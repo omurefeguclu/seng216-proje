@@ -1,4 +1,6 @@
 <?php
+namespace Core\Http;
+
 class RequestContext {
     public array|object|int|null $user = null;
     public string $method;
@@ -12,8 +14,25 @@ class RequestContext {
     }
 
     public function json(): ?array {
+        if (
+            !isset($this->headers['Content-Type']) ||
+            stripos($this->headers['Content-Type'], 'application/json') === false
+        ) {
+            return null;
+        }
+
         $body = file_get_contents('php://input');
-        return json_decode($body, true);
+        if (empty($body)) return null;
+
+        $json = json_decode($body, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            http_response_code(400);
+            echo 'Invalid JSON';
+            return null;
+        }
+
+        return $json;
     }
 
     public function query(string $key, $default = null): mixed {

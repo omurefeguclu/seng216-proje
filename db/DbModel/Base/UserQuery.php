@@ -4,9 +4,9 @@ namespace DbModel\Base;
 
 use \Exception;
 use \PDO;
-use DbModel\Users as ChildUsers;
-use DbModel\UsersQuery as ChildUsersQuery;
-use DbModel\Map\UsersTableMap;
+use DbModel\User as ChildUser;
+use DbModel\UserQuery as ChildUserQuery;
+use DbModel\Map\UserTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -19,97 +19,97 @@ use Propel\Runtime\Exception\PropelException;
 /**
  * Base class that represents a query for the `users` table.
  *
- * @method     ChildUsersQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildUsersQuery orderByUsername($order = Criteria::ASC) Order by the username column
- * @method     ChildUsersQuery orderByPassword($order = Criteria::ASC) Order by the PASSWORD column
- * @method     ChildUsersQuery orderByCreatedOn($order = Criteria::ASC) Order by the created_on column
+ * @method     ChildUserQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildUserQuery orderByUsername($order = Criteria::ASC) Order by the username column
+ * @method     ChildUserQuery orderByPassword($order = Criteria::ASC) Order by the PASSWORD column
+ * @method     ChildUserQuery orderByCreatedOn($order = Criteria::ASC) Order by the created_on column
  *
- * @method     ChildUsersQuery groupById() Group by the id column
- * @method     ChildUsersQuery groupByUsername() Group by the username column
- * @method     ChildUsersQuery groupByPassword() Group by the PASSWORD column
- * @method     ChildUsersQuery groupByCreatedOn() Group by the created_on column
+ * @method     ChildUserQuery groupById() Group by the id column
+ * @method     ChildUserQuery groupByUsername() Group by the username column
+ * @method     ChildUserQuery groupByPassword() Group by the PASSWORD column
+ * @method     ChildUserQuery groupByCreatedOn() Group by the created_on column
  *
- * @method     ChildUsersQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildUsersQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildUsersQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildUserQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildUserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildUserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildUsersQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
- * @method     ChildUsersQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
- * @method     ChildUsersQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
+ * @method     ChildUserQuery leftJoinWith($relation) Adds a LEFT JOIN clause and with to the query
+ * @method     ChildUserQuery rightJoinWith($relation) Adds a RIGHT JOIN clause and with to the query
+ * @method     ChildUserQuery innerJoinWith($relation) Adds a INNER JOIN clause and with to the query
  *
- * @method     ChildUsersQuery leftJoinStockTransactions($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransactions relation
- * @method     ChildUsersQuery rightJoinStockTransactions($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransactions relation
- * @method     ChildUsersQuery innerJoinStockTransactions($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransactions relation
+ * @method     ChildUserQuery leftJoinStockTransaction($relationAlias = null) Adds a LEFT JOIN clause to the query using the StockTransaction relation
+ * @method     ChildUserQuery rightJoinStockTransaction($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StockTransaction relation
+ * @method     ChildUserQuery innerJoinStockTransaction($relationAlias = null) Adds a INNER JOIN clause to the query using the StockTransaction relation
  *
- * @method     ChildUsersQuery joinWithStockTransactions($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransactions relation
+ * @method     ChildUserQuery joinWithStockTransaction($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the StockTransaction relation
  *
- * @method     ChildUsersQuery leftJoinWithStockTransactions() Adds a LEFT JOIN clause and with to the query using the StockTransactions relation
- * @method     ChildUsersQuery rightJoinWithStockTransactions() Adds a RIGHT JOIN clause and with to the query using the StockTransactions relation
- * @method     ChildUsersQuery innerJoinWithStockTransactions() Adds a INNER JOIN clause and with to the query using the StockTransactions relation
+ * @method     ChildUserQuery leftJoinWithStockTransaction() Adds a LEFT JOIN clause and with to the query using the StockTransaction relation
+ * @method     ChildUserQuery rightJoinWithStockTransaction() Adds a RIGHT JOIN clause and with to the query using the StockTransaction relation
+ * @method     ChildUserQuery innerJoinWithStockTransaction() Adds a INNER JOIN clause and with to the query using the StockTransaction relation
  *
- * @method     \DbModel\StockTransactionsQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \DbModel\StockTransactionQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
- * @method     ChildUsers|null findOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query
- * @method     ChildUsers findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUsers matching the query, or a new ChildUsers object populated from the query conditions when no match is found
+ * @method     ChildUser|null findOne(?ConnectionInterface $con = null) Return the first ChildUser matching the query
+ * @method     ChildUser findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildUser matching the query, or a new ChildUser object populated from the query conditions when no match is found
  *
- * @method     ChildUsers|null findOneById(int $id) Return the first ChildUsers filtered by the id column
- * @method     ChildUsers|null findOneByUsername(string $username) Return the first ChildUsers filtered by the username column
- * @method     ChildUsers|null findOneByPassword(string $PASSWORD) Return the first ChildUsers filtered by the PASSWORD column
- * @method     ChildUsers|null findOneByCreatedOn(string $created_on) Return the first ChildUsers filtered by the created_on column
+ * @method     ChildUser|null findOneById(int $id) Return the first ChildUser filtered by the id column
+ * @method     ChildUser|null findOneByUsername(string $username) Return the first ChildUser filtered by the username column
+ * @method     ChildUser|null findOneByPassword(string $PASSWORD) Return the first ChildUser filtered by the PASSWORD column
+ * @method     ChildUser|null findOneByCreatedOn(string $created_on) Return the first ChildUser filtered by the created_on column
  *
- * @method     ChildUsers requirePk($key, ?ConnectionInterface $con = null) Return the ChildUsers by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOne(?ConnectionInterface $con = null) Return the first ChildUsers matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requirePk($key, ?ConnectionInterface $con = null) Return the ChildUser by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOne(?ConnectionInterface $con = null) Return the first ChildUser matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildUsers requireOneById(int $id) Return the first ChildUsers filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOneByUsername(string $username) Return the first ChildUsers filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOneByPassword(string $PASSWORD) Return the first ChildUsers filtered by the PASSWORD column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildUsers requireOneByCreatedOn(string $created_on) Return the first ChildUsers filtered by the created_on column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneById(int $id) Return the first ChildUser filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByUsername(string $username) Return the first ChildUser filtered by the username column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByPassword(string $PASSWORD) Return the first ChildUser filtered by the PASSWORD column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildUser requireOneByCreatedOn(string $created_on) Return the first ChildUser filtered by the created_on column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
- * @method     ChildUsers[]|Collection find(?ConnectionInterface $con = null) Return ChildUsers objects based on current ModelCriteria
- * @psalm-method Collection&\Traversable<ChildUsers> find(?ConnectionInterface $con = null) Return ChildUsers objects based on current ModelCriteria
+ * @method     ChildUser[]|Collection find(?ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
+ * @psalm-method Collection&\Traversable<ChildUser> find(?ConnectionInterface $con = null) Return ChildUser objects based on current ModelCriteria
  *
- * @method     ChildUsers[]|Collection findById(int|array<int> $id) Return ChildUsers objects filtered by the id column
- * @psalm-method Collection&\Traversable<ChildUsers> findById(int|array<int> $id) Return ChildUsers objects filtered by the id column
- * @method     ChildUsers[]|Collection findByUsername(string|array<string> $username) Return ChildUsers objects filtered by the username column
- * @psalm-method Collection&\Traversable<ChildUsers> findByUsername(string|array<string> $username) Return ChildUsers objects filtered by the username column
- * @method     ChildUsers[]|Collection findByPassword(string|array<string> $PASSWORD) Return ChildUsers objects filtered by the PASSWORD column
- * @psalm-method Collection&\Traversable<ChildUsers> findByPassword(string|array<string> $PASSWORD) Return ChildUsers objects filtered by the PASSWORD column
- * @method     ChildUsers[]|Collection findByCreatedOn(string|array<string> $created_on) Return ChildUsers objects filtered by the created_on column
- * @psalm-method Collection&\Traversable<ChildUsers> findByCreatedOn(string|array<string> $created_on) Return ChildUsers objects filtered by the created_on column
+ * @method     ChildUser[]|Collection findById(int|array<int> $id) Return ChildUser objects filtered by the id column
+ * @psalm-method Collection&\Traversable<ChildUser> findById(int|array<int> $id) Return ChildUser objects filtered by the id column
+ * @method     ChildUser[]|Collection findByUsername(string|array<string> $username) Return ChildUser objects filtered by the username column
+ * @psalm-method Collection&\Traversable<ChildUser> findByUsername(string|array<string> $username) Return ChildUser objects filtered by the username column
+ * @method     ChildUser[]|Collection findByPassword(string|array<string> $PASSWORD) Return ChildUser objects filtered by the PASSWORD column
+ * @psalm-method Collection&\Traversable<ChildUser> findByPassword(string|array<string> $PASSWORD) Return ChildUser objects filtered by the PASSWORD column
+ * @method     ChildUser[]|Collection findByCreatedOn(string|array<string> $created_on) Return ChildUser objects filtered by the created_on column
+ * @psalm-method Collection&\Traversable<ChildUser> findByCreatedOn(string|array<string> $created_on) Return ChildUser objects filtered by the created_on column
  *
- * @method     ChildUsers[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
- * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildUsers> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildUser[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildUser> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  */
-abstract class UsersQuery extends ModelCriteria
+abstract class UserQuery extends ModelCriteria
 {
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \DbModel\Base\UsersQuery object.
+     * Initializes internal state of \DbModel\Base\UserQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\DbModel\\Users', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\DbModel\\User', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildUsersQuery object.
+     * Returns a new ChildUserQuery object.
      *
      * @param string $modelAlias The alias of a model in the query
      * @param Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildUsersQuery
+     * @return ChildUserQuery
      */
     public static function create(?string $modelAlias = null, ?Criteria $criteria = null): Criteria
     {
-        if ($criteria instanceof ChildUsersQuery) {
+        if ($criteria instanceof ChildUserQuery) {
             return $criteria;
         }
-        $query = new ChildUsersQuery();
+        $query = new ChildUserQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -132,7 +132,7 @@ abstract class UsersQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildUsers|array|mixed the result, formatted by the current formatter
+     * @return ChildUser|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ?ConnectionInterface $con = null)
     {
@@ -141,7 +141,7 @@ abstract class UsersQuery extends ModelCriteria
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UserTableMap::DATABASE_NAME);
         }
 
         $this->basePreSelect($con);
@@ -154,7 +154,7 @@ abstract class UsersQuery extends ModelCriteria
             return $this->findPkComplex($key, $con);
         }
 
-        if ((null !== ($obj = UsersTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
+        if ((null !== ($obj = UserTableMap::getInstanceFromPool(null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key)))) {
             // the object is already in the instance pool
             return $obj;
         }
@@ -171,7 +171,7 @@ abstract class UsersQuery extends ModelCriteria
      *
      * @throws \Propel\Runtime\Exception\PropelException
      *
-     * @return ChildUsers A model object, or null if the key is not found
+     * @return ChildUser A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
@@ -186,10 +186,10 @@ abstract class UsersQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildUsers $obj */
-            $obj = new ChildUsers();
+            /** @var ChildUser $obj */
+            $obj = new ChildUser();
             $obj->hydrate($row);
-            UsersTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
+            UserTableMap::addInstanceToPool($obj, null === $key || is_scalar($key) || is_callable([$key, '__toString']) ? (string) $key : $key);
         }
         $stmt->closeCursor();
 
@@ -202,7 +202,7 @@ abstract class UsersQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con A connection object
      *
-     * @return ChildUsers|array|mixed the result, formatted by the current formatter
+     * @return ChildUser|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -249,7 +249,7 @@ abstract class UsersQuery extends ModelCriteria
     public function filterByPrimaryKey($key)
     {
 
-        $this->addUsingAlias(UsersTableMap::COL_ID, $key, Criteria::EQUAL);
+        $this->addUsingAlias(UserTableMap::COL_ID, $key, Criteria::EQUAL);
 
         return $this;
     }
@@ -264,7 +264,7 @@ abstract class UsersQuery extends ModelCriteria
     public function filterByPrimaryKeys($keys)
     {
 
-        $this->addUsingAlias(UsersTableMap::COL_ID, $keys, Criteria::IN);
+        $this->addUsingAlias(UserTableMap::COL_ID, $keys, Criteria::IN);
 
         return $this;
     }
@@ -292,11 +292,11 @@ abstract class UsersQuery extends ModelCriteria
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(UsersTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(UserTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(UsersTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(UserTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -307,7 +307,7 @@ abstract class UsersQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(UsersTableMap::COL_ID, $id, $comparison);
+        $this->addUsingAlias(UserTableMap::COL_ID, $id, $comparison);
 
         return $this;
     }
@@ -335,7 +335,7 @@ abstract class UsersQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(UsersTableMap::COL_USERNAME, $username, $comparison);
+        $this->addUsingAlias(UserTableMap::COL_USERNAME, $username, $comparison);
 
         return $this;
     }
@@ -363,7 +363,7 @@ abstract class UsersQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(UsersTableMap::COL_PASSWORD, $password, $comparison);
+        $this->addUsingAlias(UserTableMap::COL_PASSWORD, $password, $comparison);
 
         return $this;
     }
@@ -393,11 +393,11 @@ abstract class UsersQuery extends ModelCriteria
         if (is_array($createdOn)) {
             $useMinMax = false;
             if (isset($createdOn['min'])) {
-                $this->addUsingAlias(UsersTableMap::COL_CREATED_ON, $createdOn['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(UserTableMap::COL_CREATED_ON, $createdOn['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($createdOn['max'])) {
-                $this->addUsingAlias(UsersTableMap::COL_CREATED_ON, $createdOn['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(UserTableMap::COL_CREATED_ON, $createdOn['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -408,50 +408,50 @@ abstract class UsersQuery extends ModelCriteria
             }
         }
 
-        $this->addUsingAlias(UsersTableMap::COL_CREATED_ON, $createdOn, $comparison);
+        $this->addUsingAlias(UserTableMap::COL_CREATED_ON, $createdOn, $comparison);
 
         return $this;
     }
 
     /**
-     * Filter the query by a related \DbModel\StockTransactions object
+     * Filter the query by a related \DbModel\StockTransaction object
      *
-     * @param \DbModel\StockTransactions|ObjectCollection $stockTransactions the related object to use as filter
+     * @param \DbModel\StockTransaction|ObjectCollection $stockTransaction the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByStockTransactions($stockTransactions, ?string $comparison = null)
+    public function filterByStockTransaction($stockTransaction, ?string $comparison = null)
     {
-        if ($stockTransactions instanceof \DbModel\StockTransactions) {
+        if ($stockTransaction instanceof \DbModel\StockTransaction) {
             $this
-                ->addUsingAlias(UsersTableMap::COL_ID, $stockTransactions->getCreatorUserId(), $comparison);
+                ->addUsingAlias(UserTableMap::COL_ID, $stockTransaction->getCreatorUserId(), $comparison);
 
             return $this;
-        } elseif ($stockTransactions instanceof ObjectCollection) {
+        } elseif ($stockTransaction instanceof ObjectCollection) {
             $this
-                ->useStockTransactionsQuery()
-                ->filterByPrimaryKeys($stockTransactions->getPrimaryKeys())
+                ->useStockTransactionQuery()
+                ->filterByPrimaryKeys($stockTransaction->getPrimaryKeys())
                 ->endUse();
 
             return $this;
         } else {
-            throw new PropelException('filterByStockTransactions() only accepts arguments of type \DbModel\StockTransactions or Collection');
+            throw new PropelException('filterByStockTransaction() only accepts arguments of type \DbModel\StockTransaction or Collection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the StockTransactions relation
+     * Adds a JOIN clause to the query using the StockTransaction relation
      *
      * @param string|null $relationAlias Optional alias for the relation
      * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return $this The current query, for fluid interface
      */
-    public function joinStockTransactions(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    public function joinStockTransaction(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('StockTransactions');
+        $relationMap = $tableMap->getRelation('StockTransaction');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -466,14 +466,14 @@ abstract class UsersQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'StockTransactions');
+            $this->addJoinObject($join, 'StockTransaction');
         }
 
         return $this;
     }
 
     /**
-     * Use the StockTransactions relation StockTransactions object
+     * Use the StockTransaction relation StockTransaction object
      *
      * @see useQuery()
      *
@@ -481,19 +481,19 @@ abstract class UsersQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \DbModel\StockTransactionsQuery A secondary query class using the current class as primary query
+     * @return \DbModel\StockTransactionQuery A secondary query class using the current class as primary query
      */
-    public function useStockTransactionsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useStockTransactionQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinStockTransactions($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'StockTransactions', '\DbModel\StockTransactionsQuery');
+            ->joinStockTransaction($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StockTransaction', '\DbModel\StockTransactionQuery');
     }
 
     /**
-     * Use the StockTransactions relation StockTransactions object
+     * Use the StockTransaction relation StockTransaction object
      *
-     * @param callable(\DbModel\StockTransactionsQuery):\DbModel\StockTransactionsQuery $callable A function working on the related query
+     * @param callable(\DbModel\StockTransactionQuery):\DbModel\StockTransactionQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -501,12 +501,12 @@ abstract class UsersQuery extends ModelCriteria
      *
      * @return $this
      */
-    public function withStockTransactionsQuery(
+    public function withStockTransactionQuery(
         callable $callable,
         string $relationAlias = null,
         ?string $joinType = Criteria::LEFT_JOIN
     ) {
-        $relatedQuery = $this->useStockTransactionsQuery(
+        $relatedQuery = $this->useStockTransactionQuery(
             $relationAlias,
             $joinType
         );
@@ -517,7 +517,7 @@ abstract class UsersQuery extends ModelCriteria
     }
 
     /**
-     * Use the relation to StockTransactions table for an EXISTS query.
+     * Use the relation to StockTransaction table for an EXISTS query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
      *
@@ -525,34 +525,34 @@ abstract class UsersQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the EXISTS statement
      */
-    public function useStockTransactionsExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    public function useStockTransactionExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactions', $modelAlias, $queryClass, $typeOfExists);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransaction', $modelAlias, $queryClass, $typeOfExists);
         return $q;
     }
 
     /**
-     * Use the relation to StockTransactions table for a NOT EXISTS query.
+     * Use the relation to StockTransaction table for a NOT EXISTS query.
      *
-     * @see useStockTransactionsExistsQuery()
+     * @see useStockTransactionExistsQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT EXISTS statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT EXISTS statement
      */
-    public function useStockTransactionsNotExistsQuery($modelAlias = null, $queryClass = null)
+    public function useStockTransactionNotExistsQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useExistsQuery('StockTransactions', $modelAlias, $queryClass, 'NOT EXISTS');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useExistsQuery('StockTransaction', $modelAlias, $queryClass, 'NOT EXISTS');
         return $q;
     }
 
     /**
-     * Use the relation to StockTransactions table for an IN query.
+     * Use the relation to StockTransaction table for an IN query.
      *
      * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
      *
@@ -560,43 +560,43 @@ abstract class UsersQuery extends ModelCriteria
      * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
      * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the IN statement
      */
-    public function useInStockTransactionsQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    public function useInStockTransactionQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactions', $modelAlias, $queryClass, $typeOfIn);
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransaction', $modelAlias, $queryClass, $typeOfIn);
         return $q;
     }
 
     /**
-     * Use the relation to StockTransactions table for a NOT IN query.
+     * Use the relation to StockTransaction table for a NOT IN query.
      *
-     * @see useStockTransactionsInQuery()
+     * @see useStockTransactionInQuery()
      *
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
      *
-     * @return \DbModel\StockTransactionsQuery The inner query object of the NOT IN statement
+     * @return \DbModel\StockTransactionQuery The inner query object of the NOT IN statement
      */
-    public function useNotInStockTransactionsQuery($modelAlias = null, $queryClass = null)
+    public function useNotInStockTransactionQuery($modelAlias = null, $queryClass = null)
     {
-        /** @var $q \DbModel\StockTransactionsQuery */
-        $q = $this->useInQuery('StockTransactions', $modelAlias, $queryClass, 'NOT IN');
+        /** @var $q \DbModel\StockTransactionQuery */
+        $q = $this->useInQuery('StockTransaction', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 
     /**
      * Exclude object from result
      *
-     * @param ChildUsers $users Object to remove from the list of results
+     * @param ChildUser $user Object to remove from the list of results
      *
      * @return $this The current query, for fluid interface
      */
-    public function prune($users = null)
+    public function prune($user = null)
     {
-        if ($users) {
-            $this->addUsingAlias(UsersTableMap::COL_ID, $users->getId(), Criteria::NOT_EQUAL);
+        if ($user) {
+            $this->addUsingAlias(UserTableMap::COL_ID, $user->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
@@ -611,7 +611,7 @@ abstract class UsersQuery extends ModelCriteria
     public function doDeleteAll(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -622,8 +622,8 @@ abstract class UsersQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            UsersTableMap::clearInstancePool();
-            UsersTableMap::clearRelatedInstancePool();
+            UserTableMap::clearInstancePool();
+            UserTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -641,23 +641,23 @@ abstract class UsersQuery extends ModelCriteria
     public function delete(?ConnectionInterface $con = null): int
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(UsersTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UserTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(UsersTableMap::DATABASE_NAME);
+        $criteria->setDbName(UserTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            UsersTableMap::removeInstanceFromPool($criteria);
+            UserTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            UsersTableMap::clearRelatedInstancePool();
+            UserTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });

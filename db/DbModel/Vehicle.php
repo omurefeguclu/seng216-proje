@@ -2,10 +2,10 @@
 
 namespace DbModel;
 
-use DbModel\Base\UsersQuery as BaseUsersQuery;
+use DbModel\Base\Vehicle as BaseVehicle;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'users' table.
+ * Skeleton subclass for representing a row from the 'vehicles' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use DbModel\Base\UsersQuery as BaseUsersQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class UsersQuery extends BaseUsersQuery
+class Vehicle extends BaseVehicle
 {
 
 }
