@@ -14,6 +14,7 @@
             fill: currentColor;
         }
     </style>
+
 </head>
 <body>
 <div class="d-none">
@@ -63,7 +64,8 @@
     </div>
 </main>
 
-
+<script src="/assets/oeg.templating.js"></script>
+<script src="/assets/app.js"></script>
 <script src="/assets/lib/bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

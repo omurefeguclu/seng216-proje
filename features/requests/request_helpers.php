@@ -86,3 +86,7 @@ function view(string $viewName, array $data = [], string $layoutViewName='layout
 
     return $content;
 }
+
+function layout(string $layoutViewName) {
+    register_shutdown_function();
+}

@@ -61,5 +61,5 @@ $router->group('/api/auth')
 
 $router->group('/auth')
     ->get('/login', function (){
-       return view('login');
+       return view('login', [], '_root');
     });

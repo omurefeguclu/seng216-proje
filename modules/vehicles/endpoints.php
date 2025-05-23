@@ -2,7 +2,7 @@
 
 global $router;
 
-$router->group('/vehicles')
+$router->group('/api/vehicles')
     ->get('/get/{id}', function ($id) {
         $vehicle = DbModel\VehicleQuery::create()->findPk($id);
         if(!$vehicle){
@@ -15,8 +15,8 @@ $router->group('/vehicles')
         $searchDto = $ctx->json();
 
         $query = DbModel\VehicleQuery::create();
-        if(isset($searchDto['plateNumber'])){
-            $query = $query->filterByPlateNumber($searchDto['plateNumber']);
+        if(isset($searchDto['PlateNumber'])){
+            $query = $query->filterByPlateNumber($searchDto['PlateNumber']);
         }
         $result_list = $query->paginate();
 
@@ -60,5 +60,10 @@ $router->group('/vehicles')
         $vehicles = DbModel\VehicleQuery::create()->find();
 
         return dropdown_json($vehicles, fn($vehicle)=>$vehicle->getId(), fn($vehicle)=>$vehicle->getPlateNumber());
-    })
-    ->middleware([authMiddleware()]);
+    });
+    //->middleware([authMiddleware()]);
+
+$router->group('/vehicles')
+    ->get('/', function(){
+        return view('list');
+    });

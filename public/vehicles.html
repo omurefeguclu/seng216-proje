@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warehouse Inventory Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+        /* Solid color variables */
+        --bs-light: #dedde8;
+        --bs-white: #ffffff;
+        --bs-dark: #1b253e;
+
+        --bs-primary: #293c7d;
+        --bs-secondary: #fd2b6a;
+        --bs-info: #d2a881;
+        --bs-success: #08ab63;
+        --bs-warning: #e4cd08;
+        --bs-danger: #f41b03;
+
+        /* RGB equivalents (used with opacity utilities) */
+        --bs-light-rgb: 222, 221, 232;
+        --bs-white-rgb: 255, 255, 255;
+        --bs-dark-rgb: 27, 37, 62;
+
+        --bs-primary-rgb: 41, 60, 125;
+        --bs-secondary-rgb: 253, 43, 106;
+        --bs-info-rgb: 210, 168, 129;
+        --bs-success-rgb: 8, 171, 99;
+        --bs-warning-rgb: 228, 205, 8;
+        --bs-danger-rgb: 244, 27, 3;
+
+        /* Optional: body styling */
+        --bs-body-bg: #ffffff;
+        --bs-body-color: #1b253e;
+        --bs-link-color: #293c7d;
+        --bs-link-hover-color: #fd2b6a;
+        --bs-border-color: #dedde8;
+    }
+    .data-table tr {
+        
+    }
+    .accordion-body {
+      background-color: #f8f9fa;
+    }
+    .is-valid-icon {
+      color: green;
+    }
+    .is-invalid-icon {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+    <main class="d-flex flex-nowrap min-vh-100">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark offcanvas-md offcanvas-start" style="height: 100vh; width: 280px;">
+            <div class="w-full d-flex justify-content-between align-items-center">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <svg class="bi pe-none me-2" width="40" height="32" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg> <span class="fs-4">Sidebar</span>
+                </a>
+
+                <div>
+                    <a href="javascript:void(0);" data-bs-toggle="offcanvas" class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                        <i class="bi bi-list"></i>
+                    </a>
+                </div>
+            </div>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#speedometer2"></use></svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true"><use xlink:href="#speedometer2"></use></svg>
+                        Dashboard
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="javascript:void(0);" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/assets/images/avatar.png" alt="" width="32" height="32" class="rounded-circle">
+                    <strong class="ps-2 pe-2">omurefeguclu</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    
+        <div class="d-flex flex-column flex-fill">
+            <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb"> 
+        <ol class="breadcrumb p-3 bg-body-tertiary rounded-3"> 
+            <li class="breadcrumb-item"> <a class="link-body-emphasis" href="#"> <i class="bi bi-house-door-fill" width="16" height="16" aria-hidden="true"></i> <span class="visually-hidden">Home</span> </a> </li> 
+            <li class="breadcrumb-item"> <a class="link-body-emphasis fw-semibold text-decoration-none" href="#">Library</a> </li> 
+            <li class="breadcrumb-item active" aria-current="page">Data</li>
+        </ol>
+    </nav>
+
+    <!-- Header with search -->
+    <div class="bg-primary text-white d-flex justify-content-between align-items-center p-4">
+      
+        <h4 class="mb-0">Vehicles</h4>
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <input class="form-control" style="min-width: 160px;" type="search" placeholder="Search Vehicles..." />
+            <button class="btn btn-secondary bg-secondary" style="min-width: 140px;" data-bs-toggle="modal" data-bs-target="#createModal">
+                <i class="bi bi-plus-circle me-1"></i> 
+                New Vehicle
+            </button>
+        </div>
+    </div>
+
+    <!-- Table with accordion rows and buttons -->
+    <div class="p-3">
+      
+        <div class="card shadow-sm rounded-4 border-0">
+            <div class="table-responsive">
+                <table class="table data-table table-striped table-bordered table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Plate Number</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Last Updated</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>06 DTD 243</td>
+                            <td class="d-none d-sm-table-cell">12-12-2022</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-pencil"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary border-secondary text-secondary me-1"><i class="bi bi-menu-button"></i></button>
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+                <div class="card-body p-2">
+                    
+                
+                    <!-- Pagination -->
+                    <nav>
+                        <ul class="pagination justify-content-end mb-0">
+                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+          
+
+        </div>
+
+        </div>
+    </main>
+    
+    <!-- Create Warehouse Modal -->
+    <div class="modal fade" id="createWarehouseModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Warehouse</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="warehouseName" class="form-label">Warehouse Name</label>
+                <input type="text" class="form-control is-valid" id="warehouseName" placeholder="Enter name">
+                <div class="valid-feedback d-flex align-items-center">
+                  <i class="bi bi-check-circle-fill me-1 is-valid-icon"></i> Looks good!
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

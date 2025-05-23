@@ -22,7 +22,7 @@
 
 
 <main class="d-flex flex-nowrap min-vh-100">
-    <?php echo $content ?>
+    <?= $content ?>
 </main>
 
 
