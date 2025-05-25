@@ -34,6 +34,7 @@
 
 <?= $content ?>
 
+<?php include __DIR__ . '/alerts.php' ?>
 
 <script src="/assets/oeg.templating.js"></script>
 <script src="/assets/app.js"></script>

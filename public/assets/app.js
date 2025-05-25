@@ -418,7 +418,7 @@ function refreshDataTable(dataTableElement, resetPaginator) {
     if (!paging || resetPaginator) {
         paging = getState(dataTableElement).paging = {
             PageIndex: 0,
-            PageSize: 10
+            PageSize: 5
         };
     }
 
@@ -562,7 +562,7 @@ function initDatatable(selector, prefix) {
     datatableElement.addEventListener('tableDataFetched', function (e) {
         if(!paginatorElement) return;
 
-        updatePaginatorState(datatableElement, paginatorElement, e.detail.pageIndex, 10, e.detail.totalCount);
+        updatePaginatorState(datatableElement, paginatorElement, e.detail.pageIndex, e.detail.pageSize, e.detail.totalCount);
     });
 
     refreshDataTable(datatableElement, true);
@@ -582,7 +582,34 @@ function initFormModal(modalSelector, datatable, configuration = {}, initAction 
         ...configuration
     };
 
+    modalElement.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(submitButton => {
+        submitButton.addEventListener('click', e => {
+            e.preventDefault();
 
+            const modalForm = modalElement.querySelector('form');
+            const modalState = getState(modalElement);
+
+            const entity = formToObject(modalForm);
+            const entityId = modalState.entityId;
+            const requestUrl = entityId ? modalState.config.editUrl.replace(':id', entityId) : modalState.config.createUrl;
+
+            postJson(requestUrl, entity)
+                .then(response => {
+
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+
+                    modal.hide();
+                    console.log("successfully saved element");
+
+                    refreshDataTable(modalState.config.datatable, false);
+                })
+                .catch(error => {
+                    alert(error);
+
+                });
+        });
+
+    });
 }
 function showFormModal(modalSelector, entityId) {
     const modalElement = document.querySelector(modalSelector);
@@ -596,6 +623,7 @@ function showFormModal(modalSelector, entityId) {
     const form = modalElement.querySelector('form');
     // Edit Form
     if(entityId) {
+        getState(modalElement).entityId = entityId;
         const requestUrl = modalState.config.editUrl.replace(':id', entityId);
 
         getJson(requestUrl)
@@ -611,6 +639,7 @@ function showFormModal(modalSelector, entityId) {
     }
     // Create Form
     else {
+        getState(modalElement).entityId = undefined;
         modalTitle.innerHTML = modalState.config.createTitle;
 
         bindForm(form, {});
@@ -628,6 +657,29 @@ addListener('[data-form-modal-button]', 'click', function(e) {
    const entityId = e.target.getAttribute('data-entity-id');
 
    showFormModal(modalSelector, entityId);
+});
+
+addListener('[data-delete-button]', 'click', function (e) {
+    e.preventDefault();
+
+    window.confirmation_dialog('Do you really want to delete item?')
+        .then(() => {
+            const entityId = e.target.getAttribute('data-entity-id');
+            const datatable = e.target.closest('[data-datatable]');
+            const datatableState = getState(datatable);
+
+            const deleteUrl = datatableState.datasource.delete.replace(':id', entityId);
+
+            getJson(deleteUrl)
+                .then(() => {
+                    refreshDataTable(datatable, false);
+                })
+                .catch(error => {
+
+                });
+        })
+
+
 });
 
 // Templating and rendering

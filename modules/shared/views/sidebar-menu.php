@@ -3,6 +3,7 @@ const navigations = [
     ['name'=>'Dashboard', 'icon' => 'speedometer2', 'link'=>'/dashboard'],
     ['name'=>'Vehicles', 'icon' => 'speedometer2', 'link'=>'/vehicles'],
 ];
+
 ?>
 
 <div id="side-nav" class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark vh-100 offcanvas-md offcanvas-start" style="width: 280px;">

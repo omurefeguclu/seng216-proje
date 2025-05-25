@@ -1,4 +1,4 @@
-
+<?php $viewEngine->setLayout('layout'); ?>
 
 <!-- Header with search -->
 <div class="bg-primary text-white p-4">
@@ -11,9 +11,7 @@
         </div>
 
         <div class="d-flex justify-content-center align-items-center gap-2" data-datatable-filter-group="#vehicles-table">
-            <div>
-                <input name="PlateNumber" class="form-control " style="min-width: 160px; max-width: 240px; field-sizing: content;" type="search" placeholder="Search for Plate Number...">
-            </div>
+            <input name="PlateNumber" class="form-control " style="min-width: 160px; max-width: 240px; field-sizing: content;" type="search" placeholder="Search for Plate Number...">
 
             <button class="btn btn-secondary bg-secondary" style="min-width: 140px;" data-form-modal-button="#vehicle-form-modal">
                 <svg class="bi me-1" ><use xlink:href="#plus-circle"></use> </svg>
@@ -49,7 +47,7 @@
                                 class="btn btn-sm btn-primary me-1">
                             <svg class="bi"><use xlink:href="#pencil"></use> </svg>
                         </button>
-                        <button data-form-modal-button data-delete-button data-attr-binding-target="data-delete-button" data-attr-binding="Id"
+                        <button data-delete-button data-attr-binding-target="data-entity-id" data-attr-binding="Id"
                                 class="btn btn-sm btn-danger">
                             <svg class="bi"><use xlink:href="#trash"></use> </svg>
                         </button>
