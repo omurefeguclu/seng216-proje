@@ -7,6 +7,11 @@ require_once __DIR__ . '/../features/features_index.php';
 
 $router = new Core\Router\Router();
 
+$router->routes()
+    ->get('/', function() {
+       return redirect('/dashboard', true);
+    });
+
 foreach (glob(__DIR__ . '/../modules/*/endpoints.php') as $file) {
     require $file;
 }

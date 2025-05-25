@@ -66,19 +66,30 @@
 
         <div class="col-md-6 form-section border-end">
             <div class="form-title">Login</div>
+
             <form id="loginForm" data-ajax-form action="/api/auth/login">
+                <div class="alert alert-danger d-flex align-items-center d-none" data-error="div" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" role="img"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <div>
+                        An example danger alert with an icon
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="loginUsername" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="Username" id="loginUsername" required>
+                    <input type="text" class="form-control" name="Username" id="loginUsername" data-validate="isRequired('You must enter a username')"
+                           data-error-msg="#loginUsernameAlert">
+                    <div id="loginUsernameAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
                 </div>
                 <div class="mb-3">
                     <label for="loginPassword" class="form-label">Password</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" name="Password" id="loginPassword" required>
+                        <input type="password" class="form-control" name="Password" id="loginPassword" data-validate="isRequired('You must enter a password')"
+                        data-error-msg="#loginPasswordAlert">
                         <span class="input-group-text toggle-password" data-target="loginPassword">
                             <svg class="bi"><use xlink:href="#eye"></use></svg>
-                      </span>
+                        </span>
                     </div>
+                    <div id="loginPasswordAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-custom">Login</button>
             </form>
@@ -90,26 +101,32 @@
             <form id="registerForm" data-ajax-form action="/api/auth/register">
                 <div class="mb-3">
                     <label for="registerUsername" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="Username" id="registerUsername" required>
+                    <input type="text" class="form-control" name="Username" id="registerUsername"
+                           data-validate="isRequired('You must enter a username')" data-error-msg="#registerUsernameAlert">
+                    <div id="registerUsernameAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
                 </div>
                 <div class="mb-3">
                     <label for="registerPassword" class="form-label">Password</label>
                     <div class="input-group">
-                        <input type="password" name="Password" class="form-control" id="registerPassword" required>
+                        <input type="password" name="Password" class="form-control" id="registerPassword"
+                        data-validate="isRequired('You must enter a password')" data-error-msg="#registerPasswordAlert">
                         <span class="input-group-text toggle-password" data-target="registerPassword">
                             <svg class="bi"><use xlink:href="#eye"></use></svg>
                         </span>
                     </div>
+                    <div id="registerPasswordAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
                 </div>
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Re-enter Password</label>
                     <div class="input-group">
-                        <input type="password" name="ConfirmPassword" class="form-control" id="confirmPassword" required>
+                        <input type="password" name="ConfirmPassword" class="form-control" id="confirmPassword"
+                        data-validate="isRequired('You must confirm your password') && isMatching('#registerPassword', 'Passwords are not matching')"
+                        data-error-msg="#confirmPasswordAlert">
                         <span class="input-group-text toggle-password" data-target="confirmPassword">
                             <svg class="bi"><use xlink:href="#eye"></use></svg>
                         </span>
                     </div>
-                    <div id="passwordAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
+                    <div id="confirmaPasswordAlert" class="alert alert-danger mt-2 d-none">Passwords do not match.</div>
                 </div>
                 <button type="submit" class="btn btn-success btn-custom">Register</button>
             </form>
@@ -123,35 +140,7 @@ $viewEngine->startCustomScripts();
 ?>
 <script>
     const registerForm = document.getElementById("registerForm");
-    const registerPassword = document.getElementById("registerPassword");
-    const confirmPassword = document.getElementById("confirmPassword");
-    const passwordAlert = document.getElementById("passwordAlert");
-
     const loginForm = document.getElementById("loginForm");
-
-    function checkPasswordMatch() {
-        const pass1 = registerPassword.value.trim();
-        const pass2 = confirmPassword.value.trim();
-
-        if (pass1 === "" || pass2 === "") {
-            passwordAlert.classList.add("d-none");
-            confirmPassword.classList.remove("is-invalid", "is-valid");
-            return;
-        }
-
-        if (pass1 !== pass2) {
-            passwordAlert.classList.remove("d-none");
-            confirmPassword.classList.add("is-invalid");
-            confirmPassword.classList.remove("is-valid");
-        } else {
-            passwordAlert.classList.add("d-none");
-            confirmPassword.classList.remove("is-invalid");
-            confirmPassword.classList.add("is-valid");
-        }
-    }
-
-    confirmPassword.addEventListener("input", checkPasswordMatch);
-    registerPassword.addEventListener("input", checkPasswordMatch);
 
     document.querySelectorAll(".toggle-password").forEach(toggle => {
         toggle.addEventListener("click", () => {
@@ -161,7 +150,7 @@ $viewEngine->startCustomScripts();
 
             if (input.type === "password") {
                 input.type = "text";
-                icon.setAttribute("xlink:href", "#eye-off");
+                icon.setAttribute("xlink:href", "#eye-slash");
             } else {
                 input.type = "password";
                 icon.setAttribute("xlink:href", "#eye");

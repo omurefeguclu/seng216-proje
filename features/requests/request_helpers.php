@@ -33,7 +33,7 @@ function dropdown_json(\Propel\Runtime\Collection\Collection|array $items, calla
 function error_json($error = []){
     prepare_json_result();
 
-    return json_encode(['errors' => $error]);
+    return json_encode(['Errors' => $error]);
 }
 
 

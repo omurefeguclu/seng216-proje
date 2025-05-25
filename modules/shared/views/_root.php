@@ -22,6 +22,7 @@
         }
         svg {
             fill: currentColor;
+            pointer-events: none;
         }
     </style>
 </head>

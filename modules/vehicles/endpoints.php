@@ -3,13 +3,13 @@
 global $router;
 
 $router->group('/api/vehicles')
-    ->get('/get/{id}', function ($id) {
+    ->get('/form/{id}', function ($id) {
         $vehicle = DbModel\VehicleQuery::create()->findPk($id);
         if(!$vehicle){
             return error_json('Vehicle not found with id ' . $id);
         }
 
-        return ok_json($vehicle);
+        return ok_json($vehicle->toArray());
     })
     ->post('/list', function (\Core\Http\RequestContext $ctx) {
         $searchDto = $ctx->json();

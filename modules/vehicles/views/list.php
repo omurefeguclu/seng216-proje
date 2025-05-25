@@ -7,14 +7,17 @@
             <button class="btn d-md-none" data-bs-toggle="offcanvas" data-bs-target="#side-nav">
                 <svg class="bi icon-md" style="fill: white;"><use xlink:href="#list"></use></svg>
             </button>
-            <h4 class="mb-0">Warehouses</h4>
+            <h4 class="mb-0">Vehicles</h4>
         </div>
 
         <div class="d-flex justify-content-center align-items-center gap-2" data-datatable-filter-group="#vehicles-table">
-            <input name="PlateNumber" class="form-control" style="min-width: 160px;" type="search" placeholder="Search for Plate Number...">
-            <button class="btn btn-secondary bg-secondary" style="min-width: 140px;" data-bs-toggle="modal" data-bs-target="#createWarehouseModal">
+            <div>
+                <input name="PlateNumber" class="form-control " style="min-width: 160px; max-width: 240px; field-sizing: content;" type="search" placeholder="Search for Plate Number...">
+            </div>
+
+            <button class="btn btn-secondary bg-secondary" style="min-width: 140px;" data-form-modal-button="#vehicle-form-modal">
                 <svg class="bi me-1" ><use xlink:href="#plus-circle"></use> </svg>
-                New Warehouse
+                New Vehicle
             </button>
         </div>
     </div>
@@ -26,7 +29,8 @@
 
     <div class="card shadow-sm rounded-4 border-0">
         <div class="table-responsive">
-            <table id="vehicles-table" data-paginator="#vehicles-pagination" data-datatable="/api/vehicles" class="table data-table table-striped table-bordered table-hover mb-0">
+            <table id="vehicles-table" data-paginator="#vehicles-pagination"
+                   data-form-modal="#vehicle-form-modal" class="table data-table table-striped table-bordered table-hover mb-0">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>
@@ -41,11 +45,11 @@
                     <td data-content-binding="PlateNumber">Widget A</td>
                     <td data-content-binding="CreatedOn" data-binding-func="formatDate" class="d-none d-sm-table-cell">2025-05-21</td>
                     <td>
-                        <button data-edit-button data-attr-binding-target="data-edit-button" data-attr-binding="Id"
+                        <button data-form-modal-button="#vehicle-form-modal" data-attr-binding-target="data-entity-id" data-attr-binding="Id"
                                 class="btn btn-sm btn-primary me-1">
                             <svg class="bi"><use xlink:href="#pencil"></use> </svg>
                         </button>
-                        <button data-delete-button data-attr-binding-target="data-delete-button" data-attr-binding="Id"
+                        <button data-form-modal-button data-delete-button data-attr-binding-target="data-delete-button" data-attr-binding="Id"
                                 class="btn btn-sm btn-danger">
                             <svg class="bi"><use xlink:href="#trash"></use> </svg>
                         </button>
@@ -71,54 +75,40 @@
 
 </div>
 
-<div class="modal fade" id="createWarehouseModal" tabindex="-1">
+<div class="modal fade" id="vehicle-form-modal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
 
+            <div class="modal-header">
+                <h5 class="modal-title">Create Vehicle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="plateNumber" class="form-label">Vehicle Plate Number</label>
+                        <input type="text" class="form-control" name="PlateNumber" id="plateNumber"
+                               placeholder="Enter plate number" data-validate="isRequired('You must enter a plate number')">
+                    </div>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
-<script type="text/html" id="vehicles-form-template">
-    <div class="modal-header">
-        <h5 class="modal-title">Create Warehouse</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-    </div>
-    <div class="modal-body">
-        <form>
-            <div class="mb-3">
-                <label for="warehouseName" class="form-label">Warehouse Name</label>
-                <input type="text" class="form-control is-valid" id="warehouseName" placeholder="Enter name">
-                <div class="valid-feedback d-flex align-items-center">
-                    <i class="bi bi-check-circle-fill me-1 is-valid-icon"></i> Looks good!
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success">Create</button>
-        </form>
-    </div>
-</script>
 
 <?php
 $viewEngine->startCustomScripts();
 ?>
 
 <script type="text/javascript">
-    refreshDataTable(document.getElementById('vehicles-table'), true);
+    const vehiclesTable = initDatatable('#vehicles-table', '/api/vehicles');
 
-    addListener('[data-form-modal-button]', 'click', function(e) {
-        e.preventDefault();
-
-        const modalSelector = e.target.getAttribute('data-form-modal-button');
+    initFormModal('#vehicle-form-modal', vehiclesTable, {
+        createTitle: 'Create new Vehicle',
+        updateTitle: 'Update Vehicle',
     });
 
-    (function(){
-        const modalContent = document.querySelector('#createWarehouseModal .modal-content');
-
-        const modalTemplate = document.getElementById('vehicles-form-template').innerHTML;
-        const modalContentNew = oegTemplate(modalTemplate, {});
-
-        modalContent.innerHTML = modalContentNew;
-    })();
 </script>
 
 <?php

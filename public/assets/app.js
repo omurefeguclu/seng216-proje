@@ -39,7 +39,22 @@ function addListener(selector, eventName, callback) {
     }
 }
 
+function handleProvider(valueProvider, ...args)
+{
+    if((typeof valueProvider === 'function'))
+    {
+        return valueProvider(...args);
+    }
+
+    return valueProvider;
+}
+
 function getState(element) {
+    if(!element) {
+        console.warn('State key element is invalid: ', element);
+        return {};
+    }
+
     if(!oegStates.has(element))
     {
         oegStates.set(element, {});
@@ -48,41 +63,68 @@ function getState(element) {
     return oegStates.get(element);
 }
 
-function check_and_notify(e) {
-    if (e.Errors) {
-        if ((typeof e.Errors) == 'string') {
-            //single error
-            //display the message
-            window.notify_error(e.Errors);
+function getJson(action) {
+    return fetch(action, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(check_errors);
+}
+function postJson(action, data)
+{
+    return fetch(action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(check_errors);
+}
+function check_errors(response) {
+    if (response.Errors) {
+        if ((typeof response.Errors) == 'string') {
+            return Promise.reject(response.Errors);
         } else {
-            //array of errors
-            //source: http://docs.kendoui.com/getting-started/using-kendo-with/aspnet-mvc/helpers/grid/faq#how-do-i-display-model-state-errors?
             var message = "The following errors have occurred:";
-            //create a message containing all errors.
-            for(let error of e.Errors) {
+            for(let error of response.Errors) {
                 message += "\n";
                 message += error;
             }
 
-            //display the message
-            //alert(message);
-            window.notify_error(message);
+            return Promise.reject(message);
         }
-        return false;
-    } else if (e.Data) {
-        if ((typeof e.Data) == 'string') {
-            //single error
-            //display the message
-            window.notify_success(e.Data);
-        }
-        else {
-            window.notify_success(null);
-        }
-        return true;
     }
-    else {
-        return false;
-    }
+
+    return response;
+}
+function createFormAlertAdapter(form) {
+    const errorElement = form.querySelector('[data-error]');
+
+    return {
+        errorHandler: function(error) {
+            const errorMsgSelector = errorElement.getAttribute('data-error');
+            const errorMsgElement = errorElement.querySelector(errorMsgSelector);
+
+            errorMsgElement.innerHTML = error;
+
+            errorElement.classList.remove('d-none');
+        },
+        successHandler: function () {
+            errorElement.classList.add('d-none');
+        }
+    };
+}
+function adaptFormAlert(form, request){
+    const adapter = createFormAlertAdapter(form);
+
+    request
+        .then(adapter.successHandler)
+        .catch(adapter.errorHandler);
 }
 
 function formToObject(formElement) {
@@ -107,7 +149,6 @@ function formToObject(formElement) {
 
     return formValueToObject(formValue);
 }
-
 function formValueToObject(data) {
     var initMatch = /^([a-z0-9]+?)\[/i;
     var first = /^\[[a-z0-9]+?\]/i;
@@ -164,9 +205,6 @@ function formValueToObject(data) {
 
     return data;
 }
-
-
-
 function bindForm(formElement, data) {
     const inputs = formElement.querySelectorAll('input, select, textarea');
 
@@ -195,6 +233,103 @@ function bindForm(formElement, data) {
         return path.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
     }
 }
+
+
+function validateForm(form, ignoreDirtyCheck = false) {
+    const inputFields = form.querySelectorAll('[data-validate]');
+
+    let invalid = false;
+    for(const inputField of inputFields) {
+        if(!validateInputField(inputField, ignoreDirtyCheck)) {
+            invalid = true;
+        }
+    }
+
+    if (invalid) {
+        toggleFormValid(form, false);
+    }
+
+    return !invalid;
+}
+function validateInputField(inputField, ignoreDirtyCheck = false) {
+    const validateAttr = inputField.getAttribute('data-validate');
+
+    let errorMessage = '';
+
+    function isRequired(errMsg = '') {
+        errorMessage = errMsg || 'Field is required';
+
+        return !!inputField.value;
+    }
+    function isMatching(targetSelector, errMsg = '') {
+        const targetElement = document.querySelector(targetSelector);
+
+        errorMessage = errMsg || (`Fields are not matching: ${inputField.name} & ${targetElement.name}`);
+
+        return inputField.value === targetElement.value;
+    }
+
+    const isValid = eval(validateAttr);
+    const isDirty = getState(inputField).dirty;
+    // Don't show the error visuals if input field is not dirty
+    if(!ignoreDirtyCheck && !isDirty) {
+        clearInputError(inputField);
+    }
+    else if(!isValid) {
+        showInputError(inputField, errorMessage);
+    }
+    else {
+        hideInputError(inputField);
+    }
+
+    return isValid;
+}
+function showInputError(inputField, errorMessage){
+    inputField.classList.add("is-invalid");
+    inputField.classList.remove("is-valid");
+
+    const errorMsgSelector = inputField.getAttribute('data-error-msg');
+    if(!errorMsgSelector) return;
+
+    const errorMsgElement = document.querySelector(errorMsgSelector);
+    if(!errorMsgElement) return;
+
+    errorMsgElement.classList.remove('d-none');
+    errorMsgElement.innerHTML = errorMessage;
+}
+function hideInputError(inputField) {
+    inputField.classList.remove("is-invalid");
+    inputField.classList.add("is-valid");
+
+    const errorMsgSelector = inputField.getAttribute('data-error-msg');
+    if(!errorMsgSelector) return;
+
+    const errorMsgElement = document.querySelector(errorMsgSelector);
+    if(!errorMsgElement) return;
+
+    errorMsgElement.classList.add('d-none');
+    errorMsgElement.innerHTML = '';
+}
+function clearInputError(inputField) {
+    inputField.classList.remove("is-invalid");
+    inputField.classList.remove("is-valid");
+
+    const errorMsgSelector = inputField.getAttribute('data-error-msg');
+    if(!errorMsgSelector) return;
+
+    const errorMsgElement = document.querySelector(errorMsgSelector);
+    if(!errorMsgElement) return;
+
+    errorMsgElement.classList.add('d-none');
+    errorMsgElement.innerHTML = '';
+}
+
+function toggleFormValid(form, isValid) {
+    form.querySelectorAll('button[type="submit"]').forEach((submitButton) => {
+       submitButton.disabled = !isValid;
+    });
+}
+
 
 const BindingFunctions = {}
 BindingFunctions.formatDate = function (date) {
@@ -246,8 +381,7 @@ function updatePaginatorState(tableElement, paginatorElement, pageIndex, pageSiz
         pageTemplate.before(paginatorElement);
     }
 }
-function bindData(rowElement, data)
-{
+function bindData(rowElement, data){
     const contentBindings = rowElement.querySelectorAll('[data-content-binding]');
     const attrBindings = rowElement.querySelectorAll('[data-attr-binding]');
 
@@ -270,13 +404,15 @@ function bindData(rowElement, data)
         attrBinding.setAttribute(bindingAttrName, relatedData);
     }
 }
+
 function refreshDataTable(dataTableElement, resetPaginator) {
     if(!dataTableElement) console.warn('Data table element not found');
 
-    const apiUrl = dataTableElement.getAttribute('data-datatable');
-    console.log('apiUrl: ' + apiUrl);
+    const dataSource = getState(dataTableElement).datasource;
+    if(!dataSource) console.warn('Data source is not configured');
 
-    const requestPath = apiUrl + '/list';
+
+    const requestPath = dataSource.list;
     let searchDto = getState(dataTableElement).search || {};
     let paging = getState(dataTableElement).paging;
     if (!paging || resetPaginator) {
@@ -297,14 +433,7 @@ function refreshDataTable(dataTableElement, resetPaginator) {
         ...paging
     };
 
-    fetch(requestPath, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-    })
-        .then(response => response.json())
+    postJson(requestPath, requestBody)
         .then(response => {
             const rowTemplate = dataTableElement.querySelector('[data-row-template]:not([data-temp-row])');
             const rowContainer = rowTemplate.parentElement;
@@ -340,33 +469,34 @@ function refreshDataTable(dataTableElement, resetPaginator) {
         });
 }
 
+addListener('[data-validate]', 'input', function (e) {
+    const inputField = e.target;
+   const form = e.target.closest('form');
+   getState(inputField).dirty = true;
+
+
+   // Validate form fields
+    toggleFormValid(form, validateForm(form));
+});
 addListener('form[data-ajax-form]', 'submit', function (e) {
     e.preventDefault();
     const form = e.target;
-    console.log('prevented');
+
+    if(!validateForm(form, true)){
+        return;
+    }
 
     const shouldReset = form.hasAttribute('data-ajax-reset');
     const action = form.getAttribute('action');
     const data = formToObject(form);
 
-    fetch(action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
+    const request = postJson(action, data)
     .then(response => {
-        
-        if (check_and_notify(response)) {
-            if(shouldReset) {
-                const inputs = form.querySelectorAll(':is(input, select, textarea):not(.ignore-reset):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"])');
-                inputs.forEach(input => {
-                    input.value = '';
-                });
-            }
-            
+        if(shouldReset) {
+            const inputs = form.querySelectorAll(':is(input, select, textarea):not(.ignore-reset):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"])');
+            inputs.forEach(input => {
+                input.value = '';
+            });
         }
 
         const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', {
@@ -374,6 +504,8 @@ addListener('form[data-ajax-form]', 'submit', function (e) {
         });
         form.dispatchEvent(ajaxSubmitEvent);
     });
+
+    adaptFormAlert(form, request);
 
     return false;
 });
@@ -412,18 +544,90 @@ addListener('[data-datatable-filter-group] *', 'input', function(e) {
     refreshDataTable(datatableElement, true);
 });
 
-addListener('[data-datatable]', 'tableDataFetched', function (e) {
-    const datatableElement = e.target;
-
+function initDatatable(selector, prefix) {
+    const datatableElement = document.querySelector(selector);
     const paginatorSelector = datatableElement.getAttribute('data-paginator');
-    if(!paginatorSelector) return;
 
-    const paginatorElement = document.querySelector(paginatorSelector);
-    if(!paginatorElement) {
-        return;
+    const paginatorElement = paginatorSelector ? document.querySelector(paginatorSelector) : null;
+
+    getState(datatableElement).datasource = {
+        list: prefix + '/list',
+        create: prefix + '/form',
+        edit: prefix + '/form/:id',
+        delete: prefix + '/delete/:id',
+    };
+
+    datatableElement.setAttribute('data-datatable', true);
+
+    datatableElement.addEventListener('tableDataFetched', function (e) {
+        if(!paginatorElement) return;
+
+        updatePaginatorState(datatableElement, paginatorElement, e.detail.pageIndex, 10, e.detail.totalCount);
+    });
+
+    refreshDataTable(datatableElement, true);
+
+    return datatableElement;
+}
+function initFormModal(modalSelector, datatable, configuration = {}, initAction = () => {}) {
+    const modalElement = document.querySelector(modalSelector);
+    const datatableState = getState(datatable);
+
+    getState(modalElement).config = {
+        createUrl: datatableState.datasource.create,
+        editUrl: datatableState.datasource.edit,
+        datatable: datatable,
+        createTitle: 'Create Item',
+        editTitle: 'Edit Item',
+        ...configuration
+    };
+
+
+}
+function showFormModal(modalSelector, entityId) {
+    const modalElement = document.querySelector(modalSelector);
+    const modalState = getState(modalElement);
+
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    const modalTitle = modalElement.querySelector('.modal-title');
+
+
+    const form = modalElement.querySelector('form');
+    // Edit Form
+    if(entityId) {
+        const requestUrl = modalState.config.editUrl.replace(':id', entityId);
+
+        getJson(requestUrl)
+            .then(response => {
+                modalTitle.innerHTML = handleProvider(modalState.config.editTitle, response);
+
+                bindForm(form, response);
+
+                modal.show();
+            });
+
+
+    }
+    // Create Form
+    else {
+        modalTitle.innerHTML = modalState.config.createTitle;
+
+        bindForm(form, {});
+
+        modal.show();
     }
 
-    updatePaginatorState(datatableElement, paginatorElement, e.detail.pageIndex, 10, e.detail.totalCount);
+}
+
+addListener('[data-form-modal-button]', 'click', function(e) {
+   e.preventDefault();
+   console.log('caught');
+
+   const modalSelector = e.target.getAttribute('data-form-modal-button');
+   const entityId = e.target.getAttribute('data-entity-id');
+
+   showFormModal(modalSelector, entityId);
 });
 
 // Templating and rendering
