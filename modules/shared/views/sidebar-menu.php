@@ -2,8 +2,12 @@
 const navigations = [
     ['name'=>'Dashboard', 'icon' => 'speedometer2', 'link'=>'/dashboard'],
     ['name'=>'Vehicles', 'icon' => 'speedometer2', 'link'=>'/vehicles'],
+    ['name'=>'Warehouses', 'icon' => 'speedometer2', 'link'=>'/warehouses'],
+    ['name'=>'Products', 'icon' => 'speedometer2', 'link'=>'/products'],
+    ['name'=>'Stock Transactions', 'icon' => 'speedometer2', 'link'=>'/stock-transactions'],
 ];
 
+$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 ?>
 
 <div id="side-nav" class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark vh-100 offcanvas-md offcanvas-start" style="width: 280px;">
@@ -14,8 +18,9 @@ const navigations = [
     <ul class="nav nav-pills flex-column mb-auto">
         <?php
         foreach (navigations as $nav) {
+            $isActive = ($currentPath === $nav['link']);
             echo '<li class="nav-item">';
-            echo '<a href="#" class="nav-link active" aria-current="page">';
+            echo '<a href="'. $nav['link'] . '" class="nav-link text-white ' . ($isActive ? 'active' : '') . '">';
             echo '<svg class="bi pe-none me-2" width="16" height="16" aria-hidden="true">';
             echo sprintf('<use xlink:href="#%s"></use>', $nav['icon']);
             echo '</svg>';
