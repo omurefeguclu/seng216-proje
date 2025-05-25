@@ -16,9 +16,11 @@ $router->group('/api/vehicles')
 
         $query = DbModel\VehicleQuery::create();
         if(isset($searchDto['PlateNumber'])){
-            $query = $query->filterByPlateNumber($searchDto['PlateNumber']);
+            $query = $query->filterByPlateNumber('%' . $searchDto['PlateNumber'] . '%', \Propel\Runtime\ActiveQuery\Criteria::LIKE);
         }
-        $result_list = $query->paginate();
+        $pageIndex = $searchDto['PageIndex'] ?? 0;
+        $pageSize = $searchDto['PageSize'] ?? 10;
+        $result_list = $query->paginate($pageIndex + 1, $pageSize);
 
         return paginated_json($result_list);
     })
@@ -60,10 +62,11 @@ $router->group('/api/vehicles')
         $vehicles = DbModel\VehicleQuery::create()->find();
 
         return dropdown_json($vehicles, fn($vehicle)=>$vehicle->getId(), fn($vehicle)=>$vehicle->getPlateNumber());
-    });
-    //->middleware([authMiddleware()]);
+    })
+    ->middleware([authMiddleware()]);
 
 $router->group('/vehicles')
     ->get('/', function(){
         return view('list');
-    });
+    })
+    ->middleware([authMiddleware()]);

@@ -1,4 +1,5 @@
 const documentEvents = {};
+const oegStates = new WeakMap();
 
 function listenToDocument(event) {
     
@@ -36,6 +37,15 @@ function addListener(selector, eventName, callback) {
     } else {
         console.warn(`Event ${eventName} already registered for selector ${selector}`);
     }
+}
+
+function getState(element) {
+    if(!oegStates.has(element))
+    {
+        oegStates.set(element, {});
+    }
+
+    return oegStates.get(element);
 }
 
 function check_and_notify(e) {
@@ -191,123 +201,151 @@ BindingFunctions.formatDate = function (date) {
     return (new Date(date)).toLocaleDateString();
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const dataTableElement = document.querySelector('[data-datatable]');
+function updatePaginatorState(tableElement, paginatorElement, pageIndex, pageSize, totalCount) {
+    const tableId = tableElement.id;
+    const pageTemplate = paginatorElement.querySelector('[data-page-template]:not([data-temp])');
+    const activePageTemplate = paginatorElement.querySelector('[data-active-page-template]:not([data-temp])');
+    const pageContainer = pageTemplate.parentElement;
+
+    pageTemplate.style.display='none';
+    activePageTemplate.style.display='none';
+
+    // Delete temp pages
+    pageContainer.querySelectorAll('[data-temp]').forEach((element) => {
+        element.remove();
+    });
+
+    function bindPageData(paginatorElement, pageIndex) {
+        const linkElement = paginatorElement.querySelector('a, button');
+        const pageBindElement = paginatorElement.querySelector('[data-page]');
+
+        if(linkElement) {
+            linkElement.setAttribute('data-page-button', `${tableId}#${pageIndex}`);
+        }
+        if(pageBindElement) {
+            pageBindElement.innerHTML = (pageIndex + 1) + '';
+        }
+    }
+
+    // Get pageRangeToCover
+    const range = 2;
+    const pageCount = Math.ceil(totalCount / pageSize);
+    const startPage = Math.max(pageIndex - range, 0);
+    const endPage = Math.min(pageIndex + range, pageCount - 1);
+
+    // Generate new pages
+    for(let i = startPage; i <= endPage; i++){
+        const template = i === pageIndex ? activePageTemplate: pageTemplate;
+
+        const paginatorElement = template.cloneNode(true);
+        paginatorElement.style.display = '';
+        paginatorElement.setAttribute('data-temp', 'true');
+
+        bindPageData(paginatorElement, i);
+
+        pageTemplate.before(paginatorElement);
+    }
+}
+function bindData(rowElement, data)
+{
+    const contentBindings = rowElement.querySelectorAll('[data-content-binding]');
+    const attrBindings = rowElement.querySelectorAll('[data-attr-binding]');
+
+    for(let contentBinding of contentBindings) {
+        const bindingField = contentBinding.getAttribute('data-content-binding');
+        let relatedData = data[bindingField];
+        const bindingFunc = contentBinding.getAttribute('data-binding-func');
+        if(bindingFunc) {
+            relatedData = BindingFunctions[bindingFunc](relatedData);
+        }
+
+        contentBinding.innerHTML = relatedData;
+    }
+
+    for(let attrBinding of attrBindings) {
+        const bindingField = attrBinding.getAttribute('data-attr-binding');
+        const bindingAttrName = attrBinding.getAttribute('data-attr-binding-target');
+        const relatedData = data[bindingField];
+
+        attrBinding.setAttribute(bindingAttrName, relatedData);
+    }
+}
+function refreshDataTable(dataTableElement, resetPaginator) {
     if(!dataTableElement) console.warn('Data table element not found');
 
     const apiUrl = dataTableElement.getAttribute('data-datatable');
     console.log('apiUrl: ' + apiUrl);
 
-    const rowTemplate = dataTableElement.querySelector('[data-row-template]');
-    const rowContainer = rowTemplate.parentNode;
-    rowTemplate.style.display = 'none';
+    const requestPath = apiUrl + '/list';
+    let searchDto = getState(dataTableElement).search || {};
+    let paging = getState(dataTableElement).paging;
+    if (!paging || resetPaginator) {
+        paging = getState(dataTableElement).paging = {
+            PageIndex: 0,
+            PageSize: 10
+        };
+    }
 
-
-    function bindData(rowElement, data)
-    {
-        const contentBindings = rowElement.querySelectorAll('[data-content-binding]');
-        const attrBindings = rowElement.querySelectorAll('[data-attr-binding]');
-
-        for(let contentBinding of contentBindings) {
-            const bindingField = contentBinding.getAttribute('data-content-binding');
-            let relatedData = data[bindingField];
-            const bindingFunc = contentBinding.getAttribute('data-binding-func');
-            if(bindingFunc) {
-                relatedData = BindingFunctions[bindingFunc](relatedData);
-            }
-
-            contentBinding.innerHTML = relatedData;
-        }
-
-        for(let attrBinding of attrBindings) {
-            const bindingField = attrBinding.getAttribute('data-attr-binding');
-            const bindingAttrName = attrBinding.getAttribute('data-attr-binding-target');
-            const relatedData = data[bindingField];
-
-            attrBinding.setAttribute(bindingAttrName, relatedData);
+    for(let field in searchDto) {
+        if(searchDto[field] === undefined || searchDto[field] === '') {
+            delete searchDto[field];
         }
     }
-    function refreshList() {
-        const requestPath = apiUrl + '/list';
 
-        const searchDto = {};
+    const requestBody = {
+        ...searchDto,
+        ...paging
+    };
 
-        fetch(requestPath, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(searchDto)
-        })
+    fetch(requestPath, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+    })
         .then(response => response.json())
         .then(response => {
-            console.log(response);
+            const rowTemplate = dataTableElement.querySelector('[data-row-template]:not([data-temp-row])');
+            const rowContainer = rowTemplate.parentElement;
+            rowTemplate.style.display = 'none';
 
-            rowContainer.querySelectorAll('[data-temp-row]').forEach(row => {
+            rowContainer.querySelectorAll('[data-temp-row]').forEach(tempRow => {
+
                 // Delete temp rows
-                row.remove();
+                tempRow.remove();
             });
 
             for(const item of response.Items) {
                 let generatedRow = rowTemplate.cloneNode(true);
                 generatedRow.style.display = '';
+                generatedRow.setAttribute('data-temp-row', 'true');
 
                 bindData(generatedRow, item);
 
-                rowTemplate.after(generatedRow);
+                rowContainer.insertBefore(generatedRow, rowTemplate);
             }
 
             // Fire a custom event that table data is available
 
             const dataAvailableEvent =
-                new CustomEvent('tableDataFetched', { detail: response });
+                new CustomEvent('tableDataFetched', { detail: {
+                        pageIndex: paging.PageIndex,
+                        pageSize: paging.PageSize,
+                        totalCount: response.TotalCount,
+                        data: response.Items
+                    }, bubbles: true });
+
             dataTableElement.dispatchEvent(dataAvailableEvent);
         });
-    }
-
-    refreshList();
-});
-
-/*document.addEventListener('submit', function (e) {
-    const form = e.target;
-
-    if (!form.matches('form[data-ajax-form]')) return;
-
-    e.preventDefault();
-    console.log('prevented');
-
-    const action = form.getAttribute('action');
-    const data = new FormData(form);
-    const params = new URLSearchParams(data).toString();
-
-    fetch(action, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params
-    })
-    .then(response => response.json()) 
-    .then(response => {
-        if (check_and_notify(response)) {
-            const inputs = form.querySelectorAll(':is(input, select, textarea):not(.ignore-reset):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"])');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-        }
-
-        const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', { detail: response });
-        form.dispatchEvent(ajaxSubmitEvent);
-    });
-
-    return false;
-});*/
+}
 
 addListener('form[data-ajax-form]', 'submit', function (e) {
     e.preventDefault();
+    const form = e.target;
     console.log('prevented');
 
-    const shouldReset = !!form.getAttribute('data-ajax-reset');
+    const shouldReset = form.hasAttribute('data-ajax-reset');
     const action = form.getAttribute('action');
     const data = formToObject(form);
 
@@ -316,7 +354,7 @@ addListener('form[data-ajax-form]', 'submit', function (e) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: data
+        body: JSON.stringify(data)
     })
     .then(response => response.json())
     .then(response => {
@@ -331,12 +369,61 @@ addListener('form[data-ajax-form]', 'submit', function (e) {
             
         }
 
-        const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', { detail: response });
+        const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', {
+            detail: response
+        });
         form.dispatchEvent(ajaxSubmitEvent);
     });
 
     return false;
 });
 
+addListener('[data-page-button]', 'click', function(e) {
+    e.preventDefault();
+    const clickedElement = e.target;
+
+    const pageButtonCommand = clickedElement.getAttribute('data-page-button');
+    const pageButtonCommandArgs = pageButtonCommand.split('#');
+
+    const paginatedTableId = pageButtonCommandArgs[0];
+    const paginatedTable = document.getElementById(paginatedTableId);
+
+    const newPageIndex = parseInt(pageButtonCommandArgs[1]);
+
+    getState(paginatedTable).paging = {
+        ...(getState(paginatedTable).paging || {}),
+        PageIndex: newPageIndex
+    };
+
+    refreshDataTable(paginatedTable, false);
+});
+
+addListener('[data-datatable-filter-group] *', 'input', function(e) {
+    console.log('caught');
+    const inputElement = e.target;
+    const filterGroup = inputElement.closest('[data-datatable-filter-group]');
+
+    const datatableSelector = filterGroup.getAttribute('data-datatable-filter-group');
+    const datatableElement = document.querySelector(datatableSelector);
+
+    const search = formToObject(filterGroup);
+
+    getState(datatableElement).search = search;
+    refreshDataTable(datatableElement, true);
+});
+
+addListener('[data-datatable]', 'tableDataFetched', function (e) {
+    const datatableElement = e.target;
+
+    const paginatorSelector = datatableElement.getAttribute('data-paginator');
+    if(!paginatorSelector) return;
+
+    const paginatorElement = document.querySelector(paginatorSelector);
+    if(!paginatorElement) {
+        return;
+    }
+
+    updatePaginatorState(datatableElement, paginatorElement, e.detail.pageIndex, 10, e.detail.totalCount);
+});
 
 // Templating and rendering

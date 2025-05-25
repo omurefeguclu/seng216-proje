@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../views/view_engine.php';
 
 function prepare_json_result(){
     header('Content-type: application/json');
@@ -71,7 +72,7 @@ function view(string $viewName, array $data = [], string $layoutViewName='layout
 
     $layoutFile = cycle_paths($searchViewPaths, $layoutViewName);
 
-
+    $viewEngine = new ViewEngine();
     extract($data);
     ob_start();
     require $viewFile;
@@ -87,6 +88,10 @@ function view(string $viewName, array $data = [], string $layoutViewName='layout
     return $content;
 }
 
-function layout(string $layoutViewName) {
-    register_shutdown_function();
+function redirect($redirectLink = '/', $permanent = false): void
+{
+    header('Location: ' . $redirectLink, true, $permanent ? 301 : 302);
+
+    // Based on documentation: https://thedailywtf.com/articles/WellIntentioned-Destruction
+    die();
 }

@@ -17,11 +17,11 @@ $router->group('/api/auth')
     $foundUser = $loginQuery->findOneByUsername($data['Username']);
 
     if(!$foundUser) {
-        return "User not found";
+        return error_json("User not found");
     }
 
     if($foundUser->getPassword() !== $data['Password']) {
-        return "Wrong password";
+        return error_json("Wrong password");
     }
 
     // Set session userId
@@ -29,8 +29,7 @@ $router->group('/api/auth')
 
     $result = new AuthResultDto($foundUser->getId());
 
-    header("Content-Type: application/json");
-    return json_encode($result);
+    return ok_json($result);
 })
 ->post('/register', function (\Core\Http\RequestContext $ctx) {
     $data = $ctx->json();
@@ -43,7 +42,7 @@ $router->group('/api/auth')
     $existingUserQuery = new DbModel\UserQuery();
     $user = $existingUserQuery->findOneByUsername($data['Username']);
     if($user) {
-        return "Username already exists";
+        return error_json("Username already exists");
     }
 
     $user = new DbModel\User();
@@ -59,7 +58,13 @@ $router->group('/api/auth')
     return ok_json($result);
 });
 
+
 $router->group('/auth')
     ->get('/login', function (){
        return view('login', [], '_root');
-    });
+    })
+    ->get('/logout', function (\Core\Http\RequestContext $ctx) {
+        session_destroy();
+
+        return redirect('/auth/login');
+    });;

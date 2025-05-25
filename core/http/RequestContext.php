@@ -42,4 +42,5 @@ class RequestContext {
     public function form_input(string $key, $default = null): mixed {
         return $_POST[$key] ?? $default;
     }
+
 }

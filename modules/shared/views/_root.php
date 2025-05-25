@@ -9,6 +9,16 @@
     <style type="text/css">
         .bi {
             vertical-align: -.125em;
+            width: 16px;
+            height: 16px;
+        }
+        .icon-md {
+            width: 20px;
+            height: 20px;
+        }
+        .icon-lg {
+            width: 24px;
+            height: 24px;
         }
         svg {
             fill: currentColor;
@@ -21,11 +31,13 @@
 </div>
 
 
-<main class="d-flex flex-nowrap min-vh-100">
-    <?= $content ?>
-</main>
+<?= $content ?>
 
 
+<script src="/assets/oeg.templating.js"></script>
+<script src="/assets/app.js"></script>
 <script src="/assets/lib/bootstrap-5.3.6-dist/js/bootstrap.bundle.min.js"></script>
+<?= $viewEngine->customScripts ?>
+
 </body>
 </html>
