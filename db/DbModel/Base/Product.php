@@ -9,14 +9,11 @@ use DbModel\Product as ChildProduct;
 use DbModel\ProductQuery as ChildProductQuery;
 use DbModel\StockTransaction as ChildStockTransaction;
 use DbModel\StockTransactionQuery as ChildStockTransactionQuery;
-use DbModel\WarehouseProductStock as ChildWarehouseProductStock;
 use DbModel\WarehouseProductStockLog as ChildWarehouseProductStockLog;
 use DbModel\WarehouseProductStockLogQuery as ChildWarehouseProductStockLogQuery;
-use DbModel\WarehouseProductStockQuery as ChildWarehouseProductStockQuery;
 use DbModel\Map\ProductTableMap;
 use DbModel\Map\StockTransactionTableMap;
 use DbModel\Map\WarehouseProductStockLogTableMap;
-use DbModel\Map\WarehouseProductStockTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -104,13 +101,6 @@ abstract class Product implements ActiveRecordInterface
     protected $collStockTransactionsPartial;
 
     /**
-     * @var        ObjectCollection|ChildWarehouseProductStock[] Collection to store aggregation of ChildWarehouseProductStock objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildWarehouseProductStock> Collection to store aggregation of ChildWarehouseProductStock objects.
-     */
-    protected $collWarehouseProductStocks;
-    protected $collWarehouseProductStocksPartial;
-
-    /**
      * @var        ObjectCollection|ChildWarehouseProductStockLog[] Collection to store aggregation of ChildWarehouseProductStockLog objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildWarehouseProductStockLog> Collection to store aggregation of ChildWarehouseProductStockLog objects.
      */
@@ -131,13 +121,6 @@ abstract class Product implements ActiveRecordInterface
      * @phpstan-var ObjectCollection&\Traversable<ChildStockTransaction>
      */
     protected $stockTransactionsScheduledForDeletion = null;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildWarehouseProductStock[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildWarehouseProductStock>
-     */
-    protected $warehouseProductStocksScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -605,8 +588,6 @@ abstract class Product implements ActiveRecordInterface
 
             $this->collStockTransactions = null;
 
-            $this->collWarehouseProductStocks = null;
-
             $this->collWarehouseProductStockLogs = null;
 
         } // if (deep)
@@ -734,23 +715,6 @@ abstract class Product implements ActiveRecordInterface
 
             if ($this->collStockTransactions !== null) {
                 foreach ($this->collStockTransactions as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->warehouseProductStocksScheduledForDeletion !== null) {
-                if (!$this->warehouseProductStocksScheduledForDeletion->isEmpty()) {
-                    \DbModel\WarehouseProductStockQuery::create()
-                        ->filterByPrimaryKeys($this->warehouseProductStocksScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->warehouseProductStocksScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collWarehouseProductStocks !== null) {
-                foreach ($this->collWarehouseProductStocks as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -959,21 +923,6 @@ abstract class Product implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->collStockTransactions->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->collWarehouseProductStocks) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'warehouseProductStocks';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'warehouse_product_stocks';
-                        break;
-                    default:
-                        $key = 'WarehouseProductStocks';
-                }
-
-                $result[$key] = $this->collWarehouseProductStocks->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collWarehouseProductStockLogs) {
 
@@ -1224,12 +1173,6 @@ abstract class Product implements ActiveRecordInterface
                 }
             }
 
-            foreach ($this->getWarehouseProductStocks() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addWarehouseProductStock($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getWarehouseProductStockLogs() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addWarehouseProductStockLog($relObj->copy($deepCopy));
@@ -1279,10 +1222,6 @@ abstract class Product implements ActiveRecordInterface
     {
         if ('StockTransaction' === $relationName) {
             $this->initStockTransactions();
-            return;
-        }
-        if ('WarehouseProductStock' === $relationName) {
-            $this->initWarehouseProductStocks();
             return;
         }
         if ('WarehouseProductStockLog' === $relationName) {
@@ -1635,271 +1574,6 @@ abstract class Product implements ActiveRecordInterface
     }
 
     /**
-     * Clears out the collWarehouseProductStocks collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addWarehouseProductStocks()
-     */
-    public function clearWarehouseProductStocks()
-    {
-        $this->collWarehouseProductStocks = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collWarehouseProductStocks collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialWarehouseProductStocks($v = true): void
-    {
-        $this->collWarehouseProductStocksPartial = $v;
-    }
-
-    /**
-     * Initializes the collWarehouseProductStocks collection.
-     *
-     * By default this just sets the collWarehouseProductStocks collection to an empty array (like clearcollWarehouseProductStocks());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initWarehouseProductStocks(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collWarehouseProductStocks && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = WarehouseProductStockTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collWarehouseProductStocks = new $collectionClassName;
-        $this->collWarehouseProductStocks->setModel('\DbModel\WarehouseProductStock');
-    }
-
-    /**
-     * Gets an array of ChildWarehouseProductStock objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildProduct is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildWarehouseProductStock[] List of ChildWarehouseProductStock objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildWarehouseProductStock> List of ChildWarehouseProductStock objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getWarehouseProductStocks(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collWarehouseProductStocksPartial && !$this->isNew();
-        if (null === $this->collWarehouseProductStocks || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collWarehouseProductStocks) {
-                    $this->initWarehouseProductStocks();
-                } else {
-                    $collectionClassName = WarehouseProductStockTableMap::getTableMap()->getCollectionClassName();
-
-                    $collWarehouseProductStocks = new $collectionClassName;
-                    $collWarehouseProductStocks->setModel('\DbModel\WarehouseProductStock');
-
-                    return $collWarehouseProductStocks;
-                }
-            } else {
-                $collWarehouseProductStocks = ChildWarehouseProductStockQuery::create(null, $criteria)
-                    ->filterByProduct($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collWarehouseProductStocksPartial && count($collWarehouseProductStocks)) {
-                        $this->initWarehouseProductStocks(false);
-
-                        foreach ($collWarehouseProductStocks as $obj) {
-                            if (false == $this->collWarehouseProductStocks->contains($obj)) {
-                                $this->collWarehouseProductStocks->append($obj);
-                            }
-                        }
-
-                        $this->collWarehouseProductStocksPartial = true;
-                    }
-
-                    return $collWarehouseProductStocks;
-                }
-
-                if ($partial && $this->collWarehouseProductStocks) {
-                    foreach ($this->collWarehouseProductStocks as $obj) {
-                        if ($obj->isNew()) {
-                            $collWarehouseProductStocks[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collWarehouseProductStocks = $collWarehouseProductStocks;
-                $this->collWarehouseProductStocksPartial = false;
-            }
-        }
-
-        return $this->collWarehouseProductStocks;
-    }
-
-    /**
-     * Sets a collection of ChildWarehouseProductStock objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $warehouseProductStocks A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setWarehouseProductStocks(Collection $warehouseProductStocks, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildWarehouseProductStock[] $warehouseProductStocksToDelete */
-        $warehouseProductStocksToDelete = $this->getWarehouseProductStocks(new Criteria(), $con)->diff($warehouseProductStocks);
-
-
-        $this->warehouseProductStocksScheduledForDeletion = $warehouseProductStocksToDelete;
-
-        foreach ($warehouseProductStocksToDelete as $warehouseProductStockRemoved) {
-            $warehouseProductStockRemoved->setProduct(null);
-        }
-
-        $this->collWarehouseProductStocks = null;
-        foreach ($warehouseProductStocks as $warehouseProductStock) {
-            $this->addWarehouseProductStock($warehouseProductStock);
-        }
-
-        $this->collWarehouseProductStocks = $warehouseProductStocks;
-        $this->collWarehouseProductStocksPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related WarehouseProductStock objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related WarehouseProductStock objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countWarehouseProductStocks(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collWarehouseProductStocksPartial && !$this->isNew();
-        if (null === $this->collWarehouseProductStocks || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collWarehouseProductStocks) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getWarehouseProductStocks());
-            }
-
-            $query = ChildWarehouseProductStockQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByProduct($this)
-                ->count($con);
-        }
-
-        return count($this->collWarehouseProductStocks);
-    }
-
-    /**
-     * Method called to associate a ChildWarehouseProductStock object to this object
-     * through the ChildWarehouseProductStock foreign key attribute.
-     *
-     * @param ChildWarehouseProductStock $l ChildWarehouseProductStock
-     * @return $this The current object (for fluent API support)
-     */
-    public function addWarehouseProductStock(ChildWarehouseProductStock $l)
-    {
-        if ($this->collWarehouseProductStocks === null) {
-            $this->initWarehouseProductStocks();
-            $this->collWarehouseProductStocksPartial = true;
-        }
-
-        if (!$this->collWarehouseProductStocks->contains($l)) {
-            $this->doAddWarehouseProductStock($l);
-
-            if ($this->warehouseProductStocksScheduledForDeletion and $this->warehouseProductStocksScheduledForDeletion->contains($l)) {
-                $this->warehouseProductStocksScheduledForDeletion->remove($this->warehouseProductStocksScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildWarehouseProductStock $warehouseProductStock The ChildWarehouseProductStock object to add.
-     */
-    protected function doAddWarehouseProductStock(ChildWarehouseProductStock $warehouseProductStock): void
-    {
-        $this->collWarehouseProductStocks[]= $warehouseProductStock;
-        $warehouseProductStock->setProduct($this);
-    }
-
-    /**
-     * @param ChildWarehouseProductStock $warehouseProductStock The ChildWarehouseProductStock object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeWarehouseProductStock(ChildWarehouseProductStock $warehouseProductStock)
-    {
-        if ($this->getWarehouseProductStocks()->contains($warehouseProductStock)) {
-            $pos = $this->collWarehouseProductStocks->search($warehouseProductStock);
-            $this->collWarehouseProductStocks->remove($pos);
-            if (null === $this->warehouseProductStocksScheduledForDeletion) {
-                $this->warehouseProductStocksScheduledForDeletion = clone $this->collWarehouseProductStocks;
-                $this->warehouseProductStocksScheduledForDeletion->clear();
-            }
-            $this->warehouseProductStocksScheduledForDeletion[]= clone $warehouseProductStock;
-            $warehouseProductStock->setProduct(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Product is new, it will return
-     * an empty collection; or if this Product has previously
-     * been saved, it will retrieve related WarehouseProductStocks from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Product.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildWarehouseProductStock[] List of ChildWarehouseProductStock objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildWarehouseProductStock}> List of ChildWarehouseProductStock objects
-     */
-    public function getWarehouseProductStocksJoinWarehouse(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildWarehouseProductStockQuery::create(null, $criteria);
-        $query->joinWith('Warehouse', $joinBehavior);
-
-        return $this->getWarehouseProductStocks($query, $con);
-    }
-
-    /**
      * Clears out the collWarehouseProductStockLogs collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2164,6 +1838,32 @@ abstract class Product implements ActiveRecordInterface
         return $this->getWarehouseProductStockLogs($query, $con);
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Product is new, it will return
+     * an empty collection; or if this Product has previously
+     * been saved, it will retrieve related WarehouseProductStockLogs from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Product.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildWarehouseProductStockLog[] List of ChildWarehouseProductStockLog objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildWarehouseProductStockLog}> List of ChildWarehouseProductStockLog objects
+     */
+    public function getWarehouseProductStockLogsJoinStockTransaction(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildWarehouseProductStockLogQuery::create(null, $criteria);
+        $query->joinWith('StockTransaction', $joinBehavior);
+
+        return $this->getWarehouseProductStockLogs($query, $con);
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -2203,11 +1903,6 @@ abstract class Product implements ActiveRecordInterface
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collWarehouseProductStocks) {
-                foreach ($this->collWarehouseProductStocks as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collWarehouseProductStockLogs) {
                 foreach ($this->collWarehouseProductStockLogs as $o) {
                     $o->clearAllReferences($deep);
@@ -2216,7 +1911,6 @@ abstract class Product implements ActiveRecordInterface
         } // if ($deep)
 
         $this->collStockTransactions = null;
-        $this->collWarehouseProductStocks = null;
         $this->collWarehouseProductStockLogs = null;
         return $this;
     }

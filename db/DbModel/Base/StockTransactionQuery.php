@@ -95,7 +95,17 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildStockTransactionQuery rightJoinWithUser() Adds a RIGHT JOIN clause and with to the query using the User relation
  * @method     ChildStockTransactionQuery innerJoinWithUser() Adds a INNER JOIN clause and with to the query using the User relation
  *
- * @method     \DbModel\ProductQuery|\DbModel\WarehouseQuery|\DbModel\WarehouseQuery|\DbModel\VehicleQuery|\DbModel\UserQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     ChildStockTransactionQuery leftJoinWarehouseProductStockLog($relationAlias = null) Adds a LEFT JOIN clause to the query using the WarehouseProductStockLog relation
+ * @method     ChildStockTransactionQuery rightJoinWarehouseProductStockLog($relationAlias = null) Adds a RIGHT JOIN clause to the query using the WarehouseProductStockLog relation
+ * @method     ChildStockTransactionQuery innerJoinWarehouseProductStockLog($relationAlias = null) Adds a INNER JOIN clause to the query using the WarehouseProductStockLog relation
+ *
+ * @method     ChildStockTransactionQuery joinWithWarehouseProductStockLog($joinType = Criteria::INNER_JOIN) Adds a join clause and with to the query using the WarehouseProductStockLog relation
+ *
+ * @method     ChildStockTransactionQuery leftJoinWithWarehouseProductStockLog() Adds a LEFT JOIN clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildStockTransactionQuery rightJoinWithWarehouseProductStockLog() Adds a RIGHT JOIN clause and with to the query using the WarehouseProductStockLog relation
+ * @method     ChildStockTransactionQuery innerJoinWithWarehouseProductStockLog() Adds a INNER JOIN clause and with to the query using the WarehouseProductStockLog relation
+ *
+ * @method     \DbModel\ProductQuery|\DbModel\WarehouseQuery|\DbModel\WarehouseQuery|\DbModel\VehicleQuery|\DbModel\UserQuery|\DbModel\WarehouseProductStockLogQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildStockTransaction|null findOne(?ConnectionInterface $con = null) Return the first ChildStockTransaction matching the query
  * @method     ChildStockTransaction findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildStockTransaction matching the query, or a new ChildStockTransaction object populated from the query conditions when no match is found
@@ -1561,6 +1571,179 @@ abstract class StockTransactionQuery extends ModelCriteria
     {
         /** @var $q \DbModel\UserQuery */
         $q = $this->useInQuery('User', $modelAlias, $queryClass, 'NOT IN');
+        return $q;
+    }
+
+    /**
+     * Filter the query by a related \DbModel\WarehouseProductStockLog object
+     *
+     * @param \DbModel\WarehouseProductStockLog|ObjectCollection $warehouseProductStockLog the related object to use as filter
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByWarehouseProductStockLog($warehouseProductStockLog, ?string $comparison = null)
+    {
+        if ($warehouseProductStockLog instanceof \DbModel\WarehouseProductStockLog) {
+            $this
+                ->addUsingAlias(StockTransactionTableMap::COL_ID, $warehouseProductStockLog->getRelatedTransactionId(), $comparison);
+
+            return $this;
+        } elseif ($warehouseProductStockLog instanceof ObjectCollection) {
+            $this
+                ->useWarehouseProductStockLogQuery()
+                ->filterByPrimaryKeys($warehouseProductStockLog->getPrimaryKeys())
+                ->endUse();
+
+            return $this;
+        } else {
+            throw new PropelException('filterByWarehouseProductStockLog() only accepts arguments of type \DbModel\WarehouseProductStockLog or Collection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the WarehouseProductStockLog relation
+     *
+     * @param string|null $relationAlias Optional alias for the relation
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function joinWarehouseProductStockLog(?string $relationAlias = null, ?string $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('WarehouseProductStockLog');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'WarehouseProductStockLog');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the WarehouseProductStockLog relation WarehouseProductStockLog object
+     *
+     * @see useQuery()
+     *
+     * @param string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return \DbModel\WarehouseProductStockLogQuery A secondary query class using the current class as primary query
+     */
+    public function useWarehouseProductStockLogQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinWarehouseProductStockLog($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'WarehouseProductStockLog', '\DbModel\WarehouseProductStockLogQuery');
+    }
+
+    /**
+     * Use the WarehouseProductStockLog relation WarehouseProductStockLog object
+     *
+     * @param callable(\DbModel\WarehouseProductStockLogQuery):\DbModel\WarehouseProductStockLogQuery $callable A function working on the related query
+     *
+     * @param string|null $relationAlias optional alias for the relation
+     *
+     * @param string|null $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return $this
+     */
+    public function withWarehouseProductStockLogQuery(
+        callable $callable,
+        string $relationAlias = null,
+        ?string $joinType = Criteria::LEFT_JOIN
+    ) {
+        $relatedQuery = $this->useWarehouseProductStockLogQuery(
+            $relationAlias,
+            $joinType
+        );
+        $callable($relatedQuery);
+        $relatedQuery->endUse();
+
+        return $this;
+    }
+
+    /**
+     * Use the relation to WarehouseProductStockLog table for an EXISTS query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     * @param string $typeOfExists Either ExistsQueryCriterion::TYPE_EXISTS or ExistsQueryCriterion::TYPE_NOT_EXISTS
+     *
+     * @return \DbModel\WarehouseProductStockLogQuery The inner query object of the EXISTS statement
+     */
+    public function useWarehouseProductStockLogExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
+    {
+        /** @var $q \DbModel\WarehouseProductStockLogQuery */
+        $q = $this->useExistsQuery('WarehouseProductStockLog', $modelAlias, $queryClass, $typeOfExists);
+        return $q;
+    }
+
+    /**
+     * Use the relation to WarehouseProductStockLog table for a NOT EXISTS query.
+     *
+     * @see useWarehouseProductStockLogExistsQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
+     *
+     * @return \DbModel\WarehouseProductStockLogQuery The inner query object of the NOT EXISTS statement
+     */
+    public function useWarehouseProductStockLogNotExistsQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \DbModel\WarehouseProductStockLogQuery */
+        $q = $this->useExistsQuery('WarehouseProductStockLog', $modelAlias, $queryClass, 'NOT EXISTS');
+        return $q;
+    }
+
+    /**
+     * Use the relation to WarehouseProductStockLog table for an IN query.
+     *
+     * @see \Propel\Runtime\ActiveQuery\ModelCriteria::useInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the IN query, like ExtendedBookQuery::class
+     * @param string $typeOfIn Criteria::IN or Criteria::NOT_IN
+     *
+     * @return \DbModel\WarehouseProductStockLogQuery The inner query object of the IN statement
+     */
+    public function useInWarehouseProductStockLogQuery($modelAlias = null, $queryClass = null, $typeOfIn = 'IN')
+    {
+        /** @var $q \DbModel\WarehouseProductStockLogQuery */
+        $q = $this->useInQuery('WarehouseProductStockLog', $modelAlias, $queryClass, $typeOfIn);
+        return $q;
+    }
+
+    /**
+     * Use the relation to WarehouseProductStockLog table for a NOT IN query.
+     *
+     * @see useWarehouseProductStockLogInQuery()
+     *
+     * @param string|null $modelAlias sets an alias for the nested query
+     * @param string|null $queryClass Allows to use a custom query class for the NOT IN query, like ExtendedBookQuery::class
+     *
+     * @return \DbModel\WarehouseProductStockLogQuery The inner query object of the NOT IN statement
+     */
+    public function useNotInWarehouseProductStockLogQuery($modelAlias = null, $queryClass = null)
+    {
+        /** @var $q \DbModel\WarehouseProductStockLogQuery */
+        $q = $this->useInQuery('WarehouseProductStockLog', $modelAlias, $queryClass, 'NOT IN');
         return $q;
     }
 

@@ -291,6 +291,13 @@ class StockTransactionTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, null, false);
+        $this->addRelation('WarehouseProductStockLog', '\\DbModel\\WarehouseProductStockLog', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':related_transaction_id',
+    1 => ':id',
+  ),
+), null, null, 'WarehouseProductStockLogs', false);
     }
 
     /**

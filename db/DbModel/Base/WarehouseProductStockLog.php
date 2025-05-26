@@ -7,6 +7,8 @@ use \Exception;
 use \PDO;
 use DbModel\Product as ChildProduct;
 use DbModel\ProductQuery as ChildProductQuery;
+use DbModel\StockTransaction as ChildStockTransaction;
+use DbModel\StockTransactionQuery as ChildStockTransactionQuery;
 use DbModel\Warehouse as ChildWarehouse;
 use DbModel\WarehouseProductStockLogQuery as ChildWarehouseProductStockLogQuery;
 use DbModel\WarehouseQuery as ChildWarehouseQuery;
@@ -89,6 +91,13 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     protected $product_id;
 
     /**
+     * The value for the related_transaction_id field.
+     *
+     * @var        int|null
+     */
+    protected $related_transaction_id;
+
+    /**
      * The value for the amount field.
      *
      * @var        int
@@ -119,6 +128,11 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
      * @var        ChildProduct
      */
     protected $aProduct;
+
+    /**
+     * @var        ChildStockTransaction
+     */
+    protected $aStockTransaction;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -397,6 +411,16 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     }
 
     /**
+     * Get the [related_transaction_id] column value.
+     *
+     * @return int|null
+     */
+    public function getRelatedTransactionId()
+    {
+        return $this->related_transaction_id;
+    }
+
+    /**
      * Get the [amount] column value.
      *
      * @return int
@@ -517,6 +541,30 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     }
 
     /**
+     * Set the value of [related_transaction_id] column.
+     *
+     * @param int|null $v New value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setRelatedTransactionId($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->related_transaction_id !== $v) {
+            $this->related_transaction_id = $v;
+            $this->modifiedColumns[WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID] = true;
+        }
+
+        if ($this->aStockTransaction !== null && $this->aStockTransaction->getId() !== $v) {
+            $this->aStockTransaction = null;
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the value of [amount] column.
      *
      * @param int $v New value
@@ -629,13 +677,16 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('ProductId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->product_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('RelatedTransactionId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->related_transaction_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('Amount', TableMap::TYPE_PHPNAME, $indexType)];
             $this->amount = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('IsReceived', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('IsReceived', TableMap::TYPE_PHPNAME, $indexType)];
             $this->is_received = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : WarehouseProductStockLogTableMap::translateFieldName('CreatedOn', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -648,7 +699,7 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 6; // 6 = WarehouseProductStockLogTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 7; // 7 = WarehouseProductStockLogTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\DbModel\\WarehouseProductStockLog'), 0, $e);
@@ -676,6 +727,9 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         }
         if ($this->aProduct !== null && $this->product_id !== $this->aProduct->getId()) {
             $this->aProduct = null;
+        }
+        if ($this->aStockTransaction !== null && $this->related_transaction_id !== $this->aStockTransaction->getId()) {
+            $this->aStockTransaction = null;
         }
     }
 
@@ -718,6 +772,7 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
 
             $this->aWarehouse = null;
             $this->aProduct = null;
+            $this->aStockTransaction = null;
         } // if (deep)
     }
 
@@ -840,6 +895,13 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                 $this->setProduct($this->aProduct);
             }
 
+            if ($this->aStockTransaction !== null) {
+                if ($this->aStockTransaction->isModified() || $this->aStockTransaction->isNew()) {
+                    $affectedRows += $this->aStockTransaction->save($con);
+                }
+                $this->setStockTransaction($this->aStockTransaction);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -886,6 +948,9 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_PRODUCT_ID)) {
             $modifiedColumns[':p' . $index++]  = 'product_id';
         }
+        if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'related_transaction_id';
+        }
         if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_AMOUNT)) {
             $modifiedColumns[':p' . $index++]  = 'amount';
         }
@@ -916,6 +981,10 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                         break;
                     case 'product_id':
                         $stmt->bindValue($identifier, $this->product_id, PDO::PARAM_INT);
+
+                        break;
+                    case 'related_transaction_id':
+                        $stmt->bindValue($identifier, $this->related_transaction_id, PDO::PARAM_INT);
 
                         break;
                     case 'amount':
@@ -1002,12 +1071,15 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                 return $this->getProductId();
 
             case 3:
-                return $this->getAmount();
+                return $this->getRelatedTransactionId();
 
             case 4:
-                return $this->getIsReceived();
+                return $this->getAmount();
 
             case 5:
+                return $this->getIsReceived();
+
+            case 6:
                 return $this->getCreatedOn();
 
             default:
@@ -1041,12 +1113,13 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getWarehouseId(),
             $keys[2] => $this->getProductId(),
-            $keys[3] => $this->getAmount(),
-            $keys[4] => $this->getIsReceived(),
-            $keys[5] => $this->getCreatedOn(),
+            $keys[3] => $this->getRelatedTransactionId(),
+            $keys[4] => $this->getAmount(),
+            $keys[5] => $this->getIsReceived(),
+            $keys[6] => $this->getCreatedOn(),
         ];
-        if ($result[$keys[5]] instanceof \DateTimeInterface) {
-            $result[$keys[5]] = $result[$keys[5]]->format('Y-m-d H:i:s.u');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d H:i:s.u');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1084,6 +1157,21 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                 }
 
                 $result[$key] = $this->aProduct->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aStockTransaction) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'stockTransaction';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'stock_transactions';
+                        break;
+                    default:
+                        $key = 'StockTransaction';
+                }
+
+                $result[$key] = $this->aStockTransaction->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -1131,12 +1219,15 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
                 $this->setProductId($value);
                 break;
             case 3:
-                $this->setAmount($value);
+                $this->setRelatedTransactionId($value);
                 break;
             case 4:
-                $this->setIsReceived($value);
+                $this->setAmount($value);
                 break;
             case 5:
+                $this->setIsReceived($value);
+                break;
+            case 6:
                 $this->setCreatedOn($value);
                 break;
         } // switch()
@@ -1175,13 +1266,16 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
             $this->setProductId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setAmount($arr[$keys[3]]);
+            $this->setRelatedTransactionId($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setIsReceived($arr[$keys[4]]);
+            $this->setAmount($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setCreatedOn($arr[$keys[5]]);
+            $this->setIsReceived($arr[$keys[5]]);
+        }
+        if (array_key_exists($keys[6], $arr)) {
+            $this->setCreatedOn($arr[$keys[6]]);
         }
 
         return $this;
@@ -1234,6 +1328,9 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         }
         if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_PRODUCT_ID)) {
             $criteria->add(WarehouseProductStockLogTableMap::COL_PRODUCT_ID, $this->product_id);
+        }
+        if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID)) {
+            $criteria->add(WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID, $this->related_transaction_id);
         }
         if ($this->isColumnModified(WarehouseProductStockLogTableMap::COL_AMOUNT)) {
             $criteria->add(WarehouseProductStockLogTableMap::COL_AMOUNT, $this->amount);
@@ -1334,6 +1431,7 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     {
         $copyObj->setWarehouseId($this->getWarehouseId());
         $copyObj->setProductId($this->getProductId());
+        $copyObj->setRelatedTransactionId($this->getRelatedTransactionId());
         $copyObj->setAmount($this->getAmount());
         $copyObj->setIsReceived($this->getIsReceived());
         $copyObj->setCreatedOn($this->getCreatedOn());
@@ -1468,6 +1566,57 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildStockTransaction object.
+     *
+     * @param ChildStockTransaction|null $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setStockTransaction(ChildStockTransaction $v = null)
+    {
+        if ($v === null) {
+            $this->setRelatedTransactionId(NULL);
+        } else {
+            $this->setRelatedTransactionId($v->getId());
+        }
+
+        $this->aStockTransaction = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildStockTransaction object, it will not be re-added.
+        if ($v !== null) {
+            $v->addWarehouseProductStockLog($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildStockTransaction object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildStockTransaction|null The associated ChildStockTransaction object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getStockTransaction(?ConnectionInterface $con = null)
+    {
+        if ($this->aStockTransaction === null && ($this->related_transaction_id != 0)) {
+            $this->aStockTransaction = ChildStockTransactionQuery::create()->findPk($this->related_transaction_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aStockTransaction->addWarehouseProductStockLogs($this);
+             */
+        }
+
+        return $this->aStockTransaction;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1482,9 +1631,13 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
         if (null !== $this->aProduct) {
             $this->aProduct->removeWarehouseProductStockLog($this);
         }
+        if (null !== $this->aStockTransaction) {
+            $this->aStockTransaction->removeWarehouseProductStockLog($this);
+        }
         $this->id = null;
         $this->warehouse_id = null;
         $this->product_id = null;
+        $this->related_transaction_id = null;
         $this->amount = null;
         $this->is_received = null;
         $this->created_on = null;
@@ -1514,6 +1667,7 @@ abstract class WarehouseProductStockLog implements ActiveRecordInterface
 
         $this->aWarehouse = null;
         $this->aProduct = null;
+        $this->aStockTransaction = null;
         return $this;
     }
 

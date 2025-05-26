@@ -194,13 +194,6 @@ class ProductTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'StockTransactions', false);
-        $this->addRelation('WarehouseProductStock', '\\DbModel\\WarehouseProductStock', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':product_id',
-    1 => ':id',
-  ),
-), null, null, 'WarehouseProductStocks', false);
         $this->addRelation('WarehouseProductStockLog', '\\DbModel\\WarehouseProductStockLog', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

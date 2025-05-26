@@ -60,16 +60,19 @@ $router->group('/api/stock-transactions')
 
         $entity = new DbModel\StockTransaction();
         $entity = $entity->fromArray($insertDto);
+        $entity->setCreatorUserId($ctx->user->getId());
 
         $entity->save();
 
         $receivingLog = new DbModel\WarehouseProductStockLog();
+        $receivingLog->setRelatedTransactionId($entity->getId());
         $receivingLog->setWarehouseId($entity->getToWarehouseId());
         $receivingLog->setProductId($entity->getProductId());
         $receivingLog->setAmount($entity->getAmount());
         $receivingLog->setIsReceived(true);
 
         $givingLog = new DbModel\WarehouseProductStockLog();
+        $givingLog->setRelatedTransactionId($entity->getId());
         $givingLog->setWarehouseId($entity->getFromWarehouseId());
         $givingLog->setProductId($entity->getProductId());
         $givingLog->setAmount($entity->getAmount());
@@ -86,6 +89,10 @@ $router->group('/api/stock-transactions')
         if(!$entity){
             return error_json('Vehicle not found with id ' . $id);
         }
+
+        \DbModel\WarehouseProductStockLogQuery::create()
+            ->filterByRelatedTransactionId($entity->getId())
+            ->delete();
 
         $entity->delete();
 

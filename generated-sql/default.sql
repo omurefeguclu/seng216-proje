@@ -89,30 +89,6 @@ CREATE TABLE `vehicles`
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- warehouse_product_stock
--- ---------------------------------------------------------------------
-
-DROP TABLE IF EXISTS `warehouse_product_stock`;
-
-CREATE TABLE `warehouse_product_stock`
-(
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `warehouse_id` INTEGER NOT NULL,
-    `product_id` INTEGER NOT NULL,
-    `amount` INTEGER NOT NULL,
-    `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `warehouse_id` (`warehouse_id`, `product_id`),
-    INDEX `product_id` (`product_id`),
-    CONSTRAINT `warehouse_product_stock_ibfk_1`
-        FOREIGN KEY (`warehouse_id`)
-        REFERENCES `warehouses` (`id`),
-    CONSTRAINT `warehouse_product_stock_ibfk_2`
-        FOREIGN KEY (`product_id`)
-        REFERENCES `products` (`id`)
-) ENGINE=InnoDB;
-
--- ---------------------------------------------------------------------
 -- warehouse_product_stock_log
 -- ---------------------------------------------------------------------
 
@@ -123,18 +99,23 @@ CREATE TABLE `warehouse_product_stock_log`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `warehouse_id` INTEGER NOT NULL,
     `product_id` INTEGER NOT NULL,
+    `related_transaction_id` INTEGER,
     `amount` INTEGER NOT NULL,
     `is_received` TINYINT(1) NOT NULL,
     `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     INDEX `warehouse_id` (`warehouse_id`),
     INDEX `product_id` (`product_id`),
+    INDEX `related_transaction_id` (`related_transaction_id`),
     CONSTRAINT `warehouse_product_stock_log_ibfk_1`
         FOREIGN KEY (`warehouse_id`)
         REFERENCES `warehouses` (`id`),
     CONSTRAINT `warehouse_product_stock_log_ibfk_2`
         FOREIGN KEY (`product_id`)
-        REFERENCES `products` (`id`)
+        REFERENCES `products` (`id`),
+    CONSTRAINT `warehouse_product_stock_log_ibfk_3`
+        FOREIGN KEY (`related_transaction_id`)
+        REFERENCES `stock_transactions` (`id`)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------

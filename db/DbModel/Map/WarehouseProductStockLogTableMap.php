@@ -63,7 +63,7 @@ class WarehouseProductStockLogTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 6;
+    public const NUM_COLUMNS = 7;
 
     /**
      * The number of lazy-loaded columns
@@ -73,7 +73,7 @@ class WarehouseProductStockLogTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 6;
+    public const NUM_HYDRATE_COLUMNS = 7;
 
     /**
      * the column name for the id field
@@ -89,6 +89,11 @@ class WarehouseProductStockLogTableMap extends TableMap
      * the column name for the product_id field
      */
     public const COL_PRODUCT_ID = 'warehouse_product_stock_log.product_id';
+
+    /**
+     * the column name for the related_transaction_id field
+     */
+    public const COL_RELATED_TRANSACTION_ID = 'warehouse_product_stock_log.related_transaction_id';
 
     /**
      * the column name for the amount field
@@ -119,11 +124,11 @@ class WarehouseProductStockLogTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'WarehouseId', 'ProductId', 'Amount', 'IsReceived', 'CreatedOn', ],
-        self::TYPE_CAMELNAME     => ['id', 'warehouseId', 'productId', 'amount', 'isReceived', 'createdOn', ],
-        self::TYPE_COLNAME       => [WarehouseProductStockLogTableMap::COL_ID, WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID, WarehouseProductStockLogTableMap::COL_PRODUCT_ID, WarehouseProductStockLogTableMap::COL_AMOUNT, WarehouseProductStockLogTableMap::COL_IS_RECEIVED, WarehouseProductStockLogTableMap::COL_CREATED_ON, ],
-        self::TYPE_FIELDNAME     => ['id', 'warehouse_id', 'product_id', 'amount', 'is_received', 'created_on', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
+        self::TYPE_PHPNAME       => ['Id', 'WarehouseId', 'ProductId', 'RelatedTransactionId', 'Amount', 'IsReceived', 'CreatedOn', ],
+        self::TYPE_CAMELNAME     => ['id', 'warehouseId', 'productId', 'relatedTransactionId', 'amount', 'isReceived', 'createdOn', ],
+        self::TYPE_COLNAME       => [WarehouseProductStockLogTableMap::COL_ID, WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID, WarehouseProductStockLogTableMap::COL_PRODUCT_ID, WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID, WarehouseProductStockLogTableMap::COL_AMOUNT, WarehouseProductStockLogTableMap::COL_IS_RECEIVED, WarehouseProductStockLogTableMap::COL_CREATED_ON, ],
+        self::TYPE_FIELDNAME     => ['id', 'warehouse_id', 'product_id', 'related_transaction_id', 'amount', 'is_received', 'created_on', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -135,11 +140,11 @@ class WarehouseProductStockLogTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'WarehouseId' => 1, 'ProductId' => 2, 'Amount' => 3, 'IsReceived' => 4, 'CreatedOn' => 5, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'warehouseId' => 1, 'productId' => 2, 'amount' => 3, 'isReceived' => 4, 'createdOn' => 5, ],
-        self::TYPE_COLNAME       => [WarehouseProductStockLogTableMap::COL_ID => 0, WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID => 1, WarehouseProductStockLogTableMap::COL_PRODUCT_ID => 2, WarehouseProductStockLogTableMap::COL_AMOUNT => 3, WarehouseProductStockLogTableMap::COL_IS_RECEIVED => 4, WarehouseProductStockLogTableMap::COL_CREATED_ON => 5, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'warehouse_id' => 1, 'product_id' => 2, 'amount' => 3, 'is_received' => 4, 'created_on' => 5, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'WarehouseId' => 1, 'ProductId' => 2, 'RelatedTransactionId' => 3, 'Amount' => 4, 'IsReceived' => 5, 'CreatedOn' => 6, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'warehouseId' => 1, 'productId' => 2, 'relatedTransactionId' => 3, 'amount' => 4, 'isReceived' => 5, 'createdOn' => 6, ],
+        self::TYPE_COLNAME       => [WarehouseProductStockLogTableMap::COL_ID => 0, WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID => 1, WarehouseProductStockLogTableMap::COL_PRODUCT_ID => 2, WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID => 3, WarehouseProductStockLogTableMap::COL_AMOUNT => 4, WarehouseProductStockLogTableMap::COL_IS_RECEIVED => 5, WarehouseProductStockLogTableMap::COL_CREATED_ON => 6, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'warehouse_id' => 1, 'product_id' => 2, 'related_transaction_id' => 3, 'amount' => 4, 'is_received' => 5, 'created_on' => 6, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, ]
     ];
 
     /**
@@ -171,6 +176,14 @@ class WarehouseProductStockLogTableMap extends TableMap
         'COL_PRODUCT_ID' => 'PRODUCT_ID',
         'product_id' => 'PRODUCT_ID',
         'warehouse_product_stock_log.product_id' => 'PRODUCT_ID',
+        'RelatedTransactionId' => 'RELATED_TRANSACTION_ID',
+        'WarehouseProductStockLog.RelatedTransactionId' => 'RELATED_TRANSACTION_ID',
+        'relatedTransactionId' => 'RELATED_TRANSACTION_ID',
+        'warehouseProductStockLog.relatedTransactionId' => 'RELATED_TRANSACTION_ID',
+        'WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID' => 'RELATED_TRANSACTION_ID',
+        'COL_RELATED_TRANSACTION_ID' => 'RELATED_TRANSACTION_ID',
+        'related_transaction_id' => 'RELATED_TRANSACTION_ID',
+        'warehouse_product_stock_log.related_transaction_id' => 'RELATED_TRANSACTION_ID',
         'Amount' => 'AMOUNT',
         'WarehouseProductStockLog.Amount' => 'AMOUNT',
         'amount' => 'AMOUNT',
@@ -216,6 +229,7 @@ class WarehouseProductStockLogTableMap extends TableMap
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addForeignKey('warehouse_id', 'WarehouseId', 'INTEGER', 'warehouses', 'id', true, null, null);
         $this->addForeignKey('product_id', 'ProductId', 'INTEGER', 'products', 'id', true, null, null);
+        $this->addForeignKey('related_transaction_id', 'RelatedTransactionId', 'INTEGER', 'stock_transactions', 'id', false, null, null);
         $this->addColumn('amount', 'Amount', 'INTEGER', true, null, null);
         $this->addColumn('is_received', 'IsReceived', 'BOOLEAN', true, 1, null);
         $this->addColumn('created_on', 'CreatedOn', 'TIMESTAMP', true, null, 'CURRENT_TIMESTAMP');
@@ -239,6 +253,13 @@ class WarehouseProductStockLogTableMap extends TableMap
   0 =>
   array (
     0 => ':product_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('StockTransaction', '\\DbModel\\StockTransaction', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':related_transaction_id',
     1 => ':id',
   ),
 ), null, null, null, false);
@@ -389,6 +410,7 @@ class WarehouseProductStockLogTableMap extends TableMap
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_ID);
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID);
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_PRODUCT_ID);
+            $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID);
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_AMOUNT);
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_IS_RECEIVED);
             $criteria->addSelectColumn(WarehouseProductStockLogTableMap::COL_CREATED_ON);
@@ -396,6 +418,7 @@ class WarehouseProductStockLogTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.warehouse_id');
             $criteria->addSelectColumn($alias . '.product_id');
+            $criteria->addSelectColumn($alias . '.related_transaction_id');
             $criteria->addSelectColumn($alias . '.amount');
             $criteria->addSelectColumn($alias . '.is_received');
             $criteria->addSelectColumn($alias . '.created_on');
@@ -420,6 +443,7 @@ class WarehouseProductStockLogTableMap extends TableMap
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_ID);
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_WAREHOUSE_ID);
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_PRODUCT_ID);
+            $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_RELATED_TRANSACTION_ID);
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_AMOUNT);
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_IS_RECEIVED);
             $criteria->removeSelectColumn(WarehouseProductStockLogTableMap::COL_CREATED_ON);
@@ -427,6 +451,7 @@ class WarehouseProductStockLogTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.warehouse_id');
             $criteria->removeSelectColumn($alias . '.product_id');
+            $criteria->removeSelectColumn($alias . '.related_transaction_id');
             $criteria->removeSelectColumn($alias . '.amount');
             $criteria->removeSelectColumn($alias . '.is_received');
             $criteria->removeSelectColumn($alias . '.created_on');

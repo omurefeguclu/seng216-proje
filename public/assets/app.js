@@ -626,7 +626,7 @@ function initFormModal(modalSelector, datatable, configuration = {}, initAction 
                 const entityId = modalState.entityId;
                 const requestUrl = entityId ? modalState.config.editUrl.replace(':id', entityId) : modalState.config.createUrl;
 
-                submitForm(modalForm, requestUrl, false)
+                const request = submitForm(modalForm, requestUrl, false)
                     .then(response => {
 
                         const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
@@ -638,6 +638,8 @@ function initFormModal(modalSelector, datatable, configuration = {}, initAction 
 
                         modalState.config.completedCallback(response);
                     });
+
+                adaptFormAlert(modalForm, request);
 
                 return false;
             });

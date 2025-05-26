@@ -201,13 +201,6 @@ class WarehouseTableMap extends TableMap
     1 => ':id',
   ),
 ), null, null, 'StockTransactionsRelatedByToWarehouseId', false);
-        $this->addRelation('WarehouseProductStock', '\\DbModel\\WarehouseProductStock', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':warehouse_id',
-    1 => ':id',
-  ),
-), null, null, 'WarehouseProductStocks', false);
         $this->addRelation('WarehouseProductStockLog', '\\DbModel\\WarehouseProductStockLog', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (

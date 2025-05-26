@@ -55,6 +55,12 @@
             </div>
             <div class="modal-body">
                 <form>
+                    <div class="alert alert-danger d-flex align-items-center d-none" data-error="div" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" role="img"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                        <div>
+                            An example danger alert with an icon
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="vehicleSelect" class="form-label">Associated Vehicle</label>
                         <select class="form-select" name="VehicleId" id="vehicleSelect" data-datasource="/api/vehicles/get-dropdown"
