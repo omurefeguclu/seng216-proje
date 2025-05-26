@@ -391,9 +391,14 @@ function bindData(rowElement, data){
 
     for(let contentBinding of contentBindings) {
         const bindingField = contentBinding.getAttribute('data-content-binding');
-        let relatedData = data[bindingField];
-        const bindingFunc = contentBinding.getAttribute('data-binding-func');
+
+        let relatedData = bindingField ? data[bindingField] : data;
+        let bindingFunc = contentBinding.getAttribute('data-binding-func');
         if(bindingFunc) {
+            if(!(bindingFunc in BindingFunctions)) {
+                console.error('Binding function is not provided: ', bindingFunc);
+                continue;
+            }
             Promise.resolve(BindingFunctions[bindingFunc](relatedData))
                 .then(x => {
                     relatedData = x;
@@ -419,16 +424,17 @@ function bindData(rowElement, data){
 
 function refreshDataTable(dataTableElement, resetPaginator) {
     if(!dataTableElement) console.warn('Data table element not found');
+    const dataTableState = getState(dataTableElement);
 
-    const dataSource = getState(dataTableElement).datasource;
+    const dataSource = dataTableState.datasource;
     if(!dataSource) console.warn('Data source is not configured');
 
 
     const requestPath = dataSource.list;
-    let searchDto = getState(dataTableElement).search || {};
-    let paging = getState(dataTableElement).paging;
+    let searchDto = dataTableState.search || {};
+    let paging = dataTableState.paging;
     if (!paging || resetPaginator) {
-        paging = getState(dataTableElement).paging = {
+        paging = dataTableState.paging = {
             PageIndex: 0,
             PageSize: 5
         };
@@ -564,18 +570,20 @@ addListener('[data-datatable-filter-group] *', 'input', function(e) {
     refreshDataTable(datatableElement, true);
 });
 
-function initDatatable(selector, prefix) {
+function initDatatable(selector, prefix, configureState=()=>{}) {
     const datatableElement = document.querySelector(selector);
     const paginatorSelector = datatableElement.getAttribute('data-paginator');
 
     const paginatorElement = paginatorSelector ? document.querySelector(paginatorSelector) : null;
+    const datatableState = getState(datatableElement);
 
-    getState(datatableElement).datasource = {
+    datatableState.datasource = {
         list: prefix + '/list',
         create: prefix + '/form',
         edit: prefix + '/form/:id',
         delete: prefix + '/delete/:id',
     };
+    configureState(datatableState);
 
     datatableElement.setAttribute('data-datatable', true);
 

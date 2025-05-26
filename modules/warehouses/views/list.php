@@ -28,7 +28,7 @@
     <div class="card shadow-sm rounded-4 border-0">
         <div class="table-responsive">
             <table id="entities-table" data-paginator="#entities-pagination"
-                   data-form-modal="#entity-form-modal" class="table data-table table-striped table-bordered table-hover mb-0">
+                   class="table data-table table-striped table-bordered table-hover mb-0">
                 <thead class="table-light">
                     <tr>
                         <th scope="col">#</th>
@@ -46,6 +46,10 @@
                         <button data-form-modal-button="#entity-form-modal" data-attr-binding-target="data-entity-id" data-attr-binding="Id"
                                 class="btn btn-sm btn-primary me-1">
                             <svg class="bi"><use xlink:href="#pencil"></use> </svg>
+                        </button>
+                        <button data-detail-button data-attr-binding-target="data-entity-id" data-attr-binding="Id"
+                                class="btn btn-sm btn-primary me-1">
+                            <svg class="bi"><use xlink:href="#list"></use> </svg>
                         </button>
                         <button data-delete-button data-attr-binding-target="data-entity-id" data-attr-binding="Id"
                                 class="btn btn-sm btn-danger">
@@ -95,17 +99,162 @@
     </div>
 </div>
 
+<script type="text/html" id="warehouse-detail-template">
+        <td colspan="4" class="bg-light">
+            <div class="w-full h-auto d-flex flex-column justify-content-start align-items-start gap-2 p-2">
+                <div class="row w-100">
+                    <div class="col-12 col-xl-6 border-end border-black">
+                        <div class="d-flex flex-row justify-content-between align-items-center mb-2 w-100">
+                            <span class="h4">Transaction Logs</span>
+                            <div class="d-flex flex-row">
+                            </div>
+                        </div>
+                        <div class="card shadow-sm rounded-4 border-0 w-100">
+                            <table class="table data-table table-striped mb-0" id="transaction-logs-table-<%= warehouseId %>"
+                                   data-paginator="#transaction-logs-pagination-<%= warehouseId %>">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Change Amount</th>
+                                    <th scope="col" class="d-none d-sm-table-cell">Transaction Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr data-row-template>
+                                    <td data-content-binding="ProductId" data-binding-func="product">Product A</td>
+                                    <td data-content-binding data-binding-func="changeAmount">
+                                        -10000
+                                    </td>
+                                    <td class="d-none d-sm-table-cell" data-content-binding="CreatedOn"
+                                        data-binding-func="formatDate">2025-05-21</td>
+                                </tr>
+                                <!-- More rows -->
+                                </tbody>
+                            </table>
+                            <div class="card-body p-2">
+
+
+                                <!-- Pagination -->
+                                <nav>
+                                    <ul data-pagination id="transaction-logs-pagination-<%= warehouseId %>" class="pagination rounded-2 overflow-hidden justify-content-end mb-0">
+                                        <li data-active-page-template class="page-item active"><a class="page-link" href="#" data-page>1</a></li>
+                                        <li data-page-template class="page-item"><a class="page-link" href="#" data-page>1</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-xl-6">
+                        <div class="d-flex flex-row justify-content-between align-items-center mb-2 w-100">
+                            <span class="h4">Stock Records</span>
+                            <div class="d-flex flex-row">
+                                <button class="btn btn-primary me-1">
+                                    <i class="bi bi-plus-circle"></i>
+                                    New Stock Change
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm rounded-4 border-0 w-100">
+                            <table class="table data-table table-striped mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Product Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Product A</td>
+                                    <td>
+                                        25666
+                                    </td>
+                                </tr>
+                                <!-- More rows -->
+                                </tbody>
+                            </table>
+                            <div class="card-body p-2">
+
+
+                                <!-- Pagination -->
+                                <nav >
+                                    <ul class="pagination justify-content-end mb-0">
+                                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </td>
+</script>
+
 <?php
 $viewEngine->startCustomScripts();
 ?>
 
 <script type="text/javascript">
+    BindingFunctions.product = function(productId) {
+        return fromDataSource('/api/products/get-dropdown', productId);
+    };
+
+
     const entitiesTable = initDatatable('#entities-table', '/api/warehouses');
 
     initFormModal('#entity-form-modal', entitiesTable, {
         createTitle: 'Create new Warehouse',
         updateTitle: 'Update Warehouse',
     });
+
+    addListener('[data-detail-button]', 'click', function (e) {
+       const warehouseId = e.target.getAttribute('data-entity-id');
+
+       const warehouseRow = e.target.closest('tr');
+
+       // Delete last detail row
+        const lastDetailRow = warehouseRow.parentElement.querySelector('[data-detail-row="'+warehouseId+'"]');
+        if(lastDetailRow)
+        {
+            // Toggle off action
+            lastDetailRow.remove();
+            return;
+        }
+
+       // Toggle on action
+        const warehouseTemplate = document.getElementById('warehouse-detail-template').innerHTML;
+        const warehouseElement = oegTemplate(warehouseTemplate, {
+            warehouseId: warehouseId
+        });
+        const row = document.createElement('tr');
+        row.setAttribute('data-temp-row', true);
+        row.setAttribute('data-detail-row', warehouseId);
+        row.innerHTML = warehouseElement;
+
+        warehouseRow.after(row);
+
+        BindingFunctions.changeAmount = function(stockTransaction) {
+            console.log(warehouseId, stockTransaction);
+            const sign = (warehouseId == stockTransaction.FromWarehouseId)
+                ? '-' : '+';
+
+            return sign + stockTransaction.Amount;
+        };
+        const transactionLogsTable = initDatatable('#transaction-logs-table-'+warehouseId, '/api/stock-transactions',
+            state => {
+                state.search = {
+                    WarehouseId: warehouseId
+                }
+            });
+    });
+
 
 </script>
 
