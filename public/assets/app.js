@@ -104,6 +104,9 @@ function check_errors(response) {
 }
 function createFormAlertAdapter(form) {
     const errorElement = form.querySelector('[data-error]');
+    if(!errorElement) {
+        return {errorHandler: err=>{},successHandler: () => {}};
+    }
 
     return {
         errorHandler: function(error) {
@@ -240,6 +243,7 @@ function validateForm(form, ignoreDirtyCheck = false) {
 
     let invalid = false;
     for(const inputField of inputFields) {
+        console.log(inputField);
         if(!validateInputField(inputField, ignoreDirtyCheck)) {
             invalid = true;
         }
@@ -334,7 +338,7 @@ function toggleFormValid(form, isValid) {
 const BindingFunctions = {}
 BindingFunctions.formatDate = function (date) {
     return (new Date(date)).toLocaleDateString();
-}
+};
 
 function updatePaginatorState(tableElement, paginatorElement, pageIndex, pageSize, totalCount) {
     const tableId = tableElement.id;
@@ -390,10 +394,18 @@ function bindData(rowElement, data){
         let relatedData = data[bindingField];
         const bindingFunc = contentBinding.getAttribute('data-binding-func');
         if(bindingFunc) {
-            relatedData = BindingFunctions[bindingFunc](relatedData);
+            Promise.resolve(BindingFunctions[bindingFunc](relatedData))
+                .then(x => {
+                    relatedData = x;
+
+                    contentBinding.innerHTML = x;
+                });
+        }
+        else {
+            contentBinding.innerHTML = relatedData;
         }
 
-        contentBinding.innerHTML = relatedData;
+
     }
 
     for(let attrBinding of attrBindings) {
@@ -471,6 +483,7 @@ function refreshDataTable(dataTableElement, resetPaginator) {
 
 addListener('[data-validate]', 'input', function (e) {
     const inputField = e.target;
+
    const form = e.target.closest('form');
    getState(inputField).dirty = true;
 
@@ -478,34 +491,41 @@ addListener('[data-validate]', 'input', function (e) {
    // Validate form fields
     toggleFormValid(form, validateForm(form));
 });
-addListener('form[data-ajax-form]', 'submit', function (e) {
-    e.preventDefault();
-    const form = e.target;
 
+function submitForm(form, action, shouldReset = false){
     if(!validateForm(form, true)){
-        return;
+        console.log("form is invalid");
+        return Promise.reject("invalid form");
     }
 
-    const shouldReset = form.hasAttribute('data-ajax-reset');
-    const action = form.getAttribute('action');
     const data = formToObject(form);
 
     const request = postJson(action, data)
-    .then(response => {
-        if(shouldReset) {
-            const inputs = form.querySelectorAll(':is(input, select, textarea):not(.ignore-reset):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"])');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-        }
+        .then(response => {
+            if(shouldReset) {
+                const inputs = form.querySelectorAll(':is(input, select, textarea):not(.ignore-reset):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"])');
+                inputs.forEach(input => {
+                    input.value = '';
+                });
+            }
 
-        const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', {
-            detail: response
+            const ajaxSubmitEvent = new CustomEvent('ajaxSubmitCompleted', {
+                detail: response
+            });
+            form.dispatchEvent(ajaxSubmitEvent);
         });
-        form.dispatchEvent(ajaxSubmitEvent);
-    });
 
     adaptFormAlert(form, request);
+
+    return request;
+}
+
+addListener('form[data-ajax-form]', 'submit', function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const action = form.getAttribute('action');
+
+    submitForm(form, action, true)
 
     return false;
 });
@@ -589,11 +609,10 @@ function initFormModal(modalSelector, datatable, configuration = {}, initAction 
             const modalForm = modalElement.querySelector('form');
             const modalState = getState(modalElement);
 
-            const entity = formToObject(modalForm);
             const entityId = modalState.entityId;
             const requestUrl = entityId ? modalState.config.editUrl.replace(':id', entityId) : modalState.config.createUrl;
 
-            postJson(requestUrl, entity)
+            submitForm(modalForm, requestUrl, false)
                 .then(response => {
 
                     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
@@ -602,10 +621,6 @@ function initFormModal(modalSelector, datatable, configuration = {}, initAction 
                     console.log("successfully saved element");
 
                     refreshDataTable(modalState.config.datatable, false);
-                })
-                .catch(error => {
-                    alert(error);
-
                 });
         });
 
@@ -681,5 +696,42 @@ addListener('[data-delete-button]', 'click', function (e) {
 
 
 });
+
+dropdownDatasourceCache = {};
+function populateSelectList(selectListElement) {
+    const datasource = selectListElement.getAttribute('data-datasource');
+
+    // Remove all old values
+    selectListElement.querySelectorAll('option:not([value=""])').forEach(opt => opt.remove());
+
+    const optionTemplate = selectListElement.querySelector('option') || document.createElement('option');
+    function bindOption(optionElement, itemText, itemValue) {
+        optionElement.innerHTML = itemText;
+        optionElement.setAttribute('value', itemValue);
+    }
+
+
+
+    (dropdownDatasourceCache[datasource] ||= getJson(datasource))
+        .then(response => {
+            for (const itemValue in response) {
+                const itemText = response[itemValue];
+
+                const optionElement = optionTemplate.cloneNode(true);
+
+                bindOption(optionElement, itemText, itemValue);
+
+                optionTemplate.after(optionElement);
+            }
+        });
+}
+function fromDataSource(dataSource, value) {
+    return (dropdownDatasourceCache[dataSource] ||= getJson(dataSource))
+        .then(response => {
+            return response[value];
+        });
+}
+
+document.querySelectorAll('select[data-datasource]').forEach(populateSelectList);
 
 // Templating and rendering

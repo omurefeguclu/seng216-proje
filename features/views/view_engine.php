@@ -74,6 +74,7 @@ class ViewEngine {
     }
     public function renderPartial(string $viewName, array $model = []) {
         $viewFile = $this->findView($viewName);
+        $viewEngine = $this;
 
         extract($model);
         ob_start();

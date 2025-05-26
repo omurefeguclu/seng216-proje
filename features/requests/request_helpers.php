@@ -25,7 +25,7 @@ function dropdown_json(\Propel\Runtime\Collection\Collection|array $items, calla
     $result = [];
 
     foreach ($items as $item) {
-        $result[$textSelector($item)] = $valueSelector($item);
+        $result[$valueSelector($item)] = $textSelector($item);
     }
 
     return ok_json($result);
