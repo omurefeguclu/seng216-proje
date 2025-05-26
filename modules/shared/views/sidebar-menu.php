@@ -7,12 +7,15 @@ const navigations = [
     ['name'=>'Stock Transactions', 'icon' => 'speedometer2', 'link'=>'/stock-transactions'],
 ];
 
-$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$currentPath = $viewEngine->requestContext->path;
 ?>
 
 <div id="side-nav" class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-h-100 offcanvas-md offcanvas-start" style="width: 280px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <svg class="bi pe-none me-2" style="width: 40px; height: 32px;" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg> <span class="fs-4">Sidebar</span>
+        <svg class="bi pe-none me-2" style="width: 40px; height: 32px;" aria-hidden="true">
+            <use xlink:href="#bootstrap"></use>
+        </svg>
+        <span class="fs-4">Sidebar</span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
@@ -34,7 +37,9 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     <div class="dropdown">
         <a href="javascript:void(0);" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="/assets/images/avatar.png" alt="" width="32" height="32" class="rounded-circle">
-            <strong class="ps-2 pe-2">omurefeguclu</strong>
+            <strong class="ps-2 pe-2">
+                <?=$viewEngine->requestContext->user->getUsername()?>
+            </strong>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
             <li><a class="dropdown-item" href="#">Profile</a></li>

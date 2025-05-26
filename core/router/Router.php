@@ -1,6 +1,8 @@
 <?php
 namespace Core\Router;
 
+use Core\Http\RequestContext;
+
 class Router {
     private $routes = ['GET' => [], 'POST' => []];
 
@@ -25,19 +27,17 @@ class Router {
 
 
 
-    public function dispatch(): void
+    public function dispatch(RequestContext $requestContext): void
     {
-        $ctx = new \Core\Http\RequestContext();
-
         // ✅ Normalize trailing slash (except for root)
-        if ($ctx->path !== '/' && str_ends_with($ctx->path, '/')) {
-            $ctx->path = rtrim($ctx->path, '/');
+        if ($requestContext->path !== '/' && str_ends_with($requestContext->path, '/')) {
+            $requestContext->path = rtrim($requestContext->path, '/');
         }
 
-        foreach ($this->routes[$ctx->method] ?? [] as $routeMeta) {
+        foreach ($this->routes[$requestContext->method] ?? [] as $routeMeta) {
             $params = [];
-            if ($routeMeta->matches($ctx->path, $params)) {
-                $routeMeta->execute($params, $ctx);
+            if ($routeMeta->matches($requestContext->path, $params)) {
+                $routeMeta->execute($params, $requestContext);
                 return;
             }
         }

@@ -1,4 +1,8 @@
-<?php $viewEngine->setLayout('layout'); ?>
+<?php setLayout('layout'); ?>
+
+<?= renderPartial('breadcrumb', [
+    'breadcrumb' => [['Warehouses', '/warehouses']],
+]) ?>
 
 <!-- Header with search -->
 <div class="bg-primary text-white p-4">

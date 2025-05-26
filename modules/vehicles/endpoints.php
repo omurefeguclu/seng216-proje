@@ -2,6 +2,8 @@
 
 global $router;
 
+use Propel\Runtime\ActiveQuery\Criteria;
+
 $router->group('/api/vehicles')
     ->get('/form/{id}', function ($id) {
         $vehicle = DbModel\VehicleQuery::create()->findPk($id);
@@ -59,7 +61,9 @@ $router->group('/api/vehicles')
         return ok_json();
     })
     ->get('/get-dropdown', function (){
-        $vehicles = DbModel\VehicleQuery::create()->find();
+        $vehicles = DbModel\VehicleQuery::create()
+            ->orderByCreatedOn(Criteria::DESC)
+            ->find();
 
         return dropdown_json($vehicles, fn($vehicle)=>$vehicle->getId(), fn($vehicle)=>$vehicle->getPlateNumber());
     })

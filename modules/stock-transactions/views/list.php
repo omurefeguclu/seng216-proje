@@ -1,4 +1,8 @@
-<?php $viewEngine->setLayout('layout'); ?>
+<?php setLayout('layout'); ?>
+
+<?= renderPartial('breadcrumb', [
+    'breadcrumb' => [['Stock Transactions', '/stock-transactions']],
+]) ?>
 
 <!-- Header with search -->
 <div class="bg-primary text-white p-4">
@@ -33,7 +37,7 @@
 <!-- Table with accordion rows and buttons -->
 <div class="container-lg p-4">
 
-    <?= $viewEngine->renderPartial("_table") ?>
+    <?= renderPartial("_table") ?>
 
 
 </div>

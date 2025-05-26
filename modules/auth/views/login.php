@@ -1,3 +1,5 @@
+<?php setLayout('_root'); ?>
+
 <style>
     body {
         background-color: #f0f2f5;
@@ -164,14 +166,14 @@ $viewEngine->startCustomScripts();
 
         console.log('login ajax submit completed:', response);
 
-        window.location.replace('/vehicles');
+        window.location.replace('/');
     });
     registerForm.addEventListener('ajaxSubmitCompleted', function (e) {
         const response = e.detail;
 
         console.log('register ajax submit completed:', response);
 
-        window.location.replace('/vehicles');
+        window.location.replace('/');
     });
 </script>
 <?php

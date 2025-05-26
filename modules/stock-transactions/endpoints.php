@@ -30,7 +30,9 @@ $router->group('/api/stock-transactions')
         }
         $pageIndex = $searchDto['PageIndex'] ?? 0;
         $pageSize = $searchDto['PageSize'] ?? 10;
-        $result_list = $query->paginate($pageIndex + 1, $pageSize);
+        $result_list = $query
+            ->orderByCreatedOn(Criteria::DESC)
+            ->paginate($pageIndex + 1, $pageSize);
 
         return paginated_json($result_list);
     })

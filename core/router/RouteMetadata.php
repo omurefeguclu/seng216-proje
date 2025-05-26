@@ -42,10 +42,10 @@ class RouteMetadata {
         return false;
     }
 
-    public function execute(array $params = [], RequestContext $ctx) {
+    public function execute(array $params = [], RequestContext $requestContext) {
 
         foreach ($this->middleware as $mw) {
-            if (!$mw($ctx)) {
+            if (!$mw($requestContext)) {
                 return;
             }
         }
@@ -60,7 +60,7 @@ class RouteMetadata {
             if (array_key_exists($name, $params)) {
                 $args[] = $params[$name];
             } else {
-                $args[] = $ctx; // default: pass RequestContext
+                $args[] = $requestContext; // default: pass RequestContext
             }
         }
 

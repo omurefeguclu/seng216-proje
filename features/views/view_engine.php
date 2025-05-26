@@ -1,9 +1,10 @@
 <?php
 
 class ViewEngine {
-    public function __construct(string $moduleViewPath)
+    public function __construct(string $moduleViewPath, \Core\Http\RequestContext | null $requestContext = null)
     {
         $this->customScripts = '';
+        $this->requestContext = $requestContext;
 
         $this->searchViewPaths = [
             $moduleViewPath,
@@ -12,6 +13,7 @@ class ViewEngine {
     }
 
     public string $customScripts;
+    public \Core\Http\RequestContext | null $requestContext;
     private $searchViewPaths;
     private string|null $currentLayoutViewName;
 

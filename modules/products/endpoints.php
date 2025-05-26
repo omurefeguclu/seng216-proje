@@ -23,7 +23,9 @@ $router->group('/api/products')
         }
         $pageIndex = $searchDto['PageIndex'] ?? 0;
         $pageSize = $searchDto['PageSize'] ?? 10;
-        $result_list = $query->paginate($pageIndex + 1, $pageSize);
+        $result_list = $query
+            ->orderByCreatedOn(Criteria::DESC)
+            ->paginate($pageIndex + 1, $pageSize);
 
         return paginated_json($result_list);
     })
@@ -62,7 +64,9 @@ $router->group('/api/products')
         return ok_json();
     })
     ->get('/get-dropdown', function (){
-        $entities = DbModel\ProductQuery::create()->find();
+        $entities = DbModel\ProductQuery::create()
+            ->orderByCreatedOn(Criteria::DESC)
+            ->find();
 
         return dropdown_json($entities, fn($entity)=>$entity->getId(), fn($entity)=>$entity->getName());
     })

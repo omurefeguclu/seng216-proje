@@ -40,6 +40,8 @@ function error_json($error = []){
 
 function view(string $viewName, array $data = []): string {
     try {
+        global $requestContext;
+
         // Guess the caller's file path (the .php that called `view()`)
         $callerFile = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[0]['file'] ?? null;
 
@@ -50,7 +52,9 @@ function view(string $viewName, array $data = []): string {
             http_response_code(500);
             return "Unable to resolve view path.";
         }
-        $viewEngine = new ViewEngine($moduleViewPath);
+
+        $viewEngine = new ViewEngine($moduleViewPath, $requestContext);
+        $GLOBALS['viewEngine'] = $viewEngine;
 
         return $viewEngine->renderView($viewName, $data);
     }

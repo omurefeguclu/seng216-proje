@@ -23,7 +23,9 @@ $router->group('/api/warehouses')
         }
         $pageIndex = $searchDto['PageIndex'] ?? 0;
         $pageSize = $searchDto['PageSize'] ?? 10;
-        $result_list = $query->paginate($pageIndex + 1, $pageSize);
+        $result_list = $query
+            ->orderByCreatedOn(Criteria::DESC)
+            ->paginate($pageIndex + 1, $pageSize);
 
         return paginated_json($result_list);
     })
@@ -68,6 +70,7 @@ $router->group('/api/warehouses')
         $pageSize = $searchDto['PageSize'] ?? 10;
         $results = \DbModel\WarehouseProductStockLogQuery::create()
             ->filterByWarehouseId($id)
+            ->orderByCreatedOn(Criteria::DESC)
             ->paginate($pageIndex + 1, $pageSize);
 
         return paginated_json($results);
@@ -111,7 +114,9 @@ $router->group('/api/warehouses')
         ]);
     })
     ->get('/get-dropdown', function (){
-        $entities = DbModel\WarehouseQuery::create()->find();
+        $entities = DbModel\WarehouseQuery::create()
+            ->orderByCreatedOn(Criteria::DESC)
+            ->find();
 
         return dropdown_json($entities, fn($entity)=>$entity->getId(), fn($entity)=>$entity->getName());
     })
