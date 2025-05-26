@@ -37,23 +37,44 @@ $router->group('/api/stock-transactions')
     ->post('/form', function(RequestContext $ctx) {
         $insertDto = $ctx->json();
 
+        $fromProductStock = DbModel\WarehouseProductStockLogQuery::create()
+            ->filterByWarehouseId($insertDto['FromWarehouseId'])
+            ->filterByProductId($insertDto['ProductId'])
+            ->withColumn("
+        SUM(
+            CASE 
+                WHEN is_received THEN amount 
+                ELSE -amount
+            END
+        )
+    ", 'TotalStock')->findOne();
+
+        // Propel nuance, virtual column is still present even if no result exist
+        $totalStockColumn = $fromProductStock->getVirtualColumn('TotalStock');
+        $totalStock = $totalStockColumn !== null ? $totalStockColumn : 0;
+        if($totalStock < $insertDto['Amount']){
+            return error_json('There is not enough stock at the source warehouse, there is: ' . $totalStock);
+        }
+
         $entity = new DbModel\StockTransaction();
         $entity = $entity->fromArray($insertDto);
 
         $entity->save();
 
-        return ok_json($entity->toArray());
-    })
-    ->post('/form/{id}', function($id, RequestContext $ctx) {
-        $entity = DbModel\StockTransactionQuery::create()->findPk($id);
-        if(!$entity){
-            return error_json('Vehicle not found with id ' . $id);
-        }
+        $receivingLog = new DbModel\WarehouseProductStockLog();
+        $receivingLog->setWarehouseId($entity->getToWarehouseId());
+        $receivingLog->setProductId($entity->getProductId());
+        $receivingLog->setAmount($entity->getAmount());
+        $receivingLog->setIsReceived(true);
 
-        $insertDto = $ctx->json();
+        $givingLog = new DbModel\WarehouseProductStockLog();
+        $givingLog->setWarehouseId($entity->getFromWarehouseId());
+        $givingLog->setProductId($entity->getProductId());
+        $givingLog->setAmount($entity->getAmount());
+        $givingLog->setIsReceived(false);
 
-        $entity = $entity->fromArray($insertDto);
-        $entity->save();
+        $receivingLog->save();
+        $givingLog->save();
 
         return ok_json($entity->toArray());
     })

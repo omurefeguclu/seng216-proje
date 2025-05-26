@@ -10,7 +10,7 @@ const navigations = [
 $currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 ?>
 
-<div id="side-nav" class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark vh-100 offcanvas-md offcanvas-start" style="width: 280px;">
+<div id="side-nav" class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-h-100 offcanvas-md offcanvas-start" style="width: 280px;">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
         <svg class="bi pe-none me-2" style="width: 40px; height: 32px;" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg> <span class="fs-4">Sidebar</span>
     </a>

@@ -8,6 +8,7 @@
                 <th scope="col">From</th>
                 <th scope="col">To</th>
                 <th scope="col">Product</th>
+                <th scope="col">Amount</th>
                 <th scope="col" class="d-none d-md-table-cell">Last Updated</th>
                 <th scope="col">Actions</th>
             </tr>
@@ -18,12 +19,9 @@
                 <td data-content-binding="FromWarehouseId" data-binding-func="warehouse">1</td>
                 <td data-content-binding="ToWarehouseId" data-binding-func="warehouse">1</td>
                 <td data-content-binding="ProductId" data-binding-func="product">1</td>
+                <td data-content-binding="Amount">1</td>
                 <td data-content-binding="CreatedOn" data-binding-func="formatDate" class="d-none d-md-table-cell">2025-05-21</td>
                 <td>
-                    <button data-form-modal-button="#stock-transaction-form-modal" data-attr-binding-target="data-entity-id" data-attr-binding="Id"
-                            class="btn btn-sm btn-primary me-1">
-                        <svg class="bi"><use xlink:href="#pencil"></use> </svg>
-                    </button>
                     <button data-delete-button data-attr-binding-target="data-entity-id" data-attr-binding="Id"
                             class="btn btn-sm btn-danger">
                         <svg class="bi"><use xlink:href="#trash"></use> </svg>

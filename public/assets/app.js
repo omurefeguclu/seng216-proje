@@ -600,41 +600,52 @@ function initDatatable(selector, prefix, configureState=()=>{}) {
 function initFormModal(modalSelector, datatable, configuration = {}, initAction = () => {}) {
     const modalElement = document.querySelector(modalSelector);
     const datatableState = getState(datatable);
+    const modalState = getState(modalElement);
 
-    getState(modalElement).config = {
+    const shouldCreateButtonListeners = !modalState.config;
+
+    modalState.config = {
         createUrl: datatableState.datasource.create,
         editUrl: datatableState.datasource.edit,
         datatable: datatable,
         createTitle: 'Create Item',
         editTitle: 'Edit Item',
+        completedCallback: () => {},
         ...configuration
     };
 
-    modalElement.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(submitButton => {
-        submitButton.addEventListener('click', e => {
-            e.preventDefault();
+    if(shouldCreateButtonListeners) {
+        modalElement.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(submitButton => {
+            submitButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log('caught the button click');
 
-            const modalForm = modalElement.querySelector('form');
-            const modalState = getState(modalElement);
+                const modalForm = modalElement.querySelector('form');
+                const modalState = getState(modalElement);
 
-            const entityId = modalState.entityId;
-            const requestUrl = entityId ? modalState.config.editUrl.replace(':id', entityId) : modalState.config.createUrl;
+                const entityId = modalState.entityId;
+                const requestUrl = entityId ? modalState.config.editUrl.replace(':id', entityId) : modalState.config.createUrl;
 
-            submitForm(modalForm, requestUrl, false)
-                .then(response => {
+                submitForm(modalForm, requestUrl, false)
+                    .then(response => {
 
-                    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
 
-                    modal.hide();
-                    console.log("successfully saved element");
+                        modal.hide();
+                        console.log("successfully saved element");
 
-                    refreshDataTable(modalState.config.datatable, false);
-                });
+                        refreshDataTable(modalState.config.datatable, false);
+
+                        modalState.config.completedCallback(response);
+                    });
+
+                return false;
+            });
         });
+    }
 
-    });
 }
-function showFormModal(modalSelector, entityId) {
+function showFormModal(modalSelector, entityId, injectModel = {}) {
     const modalElement = document.querySelector(modalSelector);
     const modalState = getState(modalElement);
 
@@ -646,13 +657,17 @@ function showFormModal(modalSelector, entityId) {
     const form = modalElement.querySelector('form');
     // Edit Form
     if(entityId) {
-        getState(modalElement).entityId = entityId;
+        modalState.entityId = entityId;
         const requestUrl = modalState.config.editUrl.replace(':id', entityId);
 
         getJson(requestUrl)
             .then(response => {
                 modalTitle.innerHTML = handleProvider(modalState.config.editTitle, response);
 
+                response = {
+                    ...response,
+                    ...injectModel
+                };
                 bindForm(form, response);
 
                 modal.show();
@@ -662,10 +677,14 @@ function showFormModal(modalSelector, entityId) {
     }
     // Create Form
     else {
-        getState(modalElement).entityId = undefined;
+        modalState.entityId = undefined;
         modalTitle.innerHTML = modalState.config.createTitle;
 
-        bindForm(form, {});
+        const data = {
+            ...injectModel
+        };
+
+        bindForm(form, data);
 
         modal.show();
     }

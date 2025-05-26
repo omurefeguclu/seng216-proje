@@ -99,6 +99,43 @@
     </div>
 </div>
 
+<div class="modal fade" id="stock-log-form-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Create Unknown Stock Log</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" name="WarehouseId" id="stockLogWarehouseId">
+                    <div class="mb-3">
+                        <label for="stockLogProductSelect" class="form-label">Product</label>
+                        <select class="form-select" name="ProductId" id="stockLogProductSelect" data-datasource="/api/products/get-dropdown"
+                                data-validate="isRequired('You must select a product')">
+                            <option value="">Please select a product</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stockLogChangeAmount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" name="Amount" id="stockLogChangeAmount"
+                               placeholder="Enter change amount" data-validate="isRequired('You must enter a changeAmount')">
+                    </div>
+                    <div class="mb-3">
+                        <label for="stockLogChangeType" class="form-label">Change Type</label>
+                        <select class="form-select" name="IsReceived" id="stockLogChangeType" data-validate="isRequired('You must select a change type')">
+                            <option value="true" selected>In</option>
+                            <option value="false">Out</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/html" id="warehouse-detail-template">
         <td colspan="4" class="bg-light">
             <div class="w-full h-auto d-flex flex-column justify-content-start align-items-start gap-2 p-2">
@@ -150,14 +187,15 @@
                         <div class="d-flex flex-row justify-content-between align-items-center mb-2 w-100">
                             <span class="h4">Stock Records</span>
                             <div class="d-flex flex-row">
-                                <button class="btn btn-primary me-1">
+                                <button class="btn btn-primary me-1 create-stock-log-button">
                                     <i class="bi bi-plus-circle"></i>
                                     New Stock Change
                                 </button>
                             </div>
                         </div>
                         <div class="card shadow-sm rounded-4 border-0 w-100">
-                            <table class="table data-table table-striped mb-0">
+                            <table class="table data-table table-striped mb-0" id="stocks-table-<%= warehouseId %>"
+                                   data-paginator="#stocks-pagination-<%= warehouseId %>">
                                 <thead class="table-light">
                                 <tr>
                                     <th scope="col">Product Name</th>
@@ -165,26 +203,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>Product A</td>
-                                    <td>
+                                <tr data-row-template>
+                                    <td data-content-binding="ProductId" data-binding-func="product">Product A</td>
+                                    <td data-content-binding="TotalStock">
                                         25666
                                     </td>
                                 </tr>
-                                <!-- More rows -->
+
                                 </tbody>
                             </table>
                             <div class="card-body p-2">
 
 
                                 <!-- Pagination -->
-                                <nav >
-                                    <ul class="pagination justify-content-end mb-0">
-                                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                <nav>
+                                    <ul data-pagination id="stocks-pagination-<%= warehouseId %>" class="pagination rounded-2 overflow-hidden justify-content-end mb-0">
+                                        <li data-active-page-template class="page-item active"><a class="page-link" href="#" data-page>1</a></li>
+                                        <li data-page-template class="page-item"><a class="page-link" href="#" data-page>1</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -214,6 +249,7 @@ $viewEngine->startCustomScripts();
         updateTitle: 'Update Warehouse',
     });
 
+
     addListener('[data-detail-button]', 'click', function (e) {
        const warehouseId = e.target.getAttribute('data-entity-id');
 
@@ -240,19 +276,36 @@ $viewEngine->startCustomScripts();
 
         warehouseRow.after(row);
 
-        BindingFunctions.changeAmount = function(stockTransaction) {
-            console.log(warehouseId, stockTransaction);
-            const sign = (warehouseId == stockTransaction.FromWarehouseId)
-                ? '-' : '+';
+        BindingFunctions.changeAmount = function(transactionLog) {
 
-            return sign + stockTransaction.Amount;
+            const sign = (transactionLog.IsReceived)
+                ? '+' : '-';
+
+            return sign + transactionLog.Amount;
         };
-        const transactionLogsTable = initDatatable('#transaction-logs-table-'+warehouseId, '/api/stock-transactions',
+        const transactionLogsTable = initDatatable('#transaction-logs-table-'+warehouseId, '',
             state => {
-                state.search = {
-                    WarehouseId: warehouseId
+                state.datasource.list = '/api/warehouses/stock-transactions/'+warehouseId;
+            });
+        const stockRecordsTable = initDatatable('#stocks-table-'+warehouseId, '', state => {
+            state.datasource.list = '/api/warehouses/stocks/'+warehouseId;
+        });
+
+
+        row.querySelector('.create-stock-log-button').addEventListener('click', function (e) {
+            initFormModal('#stock-log-form-modal', stockRecordsTable, {
+                createTitle: 'Create new Unknown Stock Log',
+                createUrl: '/api/warehouses/create-stock-log',
+                completedCallback: (response) => {
+                    refreshDataTable(transactionLogsTable, false);
                 }
             });
+
+            showFormModal('#stock-log-form-modal', null, {
+                IsReceived: true,
+                WarehouseId: warehouseId
+            });
+        });
     });
 
 
