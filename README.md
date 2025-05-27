@@ -67,21 +67,23 @@ http://localhost/StockTransactionWebsite
 
 ```
 StockTransactionWebsite/
-├── frontend/
-│   ├── index.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
-│
-├── backend/
-│   ├── register.php
-│   ├── login.php
-│   ├── data.xml
-│   └── includes/
-│       ├── database.php
-│       └── helpers.php
-│
-└── README.md
+├── .idea/                         # IDE configuration files (e.g., PhpStorm)
+├── core/                          # Core application logic and utilities
+├── db/
+│   └── DbModel/                   # Database models and related classes
+├── features/                      # Feature-specific modules or components
+├── generated-conf/                # Auto-generated configuration files
+├── generated-migrations/          # Auto-generated database migration scripts
+├── generated-sql/                 # Auto-generated SQL files
+├── modules/                       # Modular components of the application
+├── public/                        # Publicly accessible files (e.g., index.php, assets)
+├── .gitignore                     # Specifies intentionally untracked files to ignore
+├── README.md                      # Project documentation and overview
+├── composer.json                  # PHP dependencies and autoloading configuration
+├── propel.yml                     # Propel ORM configuration file
+├── propel.yml.dist                # Distribution version of Propel configuration
+└── schema.xml                     # XML schema definition for the database
+
 ```
 
 ---
