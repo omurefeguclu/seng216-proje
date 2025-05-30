@@ -4,7 +4,11 @@
 
 <!-- Table with accordion rows and buttons -->
 <div class="container-lg p-4">
-
+    <div class="d-flex flex-row">
+        <button class="btn d-md-none" data-bs-toggle="offcanvas" data-bs-target="#side-nav">
+            <svg class="bi icon-md"><use xlink:href="#list"></use></svg>
+        </button>
+    </div>
     <?= renderPartial('breadcrumb', [
         'breadcrumb' => [['Dashboard', '/dashboard']],
     ]) ?>
